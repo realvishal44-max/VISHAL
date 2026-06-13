@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Under Maintenance | BCA STORE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚧</text></svg>">
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --primary: #6366f1;
+      --primary-glow: rgba(99, 102, 241, 0.25);
+      --secondary: #3b82f6;
+      --secondary-glow: rgba(59, 130, 246, 0.25);
+      --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.2);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --card-bg: rgba(17, 24, 39, 0.55);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --gradient-text: linear-gradient(135deg, #a5b4fc 0%, #6366f1 50%, #3b82f6 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      padding: 24px;
+    }
+
+    /* Ambient dynamic glows */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(140px);
+      opacity: 0.22;
+      pointer-events: none;
+      z-index: 0;
+      animation: floatOrb 12s ease-in-out infinite alternate;
+    }
+
+    .orb-1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--primary) 0%, transparent 80%);
+      top: -10%;
+      left: 5%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, var(--secondary) 0%, transparent 80%);
+      bottom: -10%;
+      right: 5%;
+      animation-delay: -4s;
+    }
+
+    .orb-3 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, #ec4899 0%, transparent 80%);
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: -8s;
+    }
+
+    @keyframes floatOrb {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(40px, -30px) scale(1.1);
+      }
+
+      100% {
+        transform: translate(-20px, 50px) scale(0.9);
+      }
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .maintenance-banner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.08;
+      z-index: 1;
+      pointer-events: none;
+      transition: background-image 0.5s ease;
+    }
+
+    /* Outer Wrapper for 3D Parallax */
+    .parallax-wrapper {
+      perspective: 1000px;
+      z-index: 2;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    /* Glassmorphic Premium Card */
+    .maint-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid var(--card-border);
+      border-radius: 30px;
+      padding: 50px 40px;
+      text-align: center;
+      box-shadow:
+        0 30px 70px -15px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0px rgba(255, 255, 255, 0.12),
+        0 0 40px rgba(99, 102, 241, 0.05);
+      transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Shifting border glow */
+    .maint-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 30px;
+      padding: 1.5px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), transparent, rgba(59, 130, 246, 0.4), transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* Interactive 3D Gears Component */
+    .gears-container {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .maint-gears {
+      width: 130px;
+      height: 130px;
+    }
+
+    .gear-large {
+      transform-origin: 100px 100px;
+      animation: spinClockwise 25s linear infinite;
+    }
+
+    .gear-small-1 {
+      transform-origin: 50px 50px;
+      animation: spinCounterClockwise 12s linear infinite;
+    }
+
+    .gear-small-2 {
+      transform-origin: 62px 145px;
+      animation: spinClockwise 16s linear infinite;
+    }
+
+    @keyframes spinClockwise {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes spinCounterClockwise {
+      100% {
+        transform: rotate(-360deg);
+      }
+    }
+
+    /* Pulse Glow under Gears */
+    .gears-glow {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--primary);
+      filter: blur(25px);
+      opacity: 0.15;
+      z-index: -1;
+      animation: pulseGlow 4s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        transform: scale(0.9);
+        opacity: 0.12;
+      }
+
+      100% {
+        transform: scale(1.2);
+        opacity: 0.22;
+      }
+    }
+
+    /* Platform Subtitle */
+    .platform-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: #a5b4fc;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: inline-block;
+      position: relative;
+    }
+
+    /* Main Title with futuristic font & gradient */
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.1rem;
+      font-weight: 800;
+      line-height: 1.25;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+    }
+
+    /* Message description */
+    .maint-desc {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 35px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Info Grid */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 35px;
+    }
+
+    @media (max-width: 520px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+    }
+
+    /* Shimmering glass card */
+    .info-pill {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 18px;
+      padding: 16px 20px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-pill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
+      transition: 0.5s;
+    }
+
+    .info-pill:hover::before {
+      left: 150%;
+      transition: 0.8s ease-in-out;
+    }
+
+    .info-pill:hover {
+      background: rgba(255, 255, 255, 0.04);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .info-pill-icon {
+      font-size: 1.5rem;
+      width: 46px;
+      height: 46px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .info-pill-content {
+      flex: 1;
+    }
+
+    .info-pill-lbl {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .info-pill-val {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Live heartbeat dot */
+    .live-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      position: relative;
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    .live-dot::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1.5px solid var(--accent);
+      animation: heartbeat 1.8s infinite ease-out;
+    }
+
+    @keyframes heartbeat {
+      0% {
+        transform: scale(0.6);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1.8);
+        opacity: 0;
+      }
+    }
+
+    /* Progress bar element */
+    .progress-bar-container {
+      width: 100%;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      margin-bottom: 35px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 65%;
+      /* Simulated value */
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      box-shadow: 0 0 12px var(--primary);
+      position: relative;
+      animation: shiftProgress 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes shiftProgress {
+      0% {
+        width: 35%;
+      }
+
+      50% {
+        width: 78%;
+      }
+
+      100% {
+        width: 55%;
+      }
+    }
+
+    /* Chat desk footer link button */
+    .support-footer {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .support-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #6ee7b7;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 14px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+    }
+
+    .support-btn:hover {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.25) 100%);
+      border-color: rgba(16, 185, 129, 0.55);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow:
+        0 6px 18px rgba(16, 185, 129, 0.2),
+        0 0 10px rgba(16, 185, 129, 0.1);
+    }
+
+    /* Small responsive fixes */
+    @media (max-width: 480px) {
+      .maint-card {
+        padding: 35px 20px;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      .maint-desc {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Ambient Light Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Interactive Constellation Particle Canvas -->
+  <canvas id="particleCanvas"></canvas>
+
+  <div class="maintenance-banner" id="maintenanceBanner"></div>
+
+  <div class="parallax-wrapper">
+    <div class="maint-card" id="maintCard">
+
+      <!-- Interactive SVG interlocking gear system -->
+      <div class="gears-container">
+        <div class="gears-glow"></div>
+        <svg class="maint-gears" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="gradPrimary" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#a5b4fc" />
+              <stop offset="100%" stop-color="#6366f1" />
+            </linearGradient>
+            <linearGradient id="gradSecondary" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#93c5fd" />
+              <stop offset="100%" stop-color="#3b82f6" />
+            </linearGradient>
+            <linearGradient id="gradAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#a7f3d0" />
+              <stop offset="100%" stop-color="#10b981" />
+            </linearGradient>
+          </defs>
+          <!-- Gear Large (Main Right) -->
+          <g class="gear-large" stroke="url(#gradPrimary)" stroke-width="2.5" fill="none">
+            <circle cx="100" cy="100" r="48" stroke-dasharray="14 10" />
+            <circle cx="100" cy="100" r="38" />
+            <circle cx="100" cy="100" r="26" stroke-dasharray="2 4" />
+            <line x1="52" y1="100" x2="148" y2="100" />
+            <line x1="100" y1="52" x2="100" y2="148" />
+            <line x1="66" y1="66" x2="134" y2="134" />
+            <line x1="66" y1="134" x2="134" y2="66" />
+            <circle cx="100" cy="100" r="8" fill="url(#gradPrimary)" />
+          </g>
+          <!-- Gear Small 1 (Top Left) -->
+          <g class="gear-small-1" stroke="url(#gradSecondary)" stroke-width="1.8" fill="none">
+            <circle cx="50" cy="50" r="24" stroke-dasharray="7 7" />
+            <circle cx="50" cy="50" r="17" />
+            <line x1="26" y1="50" x2="74" y2="50" />
+            <line x1="50" y1="26" x2="50" y2="74" />
+            <circle cx="50" cy="50" r="5" fill="url(#gradSecondary)" />
+          </g>
+          <!-- Gear Small 2 (Bottom Left) -->
+          <g class="gear-small-2" stroke="url(#gradAccent)" stroke-width="2" fill="none">
+            <circle cx="62" cy="145" r="32" stroke-dasharray="9 8" />
+            <circle cx="62" cy="145" r="22" />
+            <line x1="30" y1="145" x2="94" y2="145" />
+            <line x1="62" y1="113" x2="62" y2="177" />
+            <circle cx="62" cy="145" r="6" fill="url(#gradAccent)" />
+          </g>
+        </svg>
+      </div>
+
+      <span class="platform-name" id="platformName">BCA Store</span>
+      <h1 id="maintenanceTitle">Platform Under Scheduled Upgrades</h1>
+      <p class="maint-desc" id="maintenanceMessage">We are currently implementing essential security updates and loading
+        fresh notes library folders. Student workspaces will reload dynamically once complete.</p>
+
+      <!-- Shifting Gradient Progress Bar -->
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill"></div>
+      </div>
+
+      <div class="info-grid">
+        <!-- Estimated Return Pill -->
+        <div class="info-pill">
+          <div class="info-pill-icon">⏳</div>
+          <div class="info-pill-content">
+            <div class="info-pill-lbl">Estimated Return</div>
+            <div class="info-pill-val" id="estimatedTime">2 Hours</div>
+          </div>
+        </div>
+
+        <!-- System Status Pill -->
+        <div class="info-pill">
+          <div class="info-pill-icon">⚡</div>
+          <div class="info-pill-content">
+            <div class="info-pill-lbl">Current State</div>
+            <div class="info-pill-val">
+              <span class="live-dot"></span>
+              Live Upgrading
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Announcements Segment -->
+      <div id="announcements-section"
+        style="margin: 25px 0; padding: 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; text-align: left; display: none; backdrop-filter: blur(10px);">
+        <h3
+          style="font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: #a5b4fc; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+          <span>📢</span> Recent Updates & Notices
+        </h3>
+        <style>
+          #announcements-list::-webkit-scrollbar {
+            width: 4px;
+          }
+
+          #announcements-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+          }
+
+          #announcements-list::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.25);
+            border-radius: 4px;
+          }
+
+          #announcements-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.45);
+          }
+        </style>
+        <div id="announcements-list"
+          style="display: flex; flex-direction: column; gap: 12px; max-height: 150px; overflow-y: auto; padding-right: 6px;">
+          <!-- Announcements will be dynamically rendered here -->
+        </div>
+      </div>
+
+      <div class="support-footer">
+        Need urgent assistance?
+        <a href="https://wa.me/917633865663?text=Hello%20Support!%20%F0%9F%91%8B%20HOW%20MUCH%20TIME%20NEED%20TO%20MAINTAIN%20WEBSITE%3F%20%F0%9F%9A%A7%E2%8C%9B%20Thank%20you!%20%E2%9C%A8"
+          target="_blank" class="support-btn">
+          <span>📲 Chat Support</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Compat Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script>
+    // 1. Firebase Realtime database integration and redirect handler
+    const firebaseConfig = {
+      apiKey: "AIzaSyC_mWJld2NksodLIg0hI_O0wuLWpUL4AoE",
+      authDomain: "bca-store.firebaseapp.com",
+      databaseURL: "https://bca-store-default-rtdb.firebaseio.com",
+      projectId: "bca-store",
+      storageBucket: "bca-store.firebasestorage.app",
+      messagingSenderId: "1063532602856",
+      appId: "1:1063532602856:web:30812a52ccbded1548305d"
+    };
+
+    try {
+      if (typeof firebase !== 'undefined') {
+        const app = firebase.apps && firebase.apps.length > 0 ? firebase.app() : firebase.initializeApp(firebaseConfig);
+        const db = firebase.database(app);
+
+        // Helper to parse estimated return durations/dates
+        function parseEstimatedReturn(estimatedReturn, activatedAt) {
+          if (!estimatedReturn) return null;
+
+          const dateVal = Date.parse(estimatedReturn);
+          if (!isNaN(dateVal)) {
+            return new Date(dateVal);
+          }
+
+          const baseTime = activatedAt ? parseInt(activatedAt, 10) : Date.now();
+          const words = estimatedReturn.toLowerCase().split(/\s+/);
+          let durationMs = 0;
+          for (let i = 0; i < words.length - 1; i++) {
+            const val = parseFloat(words[i]);
+            if (!isNaN(val)) {
+              const unit = words[i + 1];
+              if (unit.startsWith('minute') || unit.startsWith('min')) {
+                durationMs += val * 60 * 1000;
+              } else if (unit.startsWith('hour') || unit.startsWith('hr')) {
+                durationMs += val * 60 * 60 * 1000;
+              } else if (unit.startsWith('day') || unit.startsWith('d')) {
+                durationMs += val * 24 * 60 * 60 * 1000;
+              }
+            }
+          }
+
+          if (durationMs > 0) {
+            return new Date(baseTime + durationMs);
+          }
+          return null;
+        }
+
+        function escapeHTML(str) {
+          if (!str) return '';
+          return str.replace(/[&<>'"]/g,
+            tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+          );
+        }
+
+        function renderAnnouncements(notifications) {
+          const section = document.getElementById('announcements-section');
+          const list = document.getElementById('announcements-list');
+          if (!section || !list) return;
+
+          if (notifications && notifications.length > 0) {
+            section.style.display = 'block';
+            list.innerHTML = notifications.map(n => {
+              const date = n.timestamp ? new Date(n.timestamp).toLocaleDateString('en-US', {
+                month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+              }) : '';
+              return `
+                <div style="padding: 10px 12px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 10px; font-size: 0.85rem; border-left: 3px solid var(--primary);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <span style="font-weight: 700; color: #ffffff;">${escapeHTML(n.title)}</span>
+                    <span style="font-size: 0.7rem; color: var(--text-muted);">${date}</span>
+                  </div>
+                  <p style="color: rgba(255, 255, 255, 0.65); line-height: 1.4; font-size: 0.8rem; margin: 0; white-space: pre-line;">${escapeHTML(n.message)}</p>
+                </div>
+              `;
+            }).join('');
+          } else {
+            section.style.display = 'none';
+          }
+        }
+
+        let countdownInterval = null;
+
+        function updateMaintenanceUI(config, isSystemPath) {
+          const enabled = isSystemPath ? config.enabled : config.maintenance_mode;
+
+          // Redirect to home if maintenance is turned off
+          if (enabled === false) {
+            localStorage.setItem('maintenance_mode_cache', 'false');
+            window.location.href = 'index.html';
+            return;
+          }
+
+          // Update UI elements
+          const title = isSystemPath ? config.title : config.maintenance_title;
+          const message = isSystemPath ? config.message : config.maintenance_message;
+          const bannerUrl = isSystemPath ? config.bannerUrl : config.maintenance_banner_url;
+          const estimatedReturn = isSystemPath ? config.estimatedReturn : config.maintenance_estimated_time;
+          const activatedAt = isSystemPath ? config.activatedAt : null;
+
+          if (title) {
+            document.getElementById('maintenanceTitle').textContent = title;
+          }
+          if (message) {
+            document.getElementById('maintenanceMessage').textContent = message;
+          }
+          if (bannerUrl) {
+            const banner = document.getElementById('maintenanceBanner');
+            banner.style.backgroundImage = `url(${bannerUrl})`;
+          }
+
+          const estimatedTimeEl = document.getElementById('estimatedTime');
+          if (estimatedTimeEl) {
+            if (countdownInterval) {
+              clearInterval(countdownInterval);
+              countdownInterval = null;
+            }
+
+            if (estimatedReturn) {
+              const targetDate = parseEstimatedReturn(estimatedReturn, activatedAt);
+              if (targetDate) {
+                const updateTimer = () => {
+                  const now = Date.now();
+                  const diff = targetDate.getTime() - now;
+                  if (diff <= 0) {
+                    estimatedTimeEl.textContent = "Finishing Up...";
+                    clearInterval(countdownInterval);
+                  } else {
+                    const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+                    const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+                    const mins = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
+                    const secs = Math.floor((diff % (60 * 1000)) / 1000);
+
+                    let displayStr = "";
+                    if (days > 0) displayStr += `${days}d `;
+                    displayStr += `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                    estimatedTimeEl.textContent = displayStr;
+                  }
+                };
+                updateTimer();
+                countdownInterval = setInterval(updateTimer, 1000);
+              } else {
+                estimatedTimeEl.textContent = estimatedReturn;
+              }
+            } else {
+              estimatedTimeEl.textContent = "TBD";
+            }
+          }
+        }
+
+        // Listen to system/maintenance path first
+        db.ref('system/maintenance').on('value', (snapshot) => {
+          if (snapshot.exists() && snapshot.val().enabled !== undefined) {
+            updateMaintenanceUI(snapshot.val(), true);
+          } else {
+            // Fallback to legacy path
+            db.ref('admin_config').on('value', (legacySnap) => {
+              if (legacySnap.exists()) {
+                updateMaintenanceUI(legacySnap.val(), false);
+              }
+            });
+          }
+        });
+
+        // Listen to Recent Announcements (last 5)
+        db.ref('notifications_live').orderByChild('timestamp').limitToLast(5).on('value', (snap) => {
+          const notifications = [];
+          if (snap.exists()) {
+            snap.forEach(child => {
+              notifications.push(child.val());
+            });
+          }
+          // Reverse to show newest first
+          notifications.reverse();
+          renderAnnouncements(notifications);
+        });
+      }
+    } catch (e) {
+      console.error("Firebase config error on maintenance page:", e);
+    }
+
+    // 2. High Performance Interactive Particle Network Background
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const maxParticles = 65;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.35;
+        this.vy = (Math.random() - 0.5) * 0.35;
+        this.radius = Math.random() * 1.6 + 0.6;
+        this.alpha = Math.random() * 0.4 + 0.2;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+          this.reset();
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(99, 102, 241, ${this.alpha})`;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < maxParticles; i++) {
+      particles.push(new Particle());
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw connection lines
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 140) {
+            const alpha = (1 - dist / 140) * 0.12;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(99, 102, 241, ${alpha})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // 3. Immersive 3D Parallax Tilt Effect on Mouse Move
+    const card = document.getElementById('maintCard');
+    document.addEventListener('mousemove', (e) => {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      const dx = e.clientX - cx;
+      const dy = e.clientY - cy;
+
+      const tiltX = (dy / cy) * -6;
+      const tiltY = (dx / cx) * 6;
+
+      card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-2px)`;
+    });
+
+    document.addEventListener('mouseleave', () => {
+      card.style.transform = 'rotateX(0deg) rotateY(0deg) translateY(0px)';
+    });
+  </script>
+</body>
+
+</html>

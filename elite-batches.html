@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Elite Plus - Global Batch Viewer. Master coding and placements in a highly premium learning environment." />
+  <title>Elite Plus Workspace | BCA STORE</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Orbitron:wght@400;700;900&display=swap"
+    rel="stylesheet" />
+  
+  <!-- CSS Link Sheets -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="elite-batches-clean.css" />
+</head>
+
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-link">🏠 Home</a>
+        <a href="my-batches.html" class="nav-link">🎓 My Batch</a>
+        <a href="attendance.html" class="nav-link">📋 Attendance</a>
+        <a href="elite-plus.html" class="nav-link active">💎 Elite Plus</a>
+        <a href="exam.html" class="nav-link">📝 Exam</a>
+        <a href="test-hub.html" class="nav-link">🧠 Tests</a>
+        <a href="community.html" class="nav-link">🧑‍🤝‍🧑 Community</a>
+        <a href="analytics.html" class="nav-link">📊 Stats</a>
+        <a href="javascript:void(0)" class="nav-link" onclick="openSuggestionModal()">💬 Suggestion</a>
+        <button class="nav-bookmark-btn" id="navBkBtn" onclick="openBkPanel()" title="My Bookmarks">🔖<span
+            class="bk-count-badge" id="bkBadgeDesktop"></span></button>
+        <button class="dark-toggle" id="darkToggle" title="Toggle Dark Mode">🌙</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==================== MOBILE HORIZONTAL SELECTOR ==================== -->
+  <div class="batch-mobile-selector" id="mobileBatchList">
+    <!-- Injected by JavaScript -->
+  </div>
+
+  <!-- ==================== WORKSPACE WORK AREA ==================== -->
+  <div class="workspace-container">
+    
+    <!-- LEFT GLASS COLUMN: BATCH SELECTOR SIDEBAR -->
+    <aside class="batch-selector-sidebar">
+      <div class="sidebar-title">💎 Elite Batches</div>
+      <div class="batch-list-wrapper" id="sidebarBatchList">
+        <!-- Injected dynamically from ELITE_BATCHES configuration -->
+      </div>
+    </aside>
+
+    <!-- RIGHT WORKSPACE: ACTIVE BATCH GRID WORKSPACE -->
+    <main class="batch-main-workspace">
+      
+      <!-- Dynamic Hero Header -->
+      <div class="batch-hero-header">
+        <div class="batch-hero-content">
+          <!-- Injected dynamically by ElitePageManager -->
+        </div>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <div class="batch-tabs-nav">
+        <!-- Injected dynamically by ElitePageManager -->
+      </div>
+
+      <!-- Sections Resource Container -->
+      <div class="batch-sections-container">
+        
+        <!-- Videos Section -->
+        <div id="videos-section" class="section-container active">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">🎥</span>
+              <span>Video Lectures</span>
+              <span class="section-count" id="videos-count">0 lectures</span>
+            </div>
+          </div>
+          <div id="videos-grid" class="content-grid">
+            <div class="loading-state">
+              <div class="spinner"></div>
+              <p>Loading lectures...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes Section -->
+        <div id="notes-section" class="section-container">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">📄</span>
+              <span>Study Notes</span>
+              <span class="section-count" id="notes-count">0 notes</span>
+            </div>
+          </div>
+          <div id="notes-grid" class="content-grid">
+            <div class="loading-state">
+              <div class="spinner"></div>
+              <p>Loading study notes...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- DPP Section -->
+        <div id="dpp-section" class="section-container">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">📋</span>
+              <span>Daily Practice Problems</span>
+              <span class="section-count" id="dpp-count">0 DPPs</span>
+            </div>
+          </div>
+          <div id="dpp-grid" class="content-grid">
+            <div class="loading-state">
+              <div class="spinner"></div>
+              <p>Loading practice sets...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Classes Section -->
+        <div id="live-section" class="section-container">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="section-icon">🔴</span>
+              <span>Live Classes</span>
+              <span class="section-count" id="live-count">0 classes</span>
+            </div>
+          </div>
+          <div id="live-grid" class="content-grid">
+            <div class="loading-state">
+              <div class="spinner"></div>
+              <p>Loading scheduled live classes...</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ==================== MASTER FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3 class="footer-brand"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo" style="width: 32px; height: 32px; margin-right: 8px; border-radius: 8px;"> <span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></h3>
+          <p>Your one-stop destination for BRABU BCA study materials. Notes, PYQs, and Video Lectures at your
+            fingertips.</p>
+          <div class="footer-socials">
+            <a href="#" title="Facebook">📘</a>
+            <a href="#" title="Instagram">📸</a>
+            <a href="#" title="YouTube">📺</a>
+            <a href="#" title="Telegram">✈️</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="my-batches.html">🎓 My Batch</a></li>
+            <li><a href="exam.html">📝 Exam Pattern</a></li>
+            <li><a href="developer.html">👨‍💻 Founder & Developer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul class="footer-links">
+            <li><a href="#" onclick="openSuggestionModal()">💬 Suggestion</a></li>
+            <li><a href="contact.html">📧 Contact Us</a></li>
+            <li><a href="privacy.html">🛡️ Privacy Policy</a></li>
+            <li><a href="terms.html">📜 Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="dev-credit-box">
+          Designed & Developed with 🖤 by
+          <a href="developer.html" class="dev-link">VISHAL 🖤</a>
+        </div>
+        <p>&copy; 2026 BCA STORE. Babasaheb Bhim Rao Ambedkar Bihar University.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== BACK TO TOP ==================== -->
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <span>↑</span>
+  </button>
+
+  <!-- ==================== SUGGESTION MODAL ==================== -->
+  <div class="modal-overlay" id="suggestionModal">
+    <div class="modal glass-card">
+      <div class="modal-header">
+        <div style="display:flex; gap:16px;">
+          <h3 class="sugg-tab active">💬 Send Suggestion</h3>
+        </div>
+        <button class="modal-close" onclick="closeSuggestionModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="suggName" placeholder="Enter your name..." />
+        </div>
+        <div class="form-group">
+          <label>Category <span class="required">*</span></label>
+          <select id="suggCategory">
+            <option value="General">✨ General Feedback</option>
+            <option value="Content Missing">📝 Content Missing</option>
+            <option value="Bug Report">🪲 Bug Report</option>
+            <option value="Feature Request">💡 Feature Request</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Your Message <span class="required">*</span></label>
+          <textarea id="suggMessage" placeholder="Describe your suggestion or feedback..." rows="4" maxlength="500"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" onclick="closeSuggestionModal()">Cancel</button>
+        <button class="btn-primary" onclick="submitSuggestion()">Send Suggestion ✈️</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="student-registration.js"></script>
+  <script src="script.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof initDarkMode === 'function') initDarkMode();
+      if (typeof initNavbar === 'function') initNavbar();
+    });
+
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      const btt = document.getElementById('backToTop');
+      if (window.scrollY > 50) {
+        navbar?.classList.add('scrolled');
+      } else {
+        navbar?.classList.remove('scrolled');
+      }
+      if (window.scrollY > 500) {
+        btt?.classList.add('show');
+      } else {
+        btt?.classList.remove('show');
+      }
+    });
+  </script>
+
+  <!-- Dynamic Router Modules Configuration -->
+  <script type="module">
+    import { ELITE_BATCHES } from './elite-firebase-config.js';
+    import { ElitePageManager } from './elite-page-manager.js';
+
+    let currentBatchId = '';
+
+    // Fetch batch ID from URL parameter
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    // Populate Sidebar and horizontal mobile pills
+    function renderSelectors() {
+      const sidebarList = document.getElementById('sidebarBatchList');
+      const mobileList = document.getElementById('mobileBatchList');
+
+      if (!sidebarList || !mobileList) return;
+
+      sidebarList.innerHTML = '';
+      mobileList.innerHTML = '';
+
+      Object.keys(ELITE_BATCHES).forEach(batchId => {
+        const batch = ELITE_BATCHES[batchId];
+
+        // PC Sidebar Item Card
+        const sidebarItem = document.createElement('div');
+        sidebarItem.className = 'sidebar-batch-item';
+        sidebarItem.id = `sidebar-item-${batchId}`;
+        sidebarItem.style.setProperty('--batch-color', batch.color || '#8b5cf6');
+        sidebarItem.innerHTML = `
+          <div class="batch-item-icon">${batch.icon || '💎'}</div>
+          <div class="batch-item-details">
+            <span class="batch-item-name">${batch.name}</span>
+            <span class="batch-item-subtitle">${batch.subtitle}</span>
+          </div>
+        `;
+        sidebarItem.addEventListener('click', () => switchBatch(batchId, true));
+        sidebarList.appendChild(sidebarItem);
+
+        // Mobile Top Slider Pill
+        const mobilePill = document.createElement('div');
+        mobilePill.className = 'mobile-batch-pill';
+        mobilePill.id = `mobile-pill-${batchId}`;
+        mobilePill.innerHTML = `
+          <span>${batch.icon || '💎'}</span>
+          <span>${batch.name}</span>
+        `;
+        mobilePill.addEventListener('click', () => switchBatch(batchId, true));
+        mobileList.appendChild(mobilePill);
+      });
+    }
+
+    // Dynamic Context Switching logic
+    function switchBatch(batchId, updateUrl = true, forceRefresh = false) {
+      if (currentBatchId === batchId && !forceRefresh) return;
+
+      console.log(`🔄 Dynamic switch to batch: ${batchId}`);
+
+      // Update active selection classes
+      if (currentBatchId) {
+        const prevSidebar = document.getElementById(`sidebar-item-${currentBatchId}`);
+        const prevMobile = document.getElementById(`mobile-pill-${currentBatchId}`);
+        if (prevSidebar) prevSidebar.classList.remove('active');
+        if (prevMobile) prevMobile.classList.remove('active');
+      }
+
+      const activeSidebar = document.getElementById(`sidebar-item-${batchId}`);
+      const activeMobile = document.getElementById(`mobile-pill-${batchId}`);
+      if (activeSidebar) activeSidebar.classList.add('active');
+      if (activeMobile) {
+        activeMobile.classList.add('active');
+        activeMobile.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+
+      currentBatchId = batchId;
+
+      // Update color settings in Document
+      const batch = ELITE_BATCHES[batchId];
+      if (batch) {
+        document.documentElement.style.setProperty('--batch-color-start', batch.color || '#8b5cf6');
+        document.documentElement.style.setProperty('--batch-color-end', (batch.color ? batch.color + 'aa' : '#3b82f6'));
+
+        // Set page dataset for manager hooks
+        document.body.setAttribute('data-batch-id', batchId);
+        document.documentElement.setAttribute('data-batch-id', batchId);
+      }
+
+      // Clean up previous managers
+      if (window.elitePageManager) {
+        window.elitePageManager.destroy();
+      }
+
+      // Instantiate new dynamic Page Manager
+      window.elitePageManager = new ElitePageManager(batchId);
+
+      // Push history state
+      if (updateUrl) {
+        const newUrl = `${window.location.pathname}?batch=${batchId}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+      }
+    }
+
+    // Re-route on history navigation back/forward
+    window.addEventListener('popstate', () => {
+      const batchId = getQueryParam('batch') || 'c-programming';
+      switchBatch(batchId, false);
+    });
+
+    // Handle real-time database changes from Firebase
+    document.addEventListener('eliteBatchesUpdated', () => {
+      console.log('🔄 Elite batches updated in Firebase, refreshing workspace selectors...');
+      renderSelectors();
+      
+      let targetBatch = currentBatchId || getQueryParam('batch') || 'c-programming';
+      if (!ELITE_BATCHES[targetBatch]) {
+        targetBatch = Object.keys(ELITE_BATCHES)[0] || 'c-programming';
+      }
+      
+      if (ELITE_BATCHES[targetBatch]) {
+        switchBatch(targetBatch, false, true); // Force a refresh of the page manager and header details
+      }
+    });
+
+    // Initialize unified workspace setup
+    function init() {
+      renderSelectors();
+
+      let initialBatch = getQueryParam('batch') || 'c-programming';
+      if (!ELITE_BATCHES[initialBatch]) {
+        initialBatch = 'c-programming';
+      }
+
+      switchBatch(initialBatch, false);
+    }
+
+    // Start workspace router
+    init();
+  </script>
+
+</body>
+
+</html>
+

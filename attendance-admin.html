@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Attendance Control Console | BCA STORE</title>
+  
+  <!-- Security Gate (Immediate Redirect if Unauthorized) -->
+  <script>
+    (function() {
+      const auth = JSON.parse(localStorage.getItem('adminAuth') || 'null');
+      if (!auth || !auth.exp || auth.exp <= Date.now()) {
+        alert("Unauthorized Access. Redirecting to Admin Login Gate...");
+        window.location.replace("admin.html");
+      }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="admin-panel.css" />
+  <link rel="stylesheet" href="modern-theme.css" />
+  <link rel="stylesheet" href="admin-dashboard-modern.css" />
+  <link rel="stylesheet" href="admin-premium.css" />
+  
+  <style>
+    body {
+      background-color: #09090b;
+      font-family: 'Inter', sans-serif;
+      color: #fafafa;
+    }
+    .glass-card {
+      background: rgba(18, 18, 24, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+    .glass-input {
+      background: rgba(9, 9, 11, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-input:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
+      background: rgba(9, 9, 11, 0.8);
+    }
+    /* Hide scrollbar but keep functionality */
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-12">
+  
+  <!-- BACKGROUND GRADIENT BLURS -->
+  <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+    <div class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-600/10 blur-[150px]"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/10 blur-[150px]"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+    
+    <!-- TOP HEADER -->
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-white/10 mb-8">
+      <div class="flex items-center gap-3">
+        <a href="admin.html" class="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-xl text-xs font-bold transition-all border border-white/10 inline-flex items-center gap-2">
+          <i class="fa-solid fa-arrow-left"></i> Dashboard
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl">📅</span>
+            <h1 class="text-xl font-black text-white font-[Outfit] tracking-tight">ATTENDANCE DESK</h1>
+          </div>
+          <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">Enterprise Security & Roster Controls</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+        <!-- System Health Monitor -->
+        <div class="adm-health-widget flex items-center gap-2 px-3 py-1.5 bg-zinc-950/40 border border-white/10 rounded-xl">
+          <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+          <div class="text-[10px]">
+            <span class="text-zinc-500 font-bold block leading-none">SYSTEM</span>
+            <span class="text-emerald-400 font-extrabold leading-none">OPTIMAL</span>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-[Outfit] text-white font-extrabold shadow">
+            A
+          </div>
+          <span class="text-xs font-semibold text-zinc-300">Admin</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ROSTER KPIS HUD -->
+    <section class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+      <div class="glass-card p-4 sm:p-5 rounded-2xl border border-white/10">
+        <span class="text-[9px] sm:text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Total Sessions</span>
+        <div class="text-2xl sm:text-3xl font-black text-white mt-1 sm:mt-1.5 font-[Outfit]" id="kpiTotalSessions">0</div>
+        <span class="text-[9px] sm:text-[10px] text-zinc-500 block mt-0.5">All created</span>
+      </div>
+      <div class="glass-card p-4 sm:p-5 rounded-2xl border border-white/10">
+        <span class="text-[9px] sm:text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Active Sessions</span>
+        <div class="text-2xl sm:text-3xl font-black text-emerald-400 mt-1 sm:mt-1.5 font-[Outfit]" id="kpiActiveSessions">0</div>
+        <span class="text-[9px] sm:text-[10px] text-zinc-500 block mt-0.5">Live now</span>
+      </div>
+      <div class="glass-card p-4 sm:p-5 rounded-2xl border border-white/10">
+        <span class="text-[9px] sm:text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Today's Rate</span>
+        <div class="text-2xl sm:text-3xl font-black text-amber-400 mt-1 sm:mt-1.5 font-[Outfit]" id="kpiTodayRate">0%</div>
+        <span class="text-[9px] sm:text-[10px] text-zinc-500 block mt-0.5">Daily participation</span>
+      </div>
+      <div class="glass-card p-4 sm:p-5 rounded-2xl border border-white/10">
+        <span class="text-[9px] sm:text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Average Attendance</span>
+        <div class="text-2xl sm:text-3xl font-black text-indigo-400 mt-1 sm:mt-1.5 font-[Outfit]" id="kpiAvgRate">0.0%</div>
+        <span class="text-[9px] sm:text-[10px] text-zinc-500 block mt-0.5">Across all terms</span>
+      </div>
+      <div class="glass-card p-4 sm:p-5 rounded-2xl border border-white/10">
+        <span class="text-[9px] sm:text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Total Students</span>
+        <div class="text-2xl sm:text-3xl font-black text-purple-400 mt-1 sm:mt-1.5 font-[Outfit]" id="kpiTotalStudents">0</div>
+        <span class="text-[9px] sm:text-[10px] text-zinc-500 block mt-0.5">Registered ranks</span>
+      </div>
+    </section>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="flex border-b border-white/10 gap-2 overflow-x-auto scrollbar-hide py-1 mb-6">
+      <button onclick="switchAttSubTab('dash')" id="attTabBtnDash" class="py-2 px-3 sm:py-2.5 sm:px-5 rounded-lg text-xs sm:text-sm font-semibold tracking-wide transition-all bg-indigo-600 text-white border border-transparent shadow whitespace-nowrap">
+        📊 Analytics & Feed
+      </button>
+      <button onclick="switchAttSubTab('deploy')" id="attTabBtnDeploy" class="py-2 px-3 sm:py-2.5 sm:px-5 rounded-lg text-xs sm:text-sm font-semibold tracking-wide transition-all text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent whitespace-nowrap">
+        🚀 Deploy Session
+      </button>
+      <button onclick="switchAttSubTab('history')" id="attTabBtnHistory" class="py-2 px-3 sm:py-2.5 sm:px-5 rounded-lg text-xs sm:text-sm font-semibold tracking-wide transition-all text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent whitespace-nowrap">
+        📜 Session History
+      </button>
+      <button onclick="switchAttSubTab('records')" id="attTabBtnRecords" class="py-2 px-3 sm:py-2.5 sm:px-5 rounded-lg text-xs sm:text-sm font-semibold tracking-wide transition-all text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent whitespace-nowrap">
+        📋 Override Logs
+      </button>
+      <button onclick="switchAttSubTab('corrections')" id="attTabBtnCorrections" class="py-2 px-3 sm:py-2.5 sm:px-5 rounded-lg text-xs sm:text-sm font-semibold tracking-wide transition-all text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent whitespace-nowrap">
+        📥 Corrections Queue
+      </button>
+      <button onclick="switchAttSubTab('idcards')" id="attTabBtnIdcards" class="py-2 px-3 sm:py-2.5 sm:px-5 rounded-lg text-xs sm:text-sm font-semibold tracking-wide transition-all text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent whitespace-nowrap">
+        🆔 ID Verification
+      </button>
+      <button onclick="switchAttSubTab('audit')" id="attTabBtnAudit" class="py-2 px-3 sm:py-2.5 sm:px-5 rounded-lg text-xs sm:text-sm font-semibold tracking-wide transition-all text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent whitespace-nowrap">
+        🛡️ Audit Logs
+      </button>
+    </nav>
+
+    <!-- CONTENT PANES -->
+    <main class="space-y-6">
+
+      <!-- SUBTAB 1: ANALYTICS & FEED -->
+      <div id="attSubTabDash" class="space-y-6">
+        
+        <!-- Live Active Sessions Section -->
+        <section class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-extrabold text-white tracking-wide font-[Outfit] uppercase flex items-center gap-2">
+              <span class="relative flex h-2.5 w-2.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              </span>
+              Live Active Lectures
+            </h3>
+            <span class="text-[10px] bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider" id="activeSessionsCountLabel">0 Running</span>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="liveActiveSessionsGrid">
+            <!-- Dynamic Active Session Cards go here -->
+            <div class="col-span-full py-8 text-center text-xs text-zinc-500 border border-dashed border-white/10 rounded-2xl bg-zinc-950/20">
+              No active classroom sessions currently found. Deploy a session to start.
+            </div>
+          </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Interactive Analytics Charts (Left column) -->
+          <div class="lg:col-span-2 space-y-6">
+            
+            <!-- Attendance Trends Chart Card -->
+            <div class="glass-card p-5 rounded-2xl border border-white/10 space-y-4">
+              <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                <h3 class="text-xs sm:text-sm font-bold text-white tracking-wide font-[Outfit] uppercase">Attendance Growth & Activity Trend</h3>
+                <span class="text-[10px] bg-white/5 border border-white/10 px-2 py-0.5 rounded text-zinc-400 font-mono font-bold">Real-time Sync</span>
+              </div>
+              <div class="h-64 relative">
+                <canvas id="attendanceTrendChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Subject Performance & Class-wise side-by-side -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              <!-- Subject Performance -->
+              <div class="glass-card p-5 rounded-2xl border border-white/10 space-y-4">
+                <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                  <h3 class="text-xs sm:text-sm font-bold text-white tracking-wide font-[Outfit] uppercase">Subject Performance</h3>
+                </div>
+                <div class="h-56 relative">
+                  <canvas id="subjectPerformanceChart"></canvas>
+                </div>
+              </div>
+
+              <!-- Class-wise Distribution -->
+              <div class="glass-card p-5 rounded-2xl border border-white/10 space-y-4">
+                <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                  <h3 class="text-xs sm:text-sm font-bold text-white tracking-wide font-[Outfit] uppercase">Semester-wise Ranks</h3>
+                </div>
+                <div class="h-56 relative">
+                  <canvas id="classAttendanceChart"></canvas>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+          
+          <!-- Feed, Leaderboard & Alerts (Right column) -->
+          <div class="lg:col-span-1 space-y-6">
+            
+            <!-- Live Monitor Feed -->
+            <div class="glass-card p-5 rounded-2xl border border-white/10 flex flex-col h-[320px]">
+              <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                <h3 class="text-xs sm:text-sm font-bold text-white tracking-wide font-[Outfit] uppercase">Live Check-In Monitor</h3>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              </div>
+              <div class="flex-grow overflow-y-auto space-y-2 pr-1 mt-3 scrollbar-hide" id="attLiveMonitorFeed">
+                <div class="text-center py-12 text-xs text-zinc-500 font-sans">No logs today.</div>
+              </div>
+            </div>
+
+            <!-- Leaderboard Widget -->
+            <div class="glass-card p-5 rounded-2xl border border-white/10 space-y-3">
+              <div class="flex justify-between items-center pb-2 border-b border-white/5">
+                <h3 class="text-xs sm:text-sm font-bold text-white tracking-wide font-[Outfit] uppercase">Roster Consistency Leaderboard</h3>
+                <span class="text-[9px] text-zinc-500 font-bold uppercase">Rankings</span>
+              </div>
+              <div class="space-y-3 text-xs leading-normal" id="leaderboardWidget">
+                <!-- Dynamic leaderboard content goes here -->
+                <div class="text-center py-4 text-zinc-500">Compiling leaderboard statistics...</div>
+              </div>
+            </div>
+
+            <!-- Inactivity / Low Attendance Alerts -->
+            <div class="glass-card p-5 rounded-2xl border border-white/10 space-y-3 bg-rose-950/10 border-rose-500/20">
+              <div class="flex justify-between items-center pb-2 border-b border-rose-500/10">
+                <h3 class="text-xs sm:text-sm font-bold text-rose-400 tracking-wide font-[Outfit] uppercase">System Intelligence Alerts</h3>
+                <i class="fa-solid fa-triangle-exclamation text-rose-400 animate-pulse"></i>
+              </div>
+              <div class="space-y-2 text-xs leading-normal" id="intelligenceAlertsPanel">
+                <!-- Dynamic alerts content goes here -->
+                <div class="text-center py-4 text-zinc-500">Loading intelligence alerts...</div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- SUBTAB 2: DEPLOY CAMPAIGN -->
+      <div id="attSubTabDeploy" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Deployment Form -->
+        <div class="glass-card p-6 rounded-2xl border border-white/10 lg:col-span-1 h-fit">
+          <form id="attDeployForm" onsubmit="handleAttDeploySubmit(event)">
+              <div>
+                <label class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block mb-1.5">Semester *</label>
+                <select id="attSessSemester" class="w-full glass-input rounded-xl py-2.5 px-3 text-white text-xs outline-none" required>
+                  <option value="">Select Semester</option>
+                  <option value="Semester 1">Semester 1</option>
+                  <option value="Semester 2">Semester 2</option>
+                  <option value="Semester 3">Semester 3</option>
+                  <option value="Semester 4">Semester 4</option>
+                  <option value="Semester 5">Semester 5</option>
+                  <option value="Semester 6">Semester 6</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block mb-1.5">Lecture Subject *</label>
+                <select id="attSessSubject" class="w-full glass-input rounded-xl py-2.5 px-3 text-white text-xs outline-none" required>
+                  <option value="">Select Semester First</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block mb-1.5">Teacher Name *</label>
+                <select id="attSessTeacher" class="w-full glass-input rounded-xl py-2.5 px-3 text-white text-xs outline-none" required>
+                  <option value="">Select Teacher</option>
+                  <option value="Anjana mam">Anjana mam</option>
+                  <option value="Arun sir">Arun sir</option>
+                  <option value="Annu mam">Annu mam</option>
+                  <option value="Anubha mam">Anubha mam</option>
+                  <option value="Ram sir">Ram sir</option>
+                  <option value="Prabhat sir">Prabhat sir</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block mb-1.5">Batch *</label>
+                <select id="attSessBatch" class="w-full glass-input rounded-xl py-2.5 px-3 text-white text-xs outline-none" required>
+                  <option value="">Select Batch</option>
+                </select>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block mb-1.5">Expires In *</label>
+                  <select id="attSessDuration" class="w-full glass-input rounded-xl py-2.5 px-3 text-white text-xs outline-none" required>
+                    <option value="5">5 mins</option>
+                    <option value="10">10 mins</option>
+                    <option value="15" selected>15 mins</option>
+                    <option value="30">30 mins</option>
+                    <option value="60">60 mins</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block mb-1.5">Security *</label>
+                  <select id="attSessMethod" class="w-full glass-input rounded-xl py-2.5 px-3 text-white text-xs outline-none" required>
+                    <option value="qr" selected>Rotating QR</option>
+                    <option value="link">Expiring Link</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block mb-1.5">GPS Geofencing</label>
+                <select id="attGeofencePreset" onchange="applyAttGeofencePreset()" class="w-full glass-input rounded-xl py-2.5 px-3 text-white text-xs outline-none">
+                  <option value="disabled">Disable Geofence Checks (0,0)</option>
+                  <option value="lab" selected>Main IT Lab (26.65080, 84.90820)</option>
+                  <option value="custom">Use Admin Current Location</option>
+                </select>
+              </div>
+              <div class="grid grid-cols-3 gap-2">
+                <input type="number" step="0.000001" id="attSessLat" value="26.650800" class="glass-input rounded-lg py-1.5 px-1 text-white text-center font-mono text-[9px] outline-none">
+                <input type="number" step="0.000001" id="attSessLng" value="84.908200" class="glass-input rounded-lg py-1.5 px-1 text-white text-center font-mono text-[9px] outline-none">
+                <input type="number" id="attSessRadius" value="50" class="glass-input rounded-lg py-1.5 px-1 text-white text-center font-mono text-[9px] outline-none">
+              </div>
+              <div class="flex items-center justify-between border-t border-white/5 pt-2">
+                <span class="text-xs text-white font-bold block">Anti-Proxy Lock</span>
+                <input type="checkbox" id="attDeviceLock" checked class="w-4 h-4 accent-indigo-500">
+              </div>
+              <div class="flex items-center justify-between border-t border-white/5 pt-2">
+                <span class="text-xs text-white font-bold block">Late Grace Mins</span>
+                <select id="attLateGrace" class="glass-input rounded-lg py-0.5 px-2 text-white text-xs outline-none">
+                  <option value="2">2 min</option>
+                  <option value="5" selected>5 min</option>
+                  <option value="10">10 min</option>
+                </select>
+              </div>
+              <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-md mt-2">
+                Deploy Session
+              </button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Active Sessions List -->
+        <div class="glass-card p-6 rounded-2xl border border-white/10 lg:col-span-2 space-y-4">
+          <h3 class="text-sm font-bold text-white tracking-tight font-[Outfit] uppercase pb-2 border-b border-white/5">Active Campaigns</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-white/5 text-zinc-500 font-bold uppercase">
+                  <th class="py-2 px-3">Subject Class</th>
+                  <th class="py-2 px-3">Expires</th>
+                  <th class="py-2 px-3">Method</th>
+                  <th class="py-2 px-3">Roster</th>
+                  <th class="py-2 px-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="attSessionsTableBody" class="divide-y divide-white/5">
+                <tr><td colspan="5" class="py-10 text-center text-zinc-500">No deployed sessions.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB 3: OVERRIDE LOGS (ROSTER REPORTS & ADVANCED FILTERS) -->
+      <div id="attSubTabRecords" class="hidden space-y-4">
+        <div class="glass-card p-6 rounded-2xl border border-white/10">
+          <div class="flex flex-col gap-6 mb-6">
+            <div>
+              <h3 class="text-base font-bold text-white font-[Outfit]">Roster Records Reports & Analytics</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Filter, analyze, override student roster logs, or download reports in professional formats.</p>
+            </div>
+            
+            <!-- Advanced Filter Panel Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-zinc-950/40 p-4 rounded-2xl border border-white/5">
+              <!-- Semester Filter -->
+              <div>
+                <label class="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block mb-1">Semester</label>
+                <select id="repFilterSemester" onchange="onReportFilterChange(true)" class="w-full glass-input rounded-xl py-2 px-2.5 text-white text-xs outline-none">
+                  <option value="all">All Semesters</option>
+                  <option value="Semester 1">Semester 1</option>
+                  <option value="Semester 2">Semester 2</option>
+                  <option value="Semester 3">Semester 3</option>
+                  <option value="Semester 4">Semester 4</option>
+                  <option value="Semester 5">Semester 5</option>
+                  <option value="Semester 6">Semester 6</option>
+                </select>
+              </div>
+
+              <!-- Subject Filter -->
+              <div>
+                <label class="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block mb-1">Subject</label>
+                <select id="repFilterSubject" onchange="onReportFilterChange()" class="w-full glass-input rounded-xl py-2 px-2.5 text-white text-xs outline-none">
+                  <option value="all">All Subjects</option>
+                </select>
+              </div>
+
+              <!-- Teacher Filter -->
+              <div>
+                <label class="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block mb-1">Teacher</label>
+                <select id="repFilterTeacher" onchange="onReportFilterChange()" class="w-full glass-input rounded-xl py-2 px-2.5 text-white text-xs outline-none">
+                  <option value="all">All Teachers</option>
+                  <option value="Anjana mam">Anjana mam</option>
+                  <option value="Arun sir">Arun sir</option>
+                  <option value="Annu mam">Annu mam</option>
+                  <option value="Anubha mam">Anubha mam</option>
+                  <option value="Ram sir">Ram sir</option>
+                  <option value="Prabhat sir">Prabhat sir</option>
+                </select>
+              </div>
+
+              <!-- Date Filter -->
+              <div>
+                <label class="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block mb-1">Date</label>
+                <input type="date" id="repFilterDate" onchange="onReportFilterChange()" class="w-full glass-input rounded-xl py-2 px-2.5 text-white text-xs outline-none">
+              </div>
+
+              <!-- Session Filter -->
+              <div class="lg:col-span-2">
+                <label class="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block mb-1">Attendance Session</label>
+                <select id="repFilterSession" onchange="onReportFilterChange()" class="w-full glass-input rounded-xl py-2 px-2.5 text-white text-xs outline-none">
+                  <option value="all">All Sessions</option>
+                </select>
+              </div>
+
+              <!-- Status Filter -->
+              <div>
+                <label class="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block mb-1">Attendance Status</label>
+                <select id="repFilterStatus" onchange="onReportFilterChange()" class="w-full glass-input rounded-xl py-2 px-2.5 text-white text-xs outline-none">
+                  <option value="all">All Statuses</option>
+                  <option value="present">Present Only</option>
+                  <option value="late">Late Only</option>
+                  <option value="absent">Absent Only</option>
+                </select>
+              </div>
+
+              <!-- Text Search -->
+              <div>
+                <label class="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block mb-1">Search Student</label>
+                <input type="text" id="repFilterSearch" oninput="onReportFilterChange()" placeholder="Name or Roll Number..." class="w-full glass-input rounded-xl py-2 px-2.5 text-white text-xs outline-none">
+              </div>
+            </div>
+
+            <!-- Export Buttons -->
+            <div class="flex flex-wrap items-center justify-between gap-4 border-t border-white/5 pt-4">
+              <div class="text-xs text-zinc-400">
+                Showing <span class="text-white font-bold" id="repFilteredCount">0</span> of <span class="text-zinc-500 font-bold" id="repTotalCount">0</span> roster records
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="exportAttToExcel()" class="px-4 py-2.5 bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-400 border border-emerald-500/20 rounded-xl text-xs font-bold transition-all inline-flex items-center gap-2">
+                  <i class="fa-solid fa-file-excel"></i> Export Excel
+                </button>
+                <button onclick="exportAttToPDF()" class="px-4 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-xl text-xs font-bold transition-all inline-flex items-center gap-2">
+                  <i class="fa-solid fa-file-pdf"></i> Export PDF
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-white/5 text-zinc-500 font-bold uppercase">
+                  <th class="py-2.5 px-3">Roll</th>
+                  <th class="py-2.5 px-3">Student Name</th>
+                  <th class="py-2.5 px-3">Sem / Subject</th>
+                  <th class="py-2.5 px-3">Teacher</th>
+                  <th class="py-2.5 px-3">Session Date</th>
+                  <th class="py-2.5 px-3">Check-In</th>
+                  <th class="py-2.5 px-3">Status</th>
+                  <th class="py-2.5 px-3 text-center">Overrides</th>
+                </tr>
+              </thead>
+              <tbody id="attLogsTableBody" class="divide-y divide-white/5">
+                <tr><td colspan="8" class="py-10 text-center text-zinc-500">Loading roster database...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB 4: CORRECTIONS QUEUE -->
+      <div id="attSubTabCorrections" class="hidden space-y-4">
+        <div class="glass-card p-6 rounded-2xl border border-white/10">
+          <h3 class="text-sm font-bold text-white font-[Outfit] uppercase pb-2 border-b border-white/5">Correction Requests Approvals</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-white/5 text-zinc-500 font-bold uppercase">
+                  <th class="py-2 px-3">Student</th>
+                  <th class="py-2 px-3">Subject & Date</th>
+                  <th class="py-2.5 px-3">Reason</th>
+                  <th class="py-2.5 px-3">Req. Status</th>
+                  <th class="py-2.5 px-3 text-right">Decisions</th>
+                </tr>
+              </thead>
+              <tbody id="attCorrectionsTableBody" class="divide-y divide-white/5">
+                <tr><td colspan="5" class="py-10 text-center text-zinc-500 font-sans">No pending requests.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB 5: ID CARD VERIFICATION QUEUE -->
+      <div id="attSubTabIdcards" class="hidden space-y-4">
+        <div class="glass-card p-6 rounded-2xl border border-white/10">
+          <h3 class="text-sm font-bold text-white font-[Outfit] uppercase pb-2 border-b border-white/5">ID Card Verification Queue</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-white/5 text-zinc-500 font-bold uppercase">
+                  <th class="py-2 px-3">Student Details</th>
+                  <th class="py-2 px-3">College & Sem</th>
+                  <th class="py-2 px-3">Uploaded ID Card</th>
+                  <th class="py-2.5 px-3">Verification Status</th>
+                  <th class="py-2.5 px-3 text-right">Decisions</th>
+                </tr>
+              </thead>
+              <tbody id="attIdcardsTableBody" class="divide-y divide-white/5">
+                <tr><td colspan="5" class="py-10 text-center text-zinc-500 font-sans">No pending ID card uploads.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB 6: AUDIT LOGS -->
+      <div id="attSubTabAudit" class="hidden space-y-4">
+        <div class="glass-card p-6 rounded-2xl border border-white/10">
+          <h3 class="text-sm font-bold text-white font-[Outfit] uppercase pb-2 border-b border-white/5">Administrative Audit Trails</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs font-mono">
+              <thead>
+                <tr class="border-b border-white/5 text-zinc-500 font-bold uppercase font-sans">
+                  <th class="py-2 px-3">Action</th>
+                  <th class="py-2 px-3">Details</th>
+                  <th class="py-2.5 px-3 text-right">Time</th>
+                </tr>
+              </thead>
+              <tbody id="attAuditTableBody" class="divide-y divide-white/5">
+                <tr><td colspan="3" class="py-10 text-center text-zinc-500 font-sans">No audit logs found.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- SUBTAB 7: SESSION HISTORY -->
+      <div id="attSubTabHistory" class="hidden space-y-6">
+        <div class="glass-card p-6 rounded-2xl border border-white/10">
+          <div class="flex flex-col gap-6 mb-6">
+            <div>
+              <h3 class="text-base font-bold text-white font-[Outfit]">Permanent Session Archives & History</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">Filter, search, and view historical class attendance records permanently cached in the system.</p>
+            </div>
+            
+            <!-- Filters Panel Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-zinc-950/40 p-4 rounded-2xl border border-white/5">
+              
+              <!-- Search Bar -->
+              <div class="sm:col-span-2 md:col-span-1">
+                <label class="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block mb-1">Search Keyword</label>
+                <input type="text" id="histSearchInput" oninput="onHistoryFilterChange()" placeholder="Subject, faculty, ID..." class="w-full glass-input rounded-xl py-2 px-2.5 text-white text-xs outline-none">
+              </div>
+
+              <!-- Semester/Class Filter -->
+              <div>
+                <label class="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block mb-1">Class Semester</label>
+                <select id="histFilterSemester" onchange="onHistorySemesterChange()" class="w-full glass-input rounded-xl py-2 px-2.5 text-white text-xs outline-none">
+                  <option value="all">All Classes</option>
+                  <option value="Semester 1">BCA 1st Semester</option>
+                  <option value="Semester 2">BCA 2nd Semester</option>
+                  <option value="Semester 3">BCA 3rd Semester</option>
+                  <option value="Semester 4">BCA 4th Semester</option>
+                  <option value="Semester 5">BCA 5th Semester</option>
+                  <option value="Semester 6">BCA 6th Semester</option>
+                </select>
+              </div>
+
+              <!-- Subject Filter -->
+              <div>
+                <label class="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block mb-1">Subject</label>
+                <select id="histFilterSubject" onchange="onHistoryFilterChange()" class="w-full glass-input rounded-xl py-2 px-2.5 text-white text-xs outline-none">
+                  <option value="all">All Subjects</option>
+                </select>
+              </div>
+
+              <!-- Date Quick Range Selector -->
+              <div>
+                <label class="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block mb-1">Date Period</label>
+                <select id="histFilterDateRange" onchange="onHistoryDateRangeChange()" class="w-full glass-input rounded-xl py-2 px-2.5 text-white text-xs outline-none">
+                  <option value="all">All Time</option>
+                  <option value="today">Today</option>
+                  <option value="yesterday">Yesterday</option>
+                  <option value="7days">Last 7 Days</option>
+                  <option value="30days">Last 30 Days</option>
+                  <option value="custom">Custom Date Range</option>
+                </select>
+              </div>
+
+              <!-- Custom Date Range inputs (initially hidden) -->
+              <div id="histCustomDateContainer" class="hidden sm:col-span-2 md:col-span-2 lg:col-span-2 grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block mb-1">From Date</label>
+                  <input type="date" id="histFilterFromDate" onchange="onHistoryFilterChange()" class="w-full glass-input rounded-xl py-2 px-2.5 text-white text-xs outline-none">
+                </div>
+                <div>
+                  <label class="text-[9px] text-zinc-400 font-bold uppercase tracking-wider block mb-1">To Date</label>
+                  <input type="date" id="histFilterToDate" onchange="onHistoryFilterChange()" class="w-full glass-input rounded-xl py-2 px-2.5 text-white text-xs outline-none">
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Results Counter & Status Summary -->
+            <div class="flex items-center justify-between border-t border-white/5 pt-4">
+              <div class="text-xs text-zinc-400">
+                Found <span class="text-white font-bold" id="histResultsCount">0</span> archived sessions
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Archived Sessions Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="historicalSessionsGrid">
+            <!-- Dynamic archive session cards go here -->
+          </div>
+
+          <!-- Load More pagination button -->
+          <div class="flex justify-center pt-6 mt-4 border-t border-white/5 hidden" id="histLoadMoreContainer">
+            <button onclick="loadMoreHistorySessions()" class="px-6 py-2.5 bg-white/5 hover:bg-white/10 text-white rounded-xl text-xs font-bold transition-all border border-white/10 flex items-center gap-2">
+              <i class="fa-solid fa-spinner animate-spin hidden" id="histLoadMoreSpinner"></i> Load More Archives (50)
+            </button>
+          </div>
+
+        </div>
+      </div>
+      
+      </div>
+    </main>
+  </div>
+
+  <!-- ATTENDANCE ROTATING QR CODE DISPLAY MODAL -->
+  <div id="attQrModalOverlay" class="hidden fixed inset-0 z-[2500] bg-black/90 flex items-center justify-center p-4">
+    <div class="max-w-md w-full glass-card rounded-3xl p-6 sm:p-8 border border-white/10 text-center space-y-5 relative pulse-glow-indigo text-left">
+      <button onclick="closeAttQrModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg p-1 border-none bg-transparent cursor-pointer">
+        ✕
+      </button>
+      
+      <div class="text-center">
+        <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider font-mono">Dynamic Rotation Active</span>
+        <h3 class="text-lg font-bold text-white tracking-tight font-[Outfit] mt-2" id="attQrModalSubject">Subject Class</h3>
+        <p class="text-xs text-zinc-400">Class QR secret rotates automatically every 15s.</p>
+      </div>
+
+      <div class="w-64 h-64 mx-auto bg-white p-3 rounded-2xl flex items-center justify-center shadow-lg relative">
+        <img id="attQrModalCodeImg" src="" alt="Dynamic QR Code" class="w-full h-full object-contain">
+        <div class="absolute -bottom-3 -right-3 w-12 h-12 bg-zinc-950 border-2 border-indigo-500 rounded-full flex items-center justify-center font-[Orbitron] text-xs font-bold text-indigo-400 shadow" id="attQrModalTimer">
+          15
+        </div>
+      </div>
+
+      <div class="bg-zinc-900/80 border border-white/5 p-3 rounded-2xl max-w-xs mx-auto text-center">
+        <span class="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">Student Entry Passcode</span>
+        <div class="text-2xl font-black text-white tracking-widest font-mono mt-1" id="attQrModalPasscode">------</div>
+      </div>
+
+      <p class="text-[9px] text-zinc-500 leading-relaxed max-w-xs mx-auto text-center">Students can scan this code using the BCA Store portal camera or input the 6-character entry passcode manually.</p>
+    </div>
+  </div>
+
+  <!-- STUDENT PROFILE DETAILS MODAL -->
+  <div id="studentProfileModal" class="hidden fixed inset-0 z-[2500] bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="max-w-2xl w-full glass-card rounded-3xl p-6 sm:p-8 border border-white/10 relative overflow-y-auto max-h-[90vh] space-y-6">
+      <button onclick="closeStudentProfileModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg p-1.5 border-none bg-transparent cursor-pointer transition-all hover:scale-110">
+        ✕
+      </button>
+      
+      <div class="flex flex-col sm:flex-row gap-6 border-b border-white/10 pb-6">
+        <div class="flex-shrink-0 flex flex-col items-center">
+          <img id="modalStudentPhoto" src="avatar_faculty1.png" alt="Student Profile Photo" class="w-24 h-24 rounded-2xl object-cover border-2 border-indigo-500 shadow-lg bg-zinc-900">
+          <span id="modalStudentStatusBadge" class="mt-3 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border">STATUS</span>
+        </div>
+        <div class="space-y-3 flex-grow">
+          <div>
+            <h3 class="text-2xl font-black text-white tracking-tight font-[Outfit]" id="modalStudentName">Full Name</h3>
+            <p class="text-indigo-400 text-xs font-mono font-semibold" id="modalStudentIdText">ID: STU_12345</p>
+          </div>
+          <div class="grid grid-cols-2 gap-4 text-xs">
+            <div>
+              <span class="text-zinc-500 font-semibold block uppercase tracking-wider text-[9px]">Username</span>
+              <span class="text-zinc-200 font-bold block" id="modalStudentUsername">username</span>
+            </div>
+            <div>
+              <span class="text-zinc-500 font-semibold block uppercase tracking-wider text-[9px]">College</span>
+              <span class="text-zinc-200 font-bold block" id="modalStudentCollege">college</span>
+            </div>
+            <div>
+              <span class="text-zinc-500 font-semibold block uppercase tracking-wider text-[9px]">Semester</span>
+              <span class="text-zinc-200 font-bold block" id="modalStudentSemester">Semester X</span>
+            </div>
+            <div>
+              <span class="text-zinc-500 font-semibold block uppercase tracking-wider text-[9px]">Registered Date</span>
+              <span class="text-zinc-200 font-mono block" id="modalStudentRegDate">00/00/0000</span>
+            </div>
+            <div>
+              <span class="text-zinc-500 font-semibold block uppercase tracking-wider text-[9px]">ID Upload Date</span>
+              <span class="text-zinc-200 font-mono block" id="modalStudentIdCardUploadDate">N/A</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+        <!-- CONTACT INFORMATION -->
+        <div class="space-y-4">
+          <h4 class="text-xs font-extrabold text-white tracking-widest uppercase border-l-2 border-indigo-500 pl-2">Contact Details</h4>
+          <div class="space-y-3 bg-zinc-950/40 p-4 rounded-2xl border border-white/5 text-xs">
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-envelope text-zinc-500 w-4"></i>
+              <div>
+                <span class="text-zinc-400 font-medium block">Email Address</span>
+                <a href="" id="modalStudentEmail" class="text-indigo-400 hover:underline font-bold">email@domain.com</a>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-phone text-zinc-500 w-4"></i>
+              <div>
+                <span class="text-zinc-400 font-medium block">Phone Number</span>
+                <span class="text-zinc-200 font-bold" id="modalStudentPhone">+91 XXXXXXXXXX</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-calendar-day text-zinc-500 w-4"></i>
+              <div>
+                <span class="text-zinc-400 font-medium block">Date of Birth</span>
+                <span class="text-zinc-200 font-bold" id="modalStudentDob">YYYY-MM-DD</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- UPLOADED COLLEGE ID CARD -->
+        <div class="space-y-4">
+          <h4 class="text-xs font-extrabold text-white tracking-widest uppercase border-l-2 border-indigo-500 pl-2">College ID Card</h4>
+          <div class="bg-zinc-950/40 p-2.5 rounded-2xl border border-white/5 relative flex items-center justify-center min-h-[140px] overflow-hidden group">
+            <img id="modalIdCardImg" src="" alt="College ID Card" class="max-h-48 w-full object-contain rounded-xl transition-all group-hover:scale-102 cursor-zoom-in" onclick="window.zoomStudentIdCard()">
+            <div id="modalNoIdCardText" class="hidden text-zinc-500 text-xs font-sans py-12">No ID card uploaded.</div>
+            <!-- Fullscreen icon overlay on hover -->
+            <a id="modalIdCardDownload" href="" download="student_id_card.png" class="absolute bottom-2 right-2 p-2 bg-black/60 hover:bg-indigo-600 text-white rounded-lg transition-all text-xs flex items-center gap-1 shadow-md opacity-0 group-hover:opacity-100">
+              <i class="fa-solid fa-download"></i> Download
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- DECISION ACTIONS AT THE BOTTOM -->
+      <div id="modalAdminDecisionRow" class="hidden pt-4 border-t border-white/5 flex justify-end gap-3">
+        <button id="modalApproveBtn" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 shadow-md">
+          <i class="fa-solid fa-check"></i> Approve ID Card
+        </button>
+        <button id="modalRejectBtn" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 shadow-md">
+          <i class="fa-solid fa-xmark"></i> Reject ID Card
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== ID CARD FULL ZOOM MODAL ====== -->
+  <div id="idCardZoomModal" class="hidden fixed inset-0 z-[3000] bg-black/95 flex flex-col items-center justify-center p-4 backdrop-blur-md">
+    <button onclick="window.closeIdCardZoom()" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-2xl p-2 border-none bg-transparent cursor-pointer transition-all hover:scale-110">
+      ✕
+    </button>
+    
+    <!-- Zoom Controls Header -->
+    <div class="absolute top-4 left-4 flex items-center gap-3 bg-zinc-900/80 border border-white/10 px-4 py-2 rounded-xl text-xs z-10">
+      <button onclick="window.adjustIdCardZoom(0.1)" class="w-8 h-8 bg-white/5 hover:bg-indigo-600 rounded-lg text-white font-bold transition-all text-sm">+</button>
+      <button onclick="window.adjustIdCardZoom(-0.1)" class="w-8 h-8 bg-white/5 hover:bg-indigo-600 rounded-lg text-white font-bold transition-all text-sm">-</button>
+      <button onclick="window.resetIdCardZoom()" class="px-3 h-8 bg-white/5 hover:bg-indigo-600 rounded-lg text-white font-bold transition-all">Reset</button>
+      <span class="text-zinc-400 font-mono" id="idCardZoomBadge">100%</span>
+    </div>
+    
+    <!-- Image container supporting drag panning -->
+    <div class="w-full h-full flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing" id="idCardZoomContainer" onmousedown="window.startIdCardPan(event)" onmousemove="window.doIdCardPan(event)" onmouseup="window.stopIdCardPan()" onmouseleave="window.stopIdCardPan()">
+      <img id="idCardZoomImg" src="" alt="Full ID Card Preview" class="max-w-[90%] max-h-[90%] object-contain transition-transform duration-100 ease-out origin-center" style="transform: scale(1) translate(0px, 0px);">
+    </div>
+    
+    <!-- Footer Download -->
+    <div class="absolute bottom-6 flex items-center gap-3">
+      <a id="idCardZoomDownload" href="" download="student_id_card.png" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg shadow-indigo-600/30">
+        <i class="fa-solid fa-download"></i> Download Full Resolution Image
+      </a>
+    </div>
+  </div>
+
+  <!-- ====== UNIVERSAL SESSION DETAIL BOTTOM SHEET / MODAL ====== -->
+  <div id="sessionDetailModal" class="hidden fixed inset-0 z-[2500] bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300">
+    <!-- Center panel with responsive sizing: bottom-sheet on mobile, centered dialog on desktop -->
+    <div class="max-w-4xl w-full glass-card rounded-3xl p-6 sm:p-8 border border-white/10 relative overflow-y-auto max-h-[90vh] space-y-6 flex flex-col transition-all duration-300 transform scale-100" id="sessionDetailContentCard">
+      
+      <!-- Close button -->
+      <button onclick="closeSessionDetailModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg p-1.5 border-none bg-transparent cursor-pointer transition-all hover:scale-110">
+        ✕
+      </button>
+
+      <!-- Modal Header -->
+      <div class="border-b border-white/10 pb-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-full" id="detailStatusBadge">🟢 Active</span>
+            <span class="text-[10px] text-zinc-400 font-mono" id="detailSessionIdLabel">SESS_12345</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight font-[Outfit] mt-1" id="detailSubjectLabel">Lecture Subject</h2>
+          <p class="text-xs text-indigo-400 font-[Outfit] font-semibold mt-0.5" id="detailClassLabel">BCA 1st Semester</p>
+        </div>
+        
+        <!-- Modal Export buttons -->
+        <div class="flex items-center gap-2 self-end md:self-auto">
+          <button onclick="exportDetailToExcel()" class="px-3 py-1.5 bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-400 border border-emerald-500/20 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-file-excel"></i> Excel
+          </button>
+          <button onclick="exportDetailToPDF()" class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-file-pdf"></i> PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Navigation Tabs -->
+      <div class="flex border-b border-white/10 gap-2 overflow-x-auto scrollbar-hide py-1">
+        <button onclick="switchDetailTab('overview')" id="detailTabBtnOverview" class="py-1.5 px-4 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white">
+          📊 Overview
+        </button>
+        <button onclick="switchDetailTab('present')" id="detailTabBtnPresent" class="py-1.5 px-4 rounded-lg text-xs font-bold transition-all text-zinc-400 hover:text-white">
+          ✓ Present Students (<span id="detailPresentCountLabel">0</span>)
+        </button>
+        <button onclick="switchDetailTab('absent')" id="detailTabBtnAbsent" class="py-1.5 px-4 rounded-lg text-xs font-bold transition-all text-zinc-400 hover:text-white">
+          ✗ Absent Students (<span id="detailAbsentCountLabel">0</span>)
+        </button>
+        <button onclick="switchDetailTab('analytics')" id="detailTabBtnAnalytics" class="py-1.5 px-4 rounded-lg text-xs font-bold transition-all text-zinc-400 hover:text-white">
+          📈 Analytics Insights
+        </button>
+      </div>
+
+      <!-- Modal Content Area -->
+      <div class="flex-grow overflow-y-auto pr-1 min-h-[300px]">
+        
+        <!-- Tab 1: Overview -->
+        <div id="detailTabOverview" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <div class="bg-zinc-950/40 p-4 rounded-2xl border border-white/5 space-y-1">
+              <span class="text-[9px] text-zinc-500 font-bold uppercase tracking-wider block">Attendance Rate</span>
+              <div class="text-3xl font-black text-indigo-400 font-[Outfit]" id="detailRateMetric">0%</div>
+              <span class="text-[10px] text-zinc-400 block" id="detailRatioMetric">0 / 0 Students</span>
+            </div>
+
+            <div class="bg-zinc-950/40 p-4 rounded-2xl border border-white/5 space-y-1">
+              <span class="text-[9px] text-zinc-500 font-bold uppercase tracking-wider block">Faculty Instructor</span>
+              <div class="text-base font-bold text-white font-[Outfit] truncate" id="detailFacultyLabel">Teacher</div>
+              <span class="text-[10px] text-zinc-400 block" id="detailDateLabel">13 Jun 2026</span>
+            </div>
+
+            <div class="bg-zinc-950/40 p-4 rounded-2xl border border-white/5 space-y-1">
+              <span class="text-[9px] text-zinc-500 font-bold uppercase tracking-wider block">Time Duration</span>
+              <div class="text-base font-bold text-white font-[Outfit]" id="detailDurationLabel">10:30 AM - 11:30 AM</div>
+              <span class="text-[10px] text-emerald-400 font-semibold block" id="detailCountdownLabel">Ended</span>
+            </div>
+
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-3">
+              <h4 class="text-xs font-extrabold text-white tracking-widest uppercase border-l-2 border-indigo-500 pl-2">Session Parameters</h4>
+              <div class="bg-zinc-950/40 p-4 rounded-2xl border border-white/5 space-y-2 text-xs">
+                <div class="flex justify-between">
+                  <span class="text-zinc-500">Deployment Security:</span>
+                  <span class="text-zinc-200 font-bold" id="detailSecurityType">Rotating QR</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-zinc-500">Device Proxy Lock:</span>
+                  <span class="text-zinc-200 font-bold" id="detailDeviceLockState">Enabled</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-zinc-500">GPS Geofence Preset:</span>
+                  <span class="text-zinc-200 font-bold" id="detailGeofenceLabel">Main IT Lab</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-zinc-500">Late Grace Window:</span>
+                  <span class="text-zinc-200 font-bold" id="detailGraceWindow">5 Minutes</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h4 class="text-xs font-extrabold text-white tracking-widest uppercase border-l-2 border-indigo-500 pl-2">Geofence Telemetry</h4>
+              <div class="bg-zinc-950/40 p-4 rounded-2xl border border-white/5 space-y-2 text-xs">
+                <div class="flex justify-between">
+                  <span class="text-zinc-500">Center Coordinates:</span>
+                  <span class="text-zinc-200 font-mono font-bold" id="detailCoordinates">26.65080, 84.90820</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-zinc-200 font-bold" id="detailRadius">50 Meters</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-zinc-500">Encryption Layer:</span>
+                  <span class="text-emerald-400 font-bold">AES-256 Crypto API</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Present Students -->
+        <div id="detailTabPresent" class="hidden space-y-4">
+          <div class="flex justify-between items-center gap-4">
+            <input type="text" id="detailPresentSearch" oninput="filterDetailRoster()" placeholder="Search present students..." class="w-full max-w-xs glass-input rounded-xl py-2 px-3 text-white text-xs outline-none">
+            <div class="text-[10px] text-zinc-500 font-bold uppercase whitespace-nowrap" id="detailPresentFilteredCount">Showing 0 students</div>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="detailPresentListGrid">
+            <!-- Dynamic Present student cards go here -->
+          </div>
+        </div>
+
+        <!-- Tab 3: Absent Students -->
+        <div id="detailTabAbsent" class="hidden space-y-4">
+          <div class="flex justify-between items-center gap-4">
+            <input type="text" id="detailAbsentSearch" oninput="filterDetailRoster()" placeholder="Search absent students..." class="w-full max-w-xs glass-input rounded-xl py-2 px-3 text-white text-xs outline-none">
+            <div class="text-[10px] text-zinc-500 font-bold uppercase whitespace-nowrap" id="detailAbsentFilteredCount">Showing 0 students</div>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="detailAbsentListGrid">
+            <!-- Dynamic Absent student cards go here -->
+          </div>
+        </div>
+
+        <!-- Tab 4: Analytics Insights -->
+        <div id="detailTabAnalytics" class="hidden space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Present vs Absent Doughnut -->
+            <div class="glass-card p-4 rounded-2xl border border-white/5 space-y-3 flex flex-col justify-between items-center">
+              <h4 class="text-xs font-bold text-white uppercase tracking-wider text-center">Roster Ratio</h4>
+              <div class="w-40 h-40 relative">
+                <canvas id="detailRatioChart"></canvas>
+              </div>
+              <div class="text-center text-[10px] text-zinc-500" id="detailRatioChartText">0% Attendance</div>
+            </div>
+
+            <!-- Check-in Timeline -->
+            <div class="glass-card p-4 rounded-2xl border border-white/5 space-y-3 flex flex-col justify-between md:col-span-2">
+              <h4 class="text-xs font-bold text-white uppercase tracking-wider">Arrival Distribution (Timelines)</h4>
+              <div class="h-40 w-full relative">
+                <canvas id="detailTimelineChart"></canvas>
+              </div>
+              <div class="text-[10px] text-zinc-500 text-left">Timeline of checked-in events compared to the grace period threshold.</div>
+            </div>
+
+          </div>
+
+          <!-- Highlight Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-zinc-950/40 p-4 rounded-2xl border border-white/5 text-xs text-zinc-400 space-y-2">
+              <h5 class="font-bold text-white uppercase text-[10px]">Late Arrival Alerts</h5>
+              <p id="detailLateArrivalsSummary">Calculating late check-in parameters...</p>
+            </div>
+            <div class="bg-zinc-950/40 p-4 rounded-2xl border border-white/5 text-xs text-zinc-400 space-y-2">
+              <h5 class="font-bold text-white uppercase text-[10px]">Device Telemetry Distribution</h5>
+              <p id="detailDeviceTelemetrySummary">Analyzing client device environments...</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LOAD SCRIPTS -->
+  <!-- Firebase Compat Libraries -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  
+  <!-- Export Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  
+  <!-- Security and Engine Module -->
+  <script src="attendance-service.js"></script>
+  
+  <!-- Config block matching main application config -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyC_mWJld2NksodLIg0hI_O0wuLWpUL4AoE",
+      authDomain: "bca-store.firebaseapp.com",
+      databaseURL: "https://bca-store-default-rtdb.firebaseio.com",
+      projectId: "bca-store",
+      storageBucket: "bca-store.firebasestorage.app",
+      messagingSenderId: "1063532602856",
+      appId: "1:1063532602856:web:30812a52ccbded1548305d",
+      measurementId: "G-SEYBV2CS0W"
+    };
+    
+    let db = null;
+    try {
+      if (typeof firebase !== 'undefined') {
+        const app = firebase.apps && firebase.apps.length > 0 ? firebase.app() : firebase.initializeApp(firebaseConfig);
+        db = firebase.database(app);
+        window.db = db;
+      }
+    } catch (e) {
+      console.error("Firebase initialization failed:", e);
+    }
+  </script>
+  
+  <script src="attendance-admin.js"></script>
+</body>
+</html>

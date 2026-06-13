@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Manage your premium student account on BCA Store. View and update profile information, dynamic state/district selections, change passwords, and track sessions." />
+  <title>My Account | BCA Store</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="modern-theme.css" />
+  <link rel="stylesheet" href="elite-plus.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+
+  <style>
+    /* Premium Profile Dashboard Styling */
+    .profile-dashboard {
+      padding: 120px 20px 60px;
+      min-height: 100vh;
+      background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.03) 0%, transparent 40%),
+                  radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 40%);
+    }
+
+    .profile-grid {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 30px;
+    }
+
+    /* Left Sidebar Card */
+    .profile-sidebar {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      height: fit-content;
+    }
+
+    .profile-sidebar::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 6px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    .avatar-upload-wrap {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 20px;
+      cursor: pointer;
+    }
+
+    .avatar-upload-wrap:hover .avatar-hover-overlay {
+      opacity: 1;
+    }
+
+    .profile-avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary);
+      box-shadow: 0 8px 24px var(--primary-glow);
+      transition: transform 0.3s ease;
+    }
+
+    .avatar-hover-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      gap: 4px;
+    }
+
+    .avatar-hover-overlay span {
+      font-size: 1.3rem;
+    }
+
+    .profile-name {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .profile-username {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .profile-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-light);
+      border: 1px solid var(--border-glow);
+      color: var(--primary);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+    }
+
+    .sidebar-stats {
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat-box {
+      background: var(--bg);
+      padding: 12px;
+      border-radius: 14px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .stat-val {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .stat-lbl {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .btn-signout {
+      width: 100%;
+      padding: 12px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-signout:hover {
+      background: var(--danger);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+      transform: translateY(-1px);
+    }
+
+    /* Right Details Form Card */
+    .profile-details-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+
+    .card-header-flex h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .details-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group-full {
+      grid-column: span 2;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-wrap-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrap-icon span {
+      position: absolute;
+      left: 16px;
+      font-size: 1.1rem;
+      pointer-events: none;
+    }
+
+    .input-wrap-icon input,
+    .input-wrap-icon select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px 14px 46px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-wrap-icon input:focus,
+    .input-wrap-icon select:focus {
+      border-color: var(--primary);
+      background: var(--bg-card);
+      box-shadow: 0 0 0 4px var(--primary-light);
+    }
+
+    .input-wrap-icon input[readonly] {
+      background: rgba(0, 0, 0, 0.02);
+      border-color: var(--border);
+      color: var(--text-secondary);
+      cursor: not-allowed;
+    }
+
+    [data-theme="dark"] .input-wrap-icon input[readonly] {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .lock-badge {
+      position: absolute;
+      right: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .form-actions {
+      grid-column: span 2;
+      display: flex;
+      gap: 16px;
+      margin-top: 10px;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+    }
+
+    .btn-save-changes {
+      flex: 2;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: none;
+      color: #fff;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 20px var(--primary-glow);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-save-changes:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px var(--primary-glow);
+      opacity: 0.95;
+    }
+
+    .btn-save-changes:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-change-pass {
+      flex: 1;
+      padding: 14px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-change-pass:hover {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* Change Password Modal Overlay */
+    .acct-modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 99999; padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .acct-modal-overlay.show {
+      opacity: 1; pointer-events: auto;
+    }
+
+    .acct-modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      width: 100%; max-width: 420px;
+      padding: 30px;
+      position: relative;
+      box-shadow: var(--shadow);
+      transform: scale(0.95);
+      transition: transform 0.3s ease;
+    }
+
+    .acct-modal-overlay.show .acct-modal-card {
+      transform: scale(1);
+    }
+
+    .acct-modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .acct-modal-header h3 {
+      font-size: 1.3rem; font-weight: 800; color: var(--text);
+    }
+
+    .acct-modal-close {
+      background: none; border: none; font-size: 1.2rem; color: var(--text-muted);
+      cursor: pointer; transition: color 0.2s;
+    }
+
+    .acct-modal-close:hover {
+      color: var(--text);
+    }
+
+    .acct-modal-body .form-group {
+      margin-bottom: 16px;
+    }
+
+    .acct-modal-footer {
+      display: flex; gap: 12px; margin-top: 24px;
+    }
+
+    .acct-modal-footer button {
+      flex: 1; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .acct-btn-cancel {
+      background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+    }
+
+    .acct-btn-confirm {
+      background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; color: #fff;
+    }
+
+    .acct-btn-confirm:hover {
+      opacity: 0.95;
+    }
+
+    @media (max-width: 768px) {
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+      .profile-details-card {
+        padding: 24px;
+      }
+      .details-form {
+        grid-template-columns: 1fr;
+      }
+      .form-group-full, .form-actions {
+        grid-column: span 1;
+      }
+      .form-actions {
+        flex-direction: column;
+      }
+      .profile-dashboard {
+        padding-top: 100px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-link">🏠 Home</a>
+        <a href="my-batches.html" class="nav-link">🎓 My Batch</a>
+        <a href="attendance.html" class="nav-link">📋 Attendance</a>
+        <a href="elite-plus.html" class="nav-link">💎 Elite Plus</a>
+        <a href="exam.html" class="nav-link">📝 Exam</a>
+        <a href="test-hub.html" class="nav-link">🧠 Tests</a>
+        <a href="community.html" class="nav-link">🧑‍🤝‍🧑 Community</a>
+        <a href="analytics.html" class="nav-link">📊 Stats</a>
+        <a href="javascript:void(0)" class="nav-link" onclick="openSuggestionModal()">💬 Suggestion</a>
+        <button class="nav-bookmark-btn" onclick="openSearchModal()" title="Search" style="margin-right:10px; font-size:1.2rem;">🔍</button>
+        <button class="nav-bookmark-btn" id="navBkBtn" onclick="openBkPanel()" title="My Bookmarks">🔖<span class="bk-count-badge" id="bkBadgeDesktop"></span></button>
+        <button class="dark-toggle" id="darkToggle" title="Toggle Dark Mode">🌙</button>
+      </div>
+      <a href="install.html" class="nav-premium-install-btn">
+        <span>📲 Install</span>
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <div class="profile-dashboard">
+    <div class="profile-grid">
+      <!-- Left sidebar -->
+      <div class="profile-sidebar">
+        <div class="avatar-upload-wrap" onclick="triggerPhotoSelect()">
+          <img id="profileAvatar" src="dev_avatar.png" alt="Avatar" class="profile-avatar-img" />
+          <div class="avatar-hover-overlay">
+            <span>📷</span>
+            <b>Change Photo</b>
+          </div>
+          <!-- Hidden Input -->
+          <input type="file" id="photoSelectInput" accept="image/png, image/jpeg, image/jpg" style="display: none;" onchange="handlePhotoSelect(event)" />
+        </div>
+        <h3 class="profile-name" id="sidebarFullName">Student</h3>
+        <p class="profile-username" id="sidebarUsername">@username</p>
+        <div class="profile-badge">
+          <span>👑</span> Premium Student
+        </div>
+        
+        <div class="sidebar-stats">
+          <div class="stat-box">
+            <div class="stat-val" id="statEnrollsCount">1</div>
+            <div class="stat-lbl">Batches</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="statSessionsCount">1</div>
+            <div class="stat-lbl">Sessions</div>
+          </div>
+        </div>
+
+        <button class="btn-signout" onclick="signOutStudent()">
+          <span>🚪</span> Sign Out
+        </button>
+      </div>
+
+      <!-- Right Form details -->
+      <div class="profile-details-card">
+        <div class="card-header-flex">
+          <h2>👤 Profile Information</h2>
+        </div>
+        <form id="profileUpdateForm" onsubmit="return false;" class="details-form">
+          <!-- Full Name -->
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <div class="input-wrap-icon">
+              <span>👤</span>
+              <input type="text" id="fullName" placeholder="Full name..." required />
+            </div>
+          </div>
+
+
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <div class="input-wrap-icon">
+              <span>📧</span>
+              <input type="email" id="email" readonly />
+              <span class="lock-badge">🔒</span>
+            </div>
+          </div>
+
+          <!-- Mobile -->
+          <div class="form-group">
+            <label for="mobile">Mobile Number (WhatsApp)</label>
+            <div class="input-wrap-icon">
+              <span>📞</span>
+              <input type="tel" id="mobile" readonly />
+              <span class="lock-badge">🔒</span>
+            </div>
+          </div>
+
+          <!-- Date of Birth -->
+          <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <div class="input-wrap-icon">
+              <span>📅</span>
+              <input type="text" id="dob" required placeholder="YYYY-MM-DD" autocomplete="off" />
+            </div>
+          </div>
+
+          <!-- Semester -->
+          <div class="form-group">
+            <label for="semester">Semester</label>
+            <div class="input-wrap-icon">
+              <span>📖</span>
+              <select id="semester" required>
+                <option value="Semester 1">Semester 1</option>
+                <option value="Semester 2">Semester 2</option>
+                <option value="Semester 3">Semester 3</option>
+                <option value="Semester 4">Semester 4</option>
+                <option value="Semester 5">Semester 5</option>
+                <option value="Semester 6">Semester 6</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- State Selection -->
+          <div class="form-group">
+            <label for="stateSelect">State</label>
+            <div class="input-wrap-icon">
+              <span>📍</span>
+              <select id="stateSelect" onchange="populateDistricts()" required>
+                <option value="">Select State</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- District Selection -->
+          <div class="form-group">
+            <label for="districtSelect">District</label>
+            <div class="input-wrap-icon">
+              <span>🏙️</span>
+              <select id="districtSelect" required>
+                <option value="">Select District</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Creation Date -->
+          <div class="form-group">
+            <label>Account Created</label>
+            <div class="input-wrap-icon">
+              <span>🕒</span>
+              <input type="text" id="createdDate" readonly />
+            </div>
+          </div>
+
+          <!-- Last Login -->
+          <div class="form-group">
+            <label>Last Login</label>
+            <div class="input-wrap-icon">
+              <span>🔑</span>
+              <input type="text" id="lastLoginDate" readonly />
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="form-actions">
+            <button type="button" class="btn-change-pass" onclick="openChangePassModal()">
+              🔑 Change Password
+            </button>
+            <button type="submit" id="saveBtn" class="btn-save-changes" onclick="saveProfileChanges()">
+              ✨ Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="acct-modal-overlay" id="changePassModal">
+    <div class="acct-modal-card">
+      <div class="acct-modal-header">
+        <h3>🔑 Change Password</h3>
+        <button class="acct-modal-close" onclick="closeChangePassModal()">✕</button>
+      </div>
+      <div class="acct-modal-body">
+        <div class="form-group">
+          <label for="oldPass">Current Password</label>
+          <div class="input-wrap-icon">
+            <span>🔒</span>
+            <input type="password" id="oldPass" placeholder="Enter current password..." />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="newPass">New Password</label>
+          <div class="input-wrap-icon">
+            <span>🔑</span>
+            <input type="password" id="newPass" placeholder="Enter new password (min 6 chars)..." />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirmNewPass">Confirm New Password</label>
+          <div class="input-wrap-icon">
+            <span>🛡️</span>
+            <input type="password" id="confirmNewPass" placeholder="Confirm new password..." />
+          </div>
+        </div>
+      </div>
+      <div class="acct-modal-footer">
+        <button class="acct-btn-cancel" onclick="closeChangePassModal()">Cancel</button>
+        <button class="acct-btn-confirm" onclick="submitPasswordChange()">Change Password</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suggestion Modal -->
+  <!-- TOAST -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="student-registration.js"></script>
+  <script src="script.js"></script>
+
+  <script>
+    // State and District Data Directory
+    const IndianStatesAndDistricts = {
+      "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool", "Tirupati", "Anantapur", "Kadapa", "Eluru", "Kakinada"],
+      "Arunachal Pradesh": ["Itanagar", "Tawang", "Ziro", "Pasighat", "Bomdila", "Tezu", "Aalo"],
+      "Assam": ["Guwahati", "Dibrugarh", "Silchar", "Jorhat", "Tezpur", "Nagaon", "Tinsukia", "Bongaigaon"],
+      "Bihar": ["Muzaffarpur", "East Champaran", "West Champaran", "Patna", "Gaya", "Bhagalpur", "Darbhanga", "Nalanda", "Begusarai", "Saran", "Vaishali", "Bhojpur", "Siwan", "Gopalganj", "Samastipur", "Sitamarhi", "Madhubani", "Purnia", "Katihar", "Saharsa", "Munger", "Rohtas", "Buxar", "Aurangabad", "Jehanabad", "Nawada"],
+      "Chhattisgarh": ["Raipur", "Bilaspur", "Durg", "Bhilai", "Korba", "Rajnandgaon", "Jagdalpur", "Ambikapur"],
+      "Delhi": ["Central Delhi", "New Delhi", "North Delhi", "South Delhi", "East Delhi", "West Delhi", "Dwarka", "Rohini"],
+      "Goa": ["North Goa", "South Goa", "Panaji", "Margao", "Vasco da Gama", "Mapusa"],
+      "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Gandhinagar", "Junagadh", "Anand", "Navsari", "Morbi"],
+      "Haryana": ["Gurugram", "Faridabad", "Panipat", "Ambala", "Rohtak", "Hisar", "Karnal", "Sonipat", "Panchkula", "Yamunanagar"],
+      "Himachal Pradesh": ["Shimla", "Dharamshala", "Manali", "Solan", "Mandi", "Hamirpur", "Kullu", "Chamba"],
+      "Jammu & Kashmir": ["Srinagar", "Jammu", "Anantnag", "Baramulla", "Kathua", "Udhampur", "Kupwara", "Samba"],
+      "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Hazaribagh", "Deoghar", "Giridih", "Ramgarh", "Palamu"],
+      "Karnataka": ["Bengaluru", "Mysuru", "Hubballi", "Mangaluru", "Belagavi", "Davanagere", "Ballari", "Kalaburagi", "Udupi", "Shimoga"],
+      "Kerala": ["Trivandrum", "Kochi", "Kozhikode", "Thrissur", "Kollam", "Alappuzha", "Palakkad", "Kannur", "Kottayam", "Malappuram"],
+      "Madhya Pradesh": ["Bhopal", "Indore", "Jabalpur", "Gwalior", "Ujjain", "Sagar", "Dewas", "Satna", "Ratlam", "Rewa"],
+      "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Thane", "Nashik", "Aurangabad", "Navi Mumbai", "Solapur", "Amravati", "Kolhapur", "Nanded"],
+      "Manipur": ["Imphal", "Churachandpur", "Thoubal", "Senapati", "Ukhrul"],
+      "Meghalaya": ["Shillong", "Tura", "Jowai", "Nongpoh"],
+      "Mizoram": ["Aizawl", "Lunglei", "Champhai", "Kolasib"],
+      "Nagaland": ["Kohima", "Dimapur", "Mokokchung", "Wokha"],
+      "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela", "Sambalpur", "Puri", "Balasore", "Berhampur", "Baripada"],
+      "Punjab": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda", "Mohali", "Pathankot", "Hoshiarpur", "Moga"],
+      "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota", "Bikaner", "Ajmer", "Sikar", "Bhilwara", "Alwar", "Bharatpur"],
+      "Sikkim": ["Gangtok", "Namchi", "Gyalshing", "Mangan"],
+      "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli", "Vellore", "Erode", "Thoothukudi", "Thanjavur"],
+      "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam", "Ramagundam", "Mahbubnagar"],
+      "Tripura": ["Agartala", "Udaipur", "Dharmanagar", "Kailasahar"],
+      "Uttar Pradesh": ["Lucknow", "Kanpur", "Varanasi", "Noida", "Ghaziabad", "Prayagraj", "Agra", "Meerut", "Bareilly", "Aligarh", "Moradabad", "Gorakhpur", "Jhansi", "Saharanpur", "Mathura", "Ayodhya"],
+      "Uttarakhand": ["Dehradun", "Haridwar", "Haldwani", "Rishikesh", "Roorkee", "Nainital", "Rudrapur"],
+      "West Bengal": ["Kolkata", "Howrah", "Darjeeling", "Siliguri", "Asansol", "Durgapur", "Kharagpur", "Malda", "Bardhaman", "Murshidabad"]
+    };
+
+    let currentUserRecord = null;
+    let currentStudentId = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize Theme
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      
+      const dt = document.getElementById('darkToggle');
+      if (dt) dt.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+      // Load State Options
+      const stateSelect = document.getElementById('stateSelect');
+      Object.keys(IndianStatesAndDistricts).forEach(state => {
+        const opt = document.createElement('option');
+        opt.value = state;
+        opt.textContent = state;
+        stateSelect.appendChild(opt);
+      });
+
+      // Hybrid Mobile Native / Desktop Flatpickr Setup for DOB
+      const dobInput = document.getElementById('dob');
+      if (dobInput) {
+        // Auto-format typing to YYYY-MM-DD
+        dobInput.addEventListener('input', (e) => {
+          if (e.inputType === 'deleteContentBackward' || e.inputType === 'deleteContentForward') {
+            return;
+          }
+          let val = dobInput.value.replace(/\D/g, '');
+          let formatted = '';
+          if (val.length > 0) {
+            formatted += val.substring(0, 4);
+          }
+          if (val.length > 4) {
+            formatted += '-' + val.substring(4, 6);
+          }
+          if (val.length > 6) {
+            formatted += '-' + val.substring(6, 8);
+          }
+          dobInput.value = formatted;
+        });
+
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (isMobile) {
+          const dobIcon = dobInput.previousElementSibling; // The 📅 span
+          if (dobIcon) {
+            dobIcon.style.cursor = 'pointer';
+            
+            // Inject hidden native picker if it doesn't exist yet
+            let dobNative = document.getElementById('dobNative');
+            if (!dobNative) {
+              dobNative = document.createElement('input');
+              dobNative.type = 'date';
+              dobNative.id = 'dobNative';
+              dobNative.style.cssText = 'position: absolute; opacity: 0; width: 0; height: 0; border: none; padding: 0; margin: 0; pointer-events: none;';
+              dobNative.max = new Date().toISOString().split('T')[0];
+              dobInput.parentNode.appendChild(dobNative);
+            }
+            
+            dobIcon.addEventListener('click', () => {
+              if (typeof dobNative.showPicker === 'function') {
+                dobNative.showPicker();
+              } else {
+                dobNative.click();
+              }
+            });
+            
+            dobNative.addEventListener('change', () => {
+              dobInput.value = dobNative.value;
+            });
+          }
+        } else {
+          // Initialize Flatpickr on DOB for desktop
+          if (typeof flatpickr !== 'undefined') {
+            flatpickr("#dob", {
+              dateFormat: "Y-m-d",
+              maxDate: "today",
+              allowInput: true
+            });
+          }
+        }
+      }
+
+      // Load Profile Data
+      loadProfileData();
+    });
+
+    async function loadProfileData() {
+      const isRegistered = localStorage.getItem('student_registered') === 'true';
+      currentStudentId = localStorage.getItem('student_id');
+      
+      if (!isRegistered || !currentStudentId) {
+        alert("Session expired or unauthorized access. Redirecting to home.");
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Check firebase loading
+      if (typeof firebase === 'undefined' || !firebase.database) {
+        setTimeout(loadProfileData, 500);
+        return;
+      }
+
+      try {
+        const snapshot = await firebase.database().ref(`students/${currentStudentId}`).once('value');
+        if (!snapshot.exists()) {
+          alert("Account records not found in database.");
+          signOutStudent();
+          return;
+        }
+
+        currentUserRecord = snapshot.val();
+        populateFields(currentUserRecord);
+      } catch (err) {
+        console.error("Error loading student profile:", err);
+        // Fallback to local storage data
+        try {
+          currentUserRecord = JSON.parse(localStorage.getItem('student_data') || '{}');
+          populateFields(currentUserRecord);
+        } catch(e) {}
+      }
+    }
+
+    function populateFields(record) {
+      if (!record) return;
+
+      document.getElementById('fullName').value = record.name || '';
+      if (document.getElementById('username')) {
+        document.getElementById('username').value = record.username || record.rollNo || '';
+      }
+      document.getElementById('email').value = record.email || '';
+      document.getElementById('mobile').value = record.phone || '';
+      document.getElementById('dob').value = record.dob || '';
+      document.getElementById('semester').value = record.semester || 'Semester 1';
+      
+      document.getElementById('sidebarFullName').textContent = record.name || 'Student';
+      document.getElementById('sidebarUsername').textContent = `@${record.phone || ''}`;
+
+      if (record.photo) {
+        document.getElementById('profileAvatar').src = record.photo;
+      }
+
+      // Set State
+      const stateSelect = document.getElementById('stateSelect');
+      if (record.state) {
+        stateSelect.value = record.state;
+        populateDistricts();
+        
+        // Set District
+        const distSelect = document.getElementById('districtSelect');
+        distSelect.value = record.district || '';
+      }
+
+      // Metadata
+      document.getElementById('createdDate').value = record.registeredAt ? new Date(record.registeredAt).toLocaleString() : 'N/A';
+      document.getElementById('lastLoginDate').value = record.lastLogin ? new Date(record.lastLogin).toLocaleString() : 'N/A';
+      
+      document.getElementById('statEnrollsCount').textContent = record.batchesEnrolled ? record.batchesEnrolled.length : 1;
+      document.getElementById('statSessionsCount').textContent = record.totalSessions || 1;
+    }
+
+    function populateDistricts() {
+      const state = document.getElementById('stateSelect').value;
+      const distSelect = document.getElementById('districtSelect');
+      distSelect.innerHTML = '<option value="">Select District</option>';
+
+      if (state && IndianStatesAndDistricts[state]) {
+        IndianStatesAndDistricts[state].forEach(dist => {
+          const opt = document.createElement('option');
+          opt.value = dist;
+          opt.textContent = dist;
+          distSelect.appendChild(opt);
+        });
+      }
+    }
+
+    // Photo selection trigger
+    function triggerPhotoSelect() {
+      document.getElementById('photoSelectInput').click();
+    }
+
+    function handlePhotoSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (!['image/png', 'image/jpeg', 'image/jpg', 'image/webp'].includes(file.type)) {
+        showLocalToast('❌ Invalid image format. Select WebP, JPG, or PNG.', 'error');
+        e.target.value = '';
+        return;
+      }
+
+      if (file.size > 1 * 1024 * 1024) {
+        showLocalToast('❌ Image size must be 1 MB or less.', 'error');
+        alert('Image size must be 1 MB or less.');
+        e.target.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const img = new Image();
+        img.onload = function () {
+          const canvas = document.createElement('canvas');
+          canvas.width = 150;
+          canvas.height = 150;
+          const ctx = canvas.getContext('2d');
+          
+          const minDim = Math.min(img.width, img.height);
+          const sx = (img.width - minDim) / 2;
+          const sy = (img.height - minDim) / 2;
+          
+          ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, 150, 150);
+          
+          const base64 = canvas.toDataURL('image/jpeg', 0.85);
+          
+          // Show preview
+          document.getElementById('profileAvatar').src = base64;
+          
+          // Save immediately to Firebase & Local Storage
+          savePhotoToDatabase(base64);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function savePhotoToDatabase(base64) {
+      if (!currentStudentId) return;
+      try {
+        await firebase.database().ref(`students/${currentStudentId}`).update({
+          photo: base64
+        });
+        
+        // Update local storage
+        if (currentUserRecord) {
+          currentUserRecord.photo = base64;
+          localStorage.setItem('student_data', JSON.stringify(currentUserRecord));
+        }
+        
+        showLocalToast('📸 Profile photo updated!', 'success');
+      } catch (err) {
+        console.error("Failed to save photo:", err);
+        showLocalToast('❌ Failed to sync photo.', 'error');
+      }
+    }
+
+    async function saveProfileChanges() {
+      const name = document.getElementById('fullName').value.trim();
+      const dob = document.getElementById('dob').value.trim();
+      const sem = document.getElementById('semester').value;
+      const state = document.getElementById('stateSelect').value;
+      const dist = document.getElementById('districtSelect').value;
+
+      if (!name || !dob || !sem || !state || !dist) {
+        showLocalToast('❌ Please fill in all fields.', 'error');
+        return;
+      }
+
+      // Validate DOB format
+      const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+      let isDobValid = false;
+      if (datePattern.test(dob)) {
+        const parts = dob.split('-');
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const day = parseInt(parts[2], 10);
+        const date = new Date(year, month, day);
+        if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === day) {
+          if (date <= new Date()) {
+            isDobValid = true;
+          }
+        }
+      }
+      if (!isDobValid) {
+        showLocalToast('❌ Please enter a valid Date of Birth in YYYY-MM-DD format.', 'error');
+        return;
+      }
+
+      const avatarSrc = document.getElementById('profileAvatar').src;
+      if (!avatarSrc || avatarSrc.includes('dev_avatar.png') || avatarSrc.includes('avatar_faculty')) {
+        showLocalToast('❌ Profile photo is compulsory. Please upload a photo.', 'error');
+        return;
+      }
+
+      const saveBtn = document.getElementById('saveBtn');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '⚡ Syncing...';
+
+      try {
+        await firebase.database().ref(`students/${currentStudentId}`).update({
+          name: name,
+          dob: dob,
+          semester: sem,
+          state: state,
+          district: dist
+        });
+
+        // Update local storage record
+        if (currentUserRecord) {
+          currentUserRecord.name = name;
+          currentUserRecord.dob = dob;
+          currentUserRecord.semester = sem;
+          currentUserRecord.state = state;
+          currentUserRecord.district = dist;
+          localStorage.setItem('student_data', JSON.stringify(currentUserRecord));
+          localStorage.setItem('userName', name);
+        }
+
+        document.getElementById('sidebarFullName').textContent = name;
+        showLocalToast('✨ Profile changes saved successfully!', 'success');
+      } catch (err) {
+        console.error("Failed to update profile:", err);
+        showLocalToast('❌ Failed to save changes.', 'error');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '✨ Save Changes';
+      }
+    }
+
+    // Sign out function
+    async function signOutStudent() {
+      if (!confirm('Are you sure you want to sign out? This will clear session from this device.')) return;
+      
+      const deviceId = localStorage.getItem('student_device_id');
+      if (currentStudentId && deviceId && typeof firebase !== 'undefined' && firebase.database) {
+        try {
+          // Remove session token from database to prevent auto access
+          await firebase.database().ref(`students/${currentStudentId}/active_sessions/${deviceId}`).remove();
+        } catch(e) { console.warn("Failed to remove active session mapping:", e); }
+      }
+
+      localStorage.removeItem('userName');
+      localStorage.removeItem('student_registered');
+      localStorage.removeItem('student_data');
+      localStorage.removeItem('student_id');
+      localStorage.removeItem('student_session_token');
+      localStorage.removeItem('enrolledBatches');
+      localStorage.removeItem('enrolledEliteBatches');
+      
+      document.cookie = "userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "student_registered=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      sessionStorage.removeItem('welcomeShown');
+
+      window.location.href = 'index.html';
+    }
+
+    // Modal Pass Actions
+    function openChangePassModal() {
+      document.getElementById('changePassModal').classList.add('show');
+    }
+
+    function closeChangePassModal() {
+      document.getElementById('changePassModal').classList.remove('show');
+      document.getElementById('oldPass').value = '';
+      document.getElementById('newPass').value = '';
+      document.getElementById('confirmNewPass').value = '';
+    }
+
+    async function submitPasswordChange() {
+      const oldPass = document.getElementById('oldPass').value;
+      const newPass = document.getElementById('newPass').value;
+      const confirmNewPass = document.getElementById('confirmNewPass').value;
+
+      if (!oldPass || !newPass || !confirmNewPass) {
+        showLocalToast('❌ Please fill in all password fields.', 'error');
+        return;
+      }
+
+      if (newPass.length < 6) {
+        showLocalToast('❌ New password must be at least 6 characters.', 'error');
+        return;
+      }
+
+      if (newPass !== confirmNewPass) {
+        showLocalToast('❌ New passwords do not match.', 'error');
+        return;
+      }
+
+      try {
+        const snap = await firebase.database().ref(`students/${currentStudentId}/password`).once('value');
+        if (snap.exists() && snap.val() !== oldPass) {
+          showLocalToast('❌ Current password is incorrect.', 'error');
+          return;
+        }
+
+        await firebase.database().ref(`students/${currentStudentId}`).update({
+          password: newPass
+        });
+
+        if (currentUserRecord) {
+          currentUserRecord.password = newPass;
+          localStorage.setItem('student_data', JSON.stringify(currentUserRecord));
+        }
+
+        showLocalToast('🔒 Password changed successfully!', 'success');
+        closeChangePassModal();
+      } catch (err) {
+        console.error("Failed to change password:", err);
+        showLocalToast('❌ Failed to change password.', 'error');
+      }
+    }
+
+    function showLocalToast(msg, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = `toast ${type === 'success' ? 'toast-success' : 'toast-error'}`;
+      toast.innerHTML = `
+        <div class="toast-content" style="padding: 12px 20px; border-radius: 12px; background: rgba(0,0,0,0.85); color:#fff; display: flex; align-items: center; gap: 8px; border-left: 4px solid ${type === 'success' ? '#10b981' : '#ef4444'}; box-shadow: 0 4px 15px rgba(0,0,0,0.2); animation: toastSlideIn 0.3s forwards;">
+          <span>${msg}</span>
+        </div>
+      `;
+      
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.animation = 'toastSlideOut 0.3s forwards';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+  </script>
+
+  <style>
+    @keyframes toastSlideIn {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes toastSlideOut {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(50px); opacity: 0; }
+    }
+  </style>
+</body>
+
+</html>

@@ -1,0 +1,2073 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Secure, real-time student attendance check-in for BCA Store." />
+  <title>Student Attendance Portal | BCA Store</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --font-outfit: 'Outfit', sans-serif;
+      --font-inter: 'Inter', sans-serif;
+      --font-orbitron: 'Orbitron', sans-serif;
+    }
+    
+    body {
+      font-family: var(--font-inter);
+      background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #09090b 70%);
+      min-height: 100vh;
+      color: #f4f4f5;
+    }
+    
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .glass-panel:hover {
+      border-color: rgba(99, 102, 241, 0.2);
+      box-shadow: 0 20px 50px rgba(99, 102, 241, 0.1);
+    }
+    
+    .glass-input {
+      background: rgba(9, 9, 11, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .glass-input:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
+      background: rgba(9, 9, 11, 0.8);
+    }
+
+    .shimmer-btn {
+      background: linear-gradient(90deg, #4f46e5, #818cf8, #4f46e5);
+      background-size: 200% auto;
+      animation: shimmer 3s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .pulse-glow-green {
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+      animation: pulseGreen 2s infinite alternate;
+    }
+
+    @keyframes pulseGreen {
+      0% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+      100% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.45); }
+    }
+
+    .pulse-glow-purple {
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+      animation: pulsePurple 2s infinite alternate;
+    }
+
+    @keyframes pulsePurple {
+      0% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.2); }
+      100% { box-shadow: 0 0 30px rgba(99, 102, 241, 0.45); }
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Custom scrollbar for desktop */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+  
+  <!-- Navigation Header -->
+  <nav class="border-b border-white/5 py-4 bg-zinc-950/70 backdrop-blur-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-all">
+          <i class="fa-solid fa-graduation-cap text-white text-sm"></i>
+        </div>
+        <span class="font-black text-xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 font-[Outfit]">BCA STORE</span>
+      </a>
+      
+      <div class="flex items-center gap-4">
+        <!-- Live Clock -->
+        <div class="hidden md:flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg text-xs text-zinc-300 font-mono font-medium">
+          <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-ping"></span>
+          <span id="navClock">00:00:00 AM</span>
+        </div>
+        
+        <!-- Student Identity Badge -->
+        <div id="studentBadge" class="hidden flex items-center gap-2.5 bg-zinc-900/80 border border-white/10 p-1 pr-3 rounded-full">
+          <img id="studentAvatar" src="avatar_faculty1.png" alt="Student Profile" class="w-8 h-8 rounded-full object-cover border border-indigo-400">
+          <div class="text-left leading-none">
+            <div class="text-xs font-bold text-white max-w-[120px] truncate" id="studentNameLabel">Loading...</div>
+            <span class="text-[10px] text-zinc-400 font-medium font-mono" id="studentSemLabel">Semester</span>
+          </div>
+          <button onclick="handleLogout()" class="text-zinc-500 hover:text-rose-400 text-xs ml-1.5 transition-all p-1" title="Sign Out">
+            <i class="fa-solid fa-power-off"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Work Area -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+    
+    <!-- AUTH LOCK OVERLAY SCREEN -->
+    <div id="authRequiredScreen" class="hidden py-20 text-center">
+      <div class="max-w-md mx-auto glass-panel rounded-3xl p-8 border border-white/10 text-center">
+        <div class="w-16 h-16 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-6">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <h2 class="text-2xl font-black text-white tracking-tight font-[Outfit]">Authentication Required</h2>
+        <p class="text-zinc-400 text-sm mt-3 leading-relaxed">Please register or login to your student account to check-in and access your attendance history.</p>
+        <button onclick="window.triggerStudentLoginPopup()" class="mt-8 w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 btn-haptic">
+          <i class="fa-solid fa-user-plus"></i> Sign In / Register
+        </button>
+      </div>
+    </div>
+
+    <!-- COMPULSORY COLLEGE ID CARD UPLOAD SECTION -->
+    <div id="idCardUploadContainer" class="hidden py-10 text-center">
+      <div class="max-w-md mx-auto glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 text-center space-y-6">
+        <div class="w-16 h-16 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-2xl flex items-center justify-center text-2xl mx-auto">
+          <i class="fa-solid fa-id-badge"></i>
+        </div>
+        <div>
+          <h2 class="text-2xl font-black text-white tracking-tight font-[Outfit]">Upload College ID Card</h2>
+          <p class="text-zinc-400 text-xs mt-2 leading-relaxed">For verification purposes, you must upload a clear photo of your official college ID card to unlock class check-in. This is a one-time requirement.</p>
+        </div>
+
+        <!-- Rejection alert box -->
+        <div id="idCardRejectionMsg" class="hidden bg-rose-500/10 border border-rose-500/20 p-3.5 rounded-2xl text-rose-400 text-xs font-semibold leading-relaxed">
+          ❌ Your previous ID card was rejected by the admin. Please upload a valid card showing your name and details clearly.
+        </div>
+
+        <!-- Upload Form -->
+        <div class="space-y-4">
+          <!-- File selection box -->
+          <div class="border-2 border-dashed border-white/10 hover:border-indigo-500/30 rounded-2xl p-6 relative bg-zinc-950/40 transition-all cursor-pointer flex flex-col items-center justify-center" onclick="document.getElementById('idCardFileInput').click()">
+            <input type="file" id="idCardFileInput" accept="image/*" class="hidden" onchange="previewIdCard(event)">
+            <i class="fa-solid fa-cloud-arrow-up text-3xl text-zinc-500 mb-2" id="idCardUploadIcon"></i>
+            <span class="text-xs text-zinc-300 font-bold block" id="idCardUploadLabel">Choose ID Card Image</span>
+            <span class="text-[10px] text-zinc-600 block mt-1">PNG, JPG up to 5MB</span>
+            
+            <div id="idCardPreviewContainer" class="hidden mt-4 w-full h-40 rounded-xl overflow-hidden border border-white/10 relative">
+              <img id="idCardPreviewImg" src="" alt="ID card preview" class="w-full h-full object-contain">
+            </div>
+          </div>
+
+          <button id="idCardSubmitBtn" onclick="submitIdCard()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 btn-haptic" disabled>
+            <span>📤 Upload & Verify</span>
+            <div id="idCardSubmitLoader" class="hidden w-4 h-4 border-2 border-white/30 border-top-color-white rounded-full animate-spin"></div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDENT DASHBOARD (TABS LAYOUT) -->
+    <div id="studentDashboard" class="hidden space-y-6">
+
+      <!-- ID Pending Banner -->
+      <div id="idPendingBanner" class="hidden bg-amber-500/10 border border-amber-500/20 p-4 rounded-2xl text-amber-400 text-xs font-semibold leading-relaxed flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm shrink-0">
+          <i class="fa-solid fa-spinner animate-spin"></i>
+        </div>
+        <div>
+          <span class="text-white font-bold block">🆔 Identity Verification Pending</span>
+          <span class="text-zinc-400 font-normal">Your uploaded College ID card is awaiting administrator verification. You may still check into live sessions in the meantime.</span>
+        </div>
+      </div>
+
+      <!-- ID Rejected Banner -->
+      <div id="idRejectedBanner" class="hidden bg-rose-500/10 border border-rose-500/20 p-4 rounded-2xl text-rose-400 text-xs font-semibold leading-relaxed flex items-center justify-between gap-3 flex-wrap">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-sm shrink-0">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div>
+            <span class="text-white font-bold block">🆔 ID Card Rejected by Admin</span>
+            <span class="text-zinc-400 font-normal">Your uploaded College ID card was rejected. Please re-upload a valid card showing your details clearly.</span>
+          </div>
+        </div>
+        <button onclick="showReuploadSection()" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-[10px] font-bold tracking-wide transition-all shadow-md shrink-0 btn-haptic">
+          Re-Upload ID
+        </button>
+      </div>
+      
+      <!-- Stats Summary cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Profile info & Welcome -->
+        <div class="glass-panel p-5 rounded-2xl flex items-center gap-4 md:col-span-2 border border-white/10 relative overflow-hidden">
+          <div class="absolute -right-8 -bottom-8 opacity-5 text-8xl text-white font-black select-none pointer-events-none">BCA</div>
+          <img id="dashStudentPhoto" src="avatar_faculty1.png" alt="Profile" class="w-16 h-16 rounded-2xl object-cover border-2 border-indigo-500 shadow-md">
+          <div class="space-y-1">
+            <span class="text-[10px] bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Active Student</span>
+            <h2 class="text-xl font-bold tracking-tight text-white font-[Outfit]" id="dashStudentName">Name</h2>
+            <p class="text-xs text-zinc-400" id="dashStudentMeta">LND College | Sem 1</p>
+          </div>
+        </div>
+
+        <!-- Attendance Stats Gauge -->
+        <div class="glass-panel p-5 rounded-2xl flex items-center justify-between border border-white/10">
+          <div>
+            <span class="text-xs text-zinc-400 font-bold uppercase tracking-wider block">Attendance Rate</span>
+            <div class="text-3xl font-black text-white mt-2 font-[Outfit]" id="dashAttendanceRate">0.0%</div>
+            <span class="text-[10px] text-zinc-500 block mt-1" id="dashAttendanceSubText">No lectures logged</span>
+          </div>
+          <div class="relative w-16 h-16 flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90">
+              <circle cx="32" cy="32" r="28" stroke="rgba(255,255,255,0.05)" stroke-width="5" fill="transparent"/>
+              <circle cx="32" cy="32" r="28" stroke="#6366f1" stroke-width="5" fill="transparent" stroke-dasharray="175.9" stroke-dashoffset="175.9" id="dashRateProgressCircle" stroke-linecap="round"/>
+            </svg>
+            <span class="absolute text-[10px] font-bold text-indigo-400 font-mono" id="dashRateCenterText">0%</span>
+          </div>
+        </div>
+
+        <!-- Sessions Logged stats -->
+        <div class="glass-panel p-5 rounded-2xl flex items-center gap-4 border border-white/10">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-calendar-check"></i>
+          </div>
+          <div>
+            <span class="text-xs text-zinc-400 font-bold uppercase tracking-wider block">Classes Present</span>
+            <div class="text-2xl font-black text-white mt-1 font-[Outfit]" id="dashClassesPresent">0</div>
+            <span class="text-[10px] text-zinc-500 block" id="dashTotalClassesLabel">Out of 0 overall</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Buttons Navigation -->
+      <div class="flex border-b border-white/10 gap-2 overflow-x-auto scrollbar-hide py-1">
+        <button onclick="switchTab('mark')" id="tabBtnMark" class="py-2.5 px-5 rounded-lg text-sm font-semibold tracking-wide transition-all duration-300 border border-transparent flex items-center gap-2 bg-indigo-600 text-white shadow-lg shadow-indigo-600/10">
+          <i class="fa-solid fa-qrcode"></i> Mark Attendance
+        </button>
+        <button onclick="switchTab('history')" id="tabBtnHistory" class="py-2.5 px-5 rounded-lg text-sm font-semibold tracking-wide transition-all duration-300 border border-transparent flex items-center gap-2 text-zinc-400 hover:text-white hover:bg-white/5">
+          <i class="fa-solid fa-list-check"></i> History Records
+        </button>
+        <button onclick="switchTab('corrections')" id="tabBtnCorrections" class="py-2.5 px-5 rounded-lg text-sm font-semibold tracking-wide transition-all duration-300 border border-transparent flex items-center gap-2 text-zinc-400 hover:text-white hover:bg-white/5">
+          <i class="fa-solid fa-circle-exclamation"></i> Corrections Queue
+        </button>
+      </div>
+
+      <!-- TAB 1: MARK ATTENDANCE VIEW -->
+      <div id="tabMark" class="space-y-6">
+        
+        <!-- Live Check-In Form Panel (If session parameter present or selected) -->
+        <div id="activeSessionCard" class="hidden max-w-xl mx-auto glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <!-- Course Header -->
+          <div class="flex items-center justify-between flex-wrap gap-2 border-b border-white/5 pb-4 mb-6">
+            <div>
+              <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wider" id="classBadge">Semester Batch</span>
+              <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight font-[Outfit] mt-2" id="classSubject">Subject</h1>
+            </div>
+            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-3 py-1 rounded-full font-bold flex items-center gap-1.5 font-mono" id="liveBadge">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> LIVE SESSION
+            </span>
+          </div>
+
+          <!-- Countdown HUD -->
+          <div class="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-4 mb-6 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg">
+                <i class="fa-regular fa-clock"></i>
+              </div>
+              <div>
+                <span class="text-[10px] text-rose-300 font-bold uppercase tracking-wider block">Submission Closes In</span>
+                <span class="text-zinc-400 text-xs mt-0.5 block font-mono" id="classExpiry">Expires at: --:-- --</span>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-3xl font-black text-rose-500 font-[Orbitron] tracking-wider" id="classCountdown">00:00</div>
+            </div>
+          </div>
+
+          <!-- Pre-filled info check -->
+          <div class="bg-zinc-900/60 border border-white/5 rounded-2xl p-4 mb-6 text-xs space-y-2">
+            <div class="flex justify-between border-b border-white/5 pb-2">
+              <span class="text-zinc-400 font-medium">Logged Student:</span>
+              <span class="text-white font-bold" id="formStudentName">Name</span>
+            </div>
+            <div class="flex justify-between border-b border-white/5 pb-2">
+              <span class="text-zinc-400 font-medium">Device Fingerprint:</span>
+              <span class="text-white font-mono font-bold" id="formDeviceFingerprint">DEV_...</span>
+            </div>
+            <div class="flex justify-between items-center" id="geofenceStatusRow">
+              <span class="text-zinc-400 font-medium">GPS Geolocation Check:</span>
+              <span class="font-bold text-zinc-400 flex items-center gap-1.5" id="gpsStatusBadge">
+                <i class="fa-solid fa-spinner animate-spin text-indigo-400"></i> Acquiring Location
+              </span>
+            </div>
+          </div>
+
+          <!-- Real Time Verification form -->
+          <form id="activeCheckinForm" onsubmit="handleCheckinSubmit(event)">
+            <input type="hidden" id="formCsrfToken" value="" />
+            <div class="space-y-4">
+              <!-- Roll number input -->
+              <div class="flex flex-col">
+                <label for="rollInput" class="text-xs text-zinc-400 font-bold uppercase tracking-wide mb-1.5">Enter Roll Number *</label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-zinc-500">
+                    <i class="fa-solid fa-id-card"></i>
+                  </span>
+                  <input type="text" id="rollInput" placeholder="Class Roll No (e.g. 21)" class="w-full glass-input rounded-xl py-3 pl-10 pr-4 text-white outline-none text-sm font-semibold tracking-wide uppercase placeholder:text-zinc-600" required>
+                </div>
+              </div>
+
+              <!-- Check-In Method Specifics (QR Scan) -->
+              <div id="qrScanRequiredSection" class="hidden border border-indigo-500/20 bg-indigo-500/5 rounded-2xl p-5 space-y-4 text-center">
+                <div class="text-indigo-400 text-3xl">
+                  <i class="fa-solid fa-camera-rotate animate-bounce"></i>
+                </div>
+                <h4 class="text-sm font-bold text-white">Dynamic QR Code Verification Required</h4>
+                <p class="text-xs text-zinc-400 max-w-sm mx-auto leading-relaxed">This session requires scanning the rotating QR code displayed on the teacher's screen to prevent proxy markings.</p>
+                
+                <!-- QR Code status indicators -->
+                <div id="qrVerificationStatus" class="bg-zinc-950/80 border border-white/5 px-4 py-2.5 rounded-xl inline-flex items-center gap-2 text-xs font-mono font-bold text-zinc-400">
+                  <span class="w-2 h-2 rounded-full bg-zinc-600" id="qrDot"></span>
+                  <span id="qrStatusLabel">No scanned code token detected</span>
+                </div>
+
+                <div class="flex gap-2 justify-center">
+                  <button type="button" onclick="startCameraScanner()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-md">
+                    <i class="fa-solid fa-camera"></i> Launch Camera Scanner
+                  </button>
+                  <button type="button" onclick="showPasscodeFallback()" class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-white/10 rounded-xl text-xs font-bold transition-all">
+                    Enter Passcode Instead
+                  </button>
+                </div>
+
+                <!-- Passcode Input Fallback -->
+                <div id="passcodeFallbackWrap" class="hidden max-w-xs mx-auto pt-2">
+                  <div class="flex gap-2 justify-center">
+                    <input type="text" id="qrPasscodeInput" placeholder="6-digit dynamic code" maxlength="8" class="w-32 glass-input rounded-xl py-2 px-3 text-center text-white font-mono font-bold tracking-wider outline-none text-xs">
+                    <button type="button" onclick="verifyPasscodeFromInput()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all">
+                      Verify
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Link Campaign specific status -->
+              <div id="linkCampaignSection" class="hidden border border-teal-500/20 bg-teal-500/5 rounded-2xl p-4 text-center text-xs text-zinc-300">
+                <i class="fa-solid fa-link text-teal-400 text-lg mb-1 block"></i>
+                <span class="font-bold text-white block mb-0.5">Checked-in via Unique Campaign Link</span>
+                Verified session campaign authentication coordinates.
+              </div>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="checkinFormError" class="hidden bg-rose-500/10 border border-rose-500/25 text-rose-400 text-xs rounded-xl p-4 mt-5 font-semibold flex items-center gap-3">
+              <i class="fa-solid fa-circle-exclamation text-base"></i>
+              <span id="checkinFormErrorText">Error message description.</span>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="checkinSubmitBtn" class="mt-6 w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:cursor-not-allowed text-white rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 shimmer-btn">
+              <span>Submit Checked Attendance</span>
+              <div id="checkinBtnSpinner" class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            </button>
+          </form>
+        </div>
+
+        <!-- Check-out Section (If Checked-in but check-out time is empty) -->
+        <div id="activeCheckoutCard" class="hidden max-w-xl mx-auto glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 relative overflow-hidden pulse-glow-purple">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="text-center space-y-4">
+            <div class="w-14 h-14 bg-indigo-500/10 border border-indigo-500/25 rounded-2xl text-indigo-400 flex items-center justify-center text-2xl mx-auto">
+              <i class="fa-solid fa-door-open animate-pulse"></i>
+            </div>
+            <h3 class="text-xl font-bold tracking-tight text-white font-[Outfit]">Active Class Check-In Found</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed max-w-sm mx-auto">You checked in to <strong class="text-white" id="coSubject">Subject</strong> at <strong id="coTime" class="font-mono">--:--</strong>. Remember to check-out when the lecture ends to sync logs.</p>
+            
+            <div class="bg-zinc-950/50 border border-white/5 rounded-xl p-3.5 max-w-xs mx-auto text-xs space-y-1">
+              <div class="flex justify-between">
+                <span class="text-zinc-500">Roll Number:</span>
+                <span class="text-white font-bold" id="coRoll">--</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-zinc-500">Check-In Status:</span>
+                <span class="text-emerald-400 font-bold uppercase tracking-wider font-mono text-[10px]" id="coStatus">Present</span>
+              </div>
+            </div>
+
+            <button onclick="triggerClassCheckout()" class="w-full max-w-xs py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-md mt-4">
+              Check-Out of Session
+            </button>
+          </div>
+        </div>
+
+        <!-- Success Ticket / Receipt view -->
+        <div id="attendanceSuccessTicket" class="hidden max-w-md mx-auto glass-panel rounded-3xl p-6 border border-white/10 text-center relative overflow-hidden pulse-glow-green">
+          <div class="absolute -right-6 -bottom-6 opacity-[0.03] text-8xl text-white font-black select-none pointer-events-none font-mono">OK</div>
+          <div class="w-14 h-14 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <h2 class="text-xl font-black text-white font-[Outfit]">Check-In Registered!</h2>
+          <p class="text-zinc-400 text-xs mt-1 leading-relaxed max-w-xs mx-auto">Your attendance is secured in the classroom roster.</p>
+          
+          <!-- receipt details -->
+          <div class="bg-zinc-950/70 border border-white/5 rounded-2xl p-5 my-5 text-left text-xs space-y-3 relative">
+            <div class="absolute top-2 right-2 px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md font-bold text-[9px] uppercase tracking-wider font-mono" id="recStatus">Present</div>
+            
+            <div class="flex justify-between border-b border-white/5 pb-2">
+              <span class="text-zinc-500">Student Name</span>
+              <span class="text-white font-bold" id="recStudentName">Loading</span>
+            </div>
+            <div class="flex justify-between border-b border-white/5 pb-2">
+              <span class="text-zinc-500">Roll Number</span>
+              <span class="text-white font-mono font-bold" id="recRoll">Loading</span>
+            </div>
+            <div class="flex justify-between border-b border-white/5 pb-2">
+              <span class="text-zinc-500">Subject Class</span>
+              <span class="text-white font-bold" id="recSubject">Loading</span>
+            </div>
+            <div class="flex justify-between border-b border-white/5 pb-2">
+              <span class="text-zinc-500">Checked-In At</span>
+              <span class="text-white font-mono" id="recTimestamp">Loading</span>
+            </div>
+            <div class="flex justify-between items-center pt-1">
+              <span class="text-zinc-500">Roster UID Receipt</span>
+              <span class="text-[10px] font-mono text-indigo-400 font-bold" id="recReceiptId">REC_...</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="shareTicketWhatsApp()" class="py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-md flex items-center justify-center gap-1.5">
+              <i class="fa-brands fa-whatsapp text-sm"></i> Share Receipt
+            </button>
+            <button onclick="dismissTicketView()" class="py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-white/10 rounded-xl text-xs font-bold tracking-wide transition-all">
+              Dashboard Home
+            </button>
+          </div>
+        </div>
+
+        <!-- Dashboard default checkin prompt state (if no active session is selected/searched) -->
+        <div id="defaultCheckinSearch" class="max-w-md mx-auto glass-panel rounded-3xl p-8 border border-white/10 text-center space-y-6">
+          <div class="w-16 h-16 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-2xl flex items-center justify-center text-2xl mx-auto">
+            <i class="fa-solid fa-fingerprint"></i>
+          </div>
+          <div class="space-y-2">
+            <h3 class="text-xl font-bold tracking-tight text-white font-[Outfit]">No Session Link Loaded</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed max-w-sm mx-auto">Open the unique attendance link provided by your lecturer, or use the camera scanner to read the secure rotating QR code in class.</p>
+          </div>
+
+          <!-- Active Campaigns list -->
+          <div id="liveCampaignsFeed" class="text-left space-y-3 pt-2">
+            <span class="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">Live Classroom Sessions</span>
+            
+            <div id="liveSessionsList" class="space-y-2 max-h-[160px] overflow-y-auto pr-1">
+              <!-- placeholder -->
+              <div class="text-center py-6 text-xs text-zinc-500 border border-dashed border-white/10 rounded-xl bg-zinc-950/20">
+                No active classroom sessions currently found.
+              </div>
+            </div>
+          </div>
+
+          <button onclick="startCameraScanner()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-md flex items-center justify-center gap-2">
+            <i class="fa-solid fa-qrcode"></i> Launch QR Code Scanner
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 2: ATTENDANCE RECORDS HISTORY -->
+      <div id="tabHistory" class="hidden space-y-4">
+        <div class="glass-panel p-5 sm:p-6 rounded-2xl border border-white/10">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <div>
+              <h3 class="text-lg font-bold text-white tracking-tight font-[Outfit]">Attendance Roster Logs</h3>
+              <p class="text-xs text-zinc-400 mt-0.5">List of class sessions logged on this device and your roster name.</p>
+            </div>
+            
+            <!-- Filters -->
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <div class="relative flex-grow sm:flex-grow-0">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-zinc-500 text-xs">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" id="historySearch" oninput="filterHistory()" placeholder="Search Subject..." class="w-full sm:w-48 glass-input rounded-lg py-1.5 pl-8 pr-3 text-white text-xs outline-none">
+              </div>
+            </div>
+          </div>
+
+          <!-- History Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-white/5 text-zinc-500 font-bold uppercase tracking-wider">
+                  <th class="py-3 px-4">Subject Lecture</th>
+                  <th class="py-3 px-4">Date & Time</th>
+                  <th class="py-3 px-4">Checked-In</th>
+                  <th class="py-3 px-4">Checked-Out</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4 text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody" class="divide-y divide-white/5">
+                <tr>
+                  <td colspan="6" class="py-12 text-center text-zinc-500 font-medium bg-zinc-950/20 rounded-xl">
+                    <i class="fa-solid fa-circle-notch animate-spin text-lg text-indigo-400 mb-2 block"></i> Loading logs...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: CORRECTIONS REQUEST QUEUE -->
+      <div id="tabCorrections" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Submit Correction form -->
+        <div class="glass-panel p-5 sm:p-6 rounded-2xl border border-white/10 lg:col-span-1 h-fit">
+          <h3 class="text-base font-bold text-white tracking-tight font-[Outfit] mb-4">Request Attendance Correction</h3>
+          
+          <form id="correctionForm" onsubmit="handleCorrectionSubmit(event)">
+            <div class="space-y-4">
+              <!-- Select Session Date -->
+              <div>
+                <label for="corrDate" class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block mb-1.5">Lecture Date *</label>
+                <input type="date" id="corrDate" class="w-full glass-input rounded-xl py-2.5 px-3 text-white text-xs outline-none" required>
+              </div>
+
+              <!-- Subject Name -->
+              <div>
+                <label for="corrSubject" class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block mb-1.5">Lecture Subject *</label>
+                <input type="text" id="corrSubject" placeholder="e.g. C Programming" class="w-full glass-input rounded-xl py-2.5 px-3 text-white text-xs outline-none" required>
+              </div>
+
+              <!-- Roll number -->
+              <div>
+                <label for="corrRoll" class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block mb-1.5">Class Roll Number *</label>
+                <input type="text" id="corrRoll" placeholder="e.g. 25" class="w-full glass-input rounded-xl py-2.5 px-3 text-white text-xs outline-none" required>
+              </div>
+
+              <!-- Requested Status -->
+              <div>
+                <label for="corrStatus" class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block mb-1.5">Requested Status *</label>
+                <select id="corrStatus" class="w-full glass-input rounded-xl py-2.5 px-3 text-white text-xs outline-none" required>
+                  <option value="present">Present (On Time)</option>
+                  <option value="late">Late Arrival (Excuse)</option>
+                </select>
+              </div>
+
+              <!-- Reason description -->
+              <div>
+                <label for="corrReason" class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block mb-1.5">Reason for correction *</label>
+                <textarea id="corrReason" rows="3" placeholder="Provide valid reason for missing roster or technical error..." class="w-full glass-input rounded-xl py-2.5 px-3 text-white text-xs outline-none resize-none" required></textarea>
+              </div>
+
+              <div id="corrFormError" class="hidden bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs rounded-xl p-3 font-semibold">
+                Error message
+              </div>
+
+              <button type="submit" id="corrSubmitBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5">
+                <span>Submit Correction Request</span>
+                <div id="corrBtnSpinner" class="hidden w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Correction Queue Status Roster -->
+        <div class="glass-panel p-5 sm:p-6 rounded-2xl border border-white/10 lg:col-span-2">
+          <h3 class="text-base font-bold text-white tracking-tight font-[Outfit] mb-4">Correction Request Status</h3>
+          
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-white/5 text-zinc-500 font-bold uppercase tracking-wider">
+                  <th class="py-2.5 px-3">Subject Class</th>
+                  <th class="py-2.5 px-3">Req. Status</th>
+                  <th class="py-2.5 px-3">Reason Summary</th>
+                  <th class="py-2.5 px-3">Submitted At</th>
+                  <th class="py-2.5 px-3 text-right">Roster Status</th>
+                </tr>
+              </thead>
+              <tbody id="correctionsTableBody" class="divide-y divide-white/5">
+                <tr>
+                  <td colspan="5" class="py-10 text-center text-zinc-500">
+                    No correction requests submitted.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- CAMERA SCANNER MODAL OVERLAY -->
+  <div id="scannerOverlay" class="hidden fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center p-4">
+    <div class="max-w-md w-full glass-panel rounded-3xl p-6 border border-white/10 space-y-4 relative text-center">
+      <button onclick="stopCameraScanner()" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg p-1">
+        ✕
+      </button>
+      <h3 class="text-lg font-bold text-white tracking-tight font-[Outfit]">QR Code Scanner</h3>
+      <p class="text-xs text-zinc-400">Position the rotating class QR code within the viewport frame.</p>
+      
+      <!-- Video Viewport -->
+      <div class="relative w-full aspect-square max-w-[280px] mx-auto border-2 border-indigo-500 rounded-2xl overflow-hidden bg-black flex items-center justify-center">
+        <div id="qrReader" class="w-full h-full"></div>
+        
+        <!-- Target indicator frame overlay -->
+        <div class="absolute inset-4 border border-dashed border-white/40 rounded-xl pointer-events-none flex items-center justify-center">
+          <div class="w-8 h-8 border-t-2 border-l-2 border-indigo-400 absolute top-0 left-0"></div>
+          <div class="w-8 h-8 border-t-2 border-r-2 border-indigo-400 absolute top-0 right-0"></div>
+          <div class="w-8 h-8 border-b-2 border-l-2 border-indigo-400 absolute bottom-0 left-0"></div>
+          <div class="w-8 h-8 border-b-2 border-r-2 border-indigo-400 absolute bottom-0 right-0"></div>
+        </div>
+      </div>
+      
+      <div class="text-xs font-mono text-zinc-500">
+        Using system primary camera lens
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 py-6 bg-zinc-950/40 text-center text-xs text-zinc-500 font-medium mt-12">
+    <p>&copy; 2026 BCA Store. All rights reserved. | Built with Security Verification Logs</p>
+  </footer>
+
+  <!-- HTML5 QR CODE READER LIBRARY -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <!-- Firebase Script SDK Hooks -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  
+  <!-- Cryptography & Security Layer -->
+  <script src="attendance-service.js"></script>
+  <script src="student-registration.js"></script>
+  
+  <script>
+    // Firebase Config Initialization
+    const firebaseConfig = {
+      apiKey: "AIzaSyC_mWJld2NksodLIg0hI_O0wuLWpUL4AoE",
+      authDomain: "bca-store.firebaseapp.com",
+      databaseURL: "https://bca-store-default-rtdb.firebaseio.com",
+      projectId: "bca-store",
+      storageBucket: "bca-store.firebasestorage.app",
+      messagingSenderId: "1063532602856",
+      appId: "1:1063532602856:web:30812a52ccbded1548305d"
+    };
+
+    let app, db;
+    try {
+      app = firebase.apps && firebase.apps.length > 0 ? firebase.app() : firebase.initializeApp(firebaseConfig);
+      db = firebase.database(app);
+    } catch (e) {
+      console.error("Firebase init failed:", e.message);
+    }
+
+    // Helper functions
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    const querySessionId = getQueryParam('session');
+    const queryQrSecret = getQueryParam('qrSecret');
+    
+    let studentId = '';
+    let studentData = {};
+    let activeSession = null;
+    let timerInterval = null;
+    let gpsCoords = null;
+    let gpsErrorMsg = '';
+    let html5QrScanner = null;
+    let scannedToken = '';
+    let studentJwt = null;
+
+    // Haversine Distance helper
+    function getDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371e3; // metres
+      const phi1 = lat1 * Math.PI/180;
+      const phi2 = lat2 * Math.PI/180;
+      const deltaPhi = (lat2-lat1) * Math.PI/180;
+      const deltaLambda = (lon2-lon1) * Math.PI/180;
+
+      const a = Math.sin(deltaPhi/2) * Math.sin(deltaPhi/2) +
+                Math.cos(phi1) * Math.cos(phi2) *
+                Math.sin(deltaLambda/2) * Math.sin(deltaLambda/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+
+    // Real-time clock HUD
+    function updateClock() {
+      const el = document.getElementById('navClock');
+      if (el) {
+        el.textContent = new Date().toLocaleTimeString('en-US', { hour12: true });
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // DOM LOAD ACTION
+    document.addEventListener('DOMContentLoaded', () => {
+      checkUserAuth();
+    });
+
+    let selectedIdCardBase64 = '';
+
+    // ID Card File Selection and Preview Handler
+    window.previewIdCard = function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (!['image/png', 'image/jpeg', 'image/jpg', 'image/webp'].includes(file.type)) {
+        alert("Invalid image format. Select WebP, JPG, or PNG.");
+        event.target.value = '';
+        return;
+      }
+      if (file.size > 1 * 1024 * 1024) {
+        alert("Image size must be 1 MB or less.");
+        event.target.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        selectedIdCardBase64 = e.target.result;
+        document.getElementById('idCardPreviewImg').src = selectedIdCardBase64;
+        document.getElementById('idCardPreviewContainer').classList.remove('hidden');
+        
+        const uploadIcon = document.getElementById('idCardUploadIcon');
+        if (uploadIcon) {
+          uploadIcon.className = "fa-solid fa-circle-check text-3xl text-emerald-400 mb-2 animate-bounce";
+        }
+        
+        const label = document.getElementById('idCardUploadLabel');
+        if (label) {
+          label.textContent = file.name;
+        }
+        
+        document.getElementById('idCardSubmitBtn').disabled = false;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    // ID Card Submission to Realtime Database
+    window.submitIdCard = async function() {
+      if (!selectedIdCardBase64 || !studentId || !db) {
+        alert("Please select a file and ensure your connection is active.");
+        return;
+      }
+      
+      const btn = document.getElementById('idCardSubmitBtn');
+      const loader = document.getElementById('idCardSubmitLoader');
+      
+      btn.disabled = true;
+      if (loader) loader.classList.remove('hidden');
+      
+      try {
+        await db.ref(`students/${studentId}`).update({
+          idCard: selectedIdCardBase64,
+          idCardStatus: 'pending'
+        });
+        
+        alert("ID Card uploaded successfully! Awaiting administrator verification.");
+        selectedIdCardBase64 = '';
+        document.getElementById('idCardPreviewContainer').classList.add('hidden');
+        document.getElementById('idCardFileInput').value = '';
+        
+        // Refresh Auth State
+        await checkUserAuth();
+      } catch(e) {
+        alert("Upload failed: " + e.message);
+      } finally {
+        btn.disabled = false;
+        if (loader) loader.classList.add('hidden');
+      }
+    };
+
+    async function checkUserAuth() {
+      const isRegistered = localStorage.getItem('student_registered') === 'true';
+      if (!isRegistered) {
+        document.getElementById('authRequiredScreen').classList.remove('hidden');
+        return;
+      }
+
+      studentId = localStorage.getItem('student_id');
+      
+      // Sync real-time ID verification state from online db
+      if (db) {
+        try {
+          const snap = await db.ref(`students/${studentId}`).once('value');
+          if (snap.exists()) {
+            studentData = snap.val();
+            localStorage.setItem('student_data', JSON.stringify(studentData));
+          }
+        } catch (e) {
+          console.warn("RTDB Profile sync failed:", e);
+          try {
+            studentData = JSON.parse(localStorage.getItem('student_data') || '{}');
+          } catch(err) {
+            studentData = {};
+          }
+        }
+      } else {
+        try {
+          studentData = JSON.parse(localStorage.getItem('student_data') || '{}');
+        } catch(err) {
+          studentData = {};
+        }
+      }
+
+      // Generate client-side session JWT for current student context
+      studentJwt = await AttendanceSecurity.generateJWT({
+        userId: studentId,
+        username: studentData.username,
+        role: "student"
+      });
+      // Bypassed: Do not overwrite the main student_session_token from login, otherwise navigation back from this page triggers session mismatch.
+      // localStorage.setItem('student_session_token', studentJwt);
+
+      // Inject CSRF Token
+      const csrf = AttendanceSecurity.generateCSRFToken();
+      document.getElementById('formCsrfToken').value = csrf;
+
+      // Display student details in header
+      document.getElementById('studentNameLabel').textContent = studentData.name || 'Student';
+      document.getElementById('studentSemLabel').textContent = studentData.semester || 'Semester';
+      
+      const avatarEl = document.getElementById('studentAvatar');
+      if (avatarEl && studentData.photo) {
+        avatarEl.src = studentData.photo;
+      }
+      
+      document.getElementById('studentBadge').classList.remove('hidden');
+
+      // ID CARD COMPULSORY UPLOAD SECURITY CHECK
+      const idStatus = studentData.idCardStatus || 'unuploaded';
+      
+      if (idStatus === 'unuploaded') {
+        // Block dashboard access and display uploader form
+        document.getElementById('studentDashboard').classList.add('hidden');
+        document.getElementById('idCardUploadContainer').classList.remove('hidden');
+        return; // BLOCK dashboards loads
+      }
+
+      // User has uploaded a card (pending, approved, or rejected)
+      document.getElementById('idCardUploadContainer').classList.add('hidden');
+      document.getElementById('studentDashboard').classList.remove('hidden');
+
+      const pendingBanner = document.getElementById('idPendingBanner');
+      if (idStatus === 'pending') {
+        pendingBanner.classList.remove('hidden');
+      } else {
+        pendingBanner.classList.add('hidden');
+      }
+
+      const rejectedBanner = document.getElementById('idRejectedBanner');
+      if (idStatus === 'rejected') {
+        rejectedBanner.classList.remove('hidden');
+      } else {
+        rejectedBanner.classList.add('hidden');
+      }
+      
+      // Render dashboard values
+      document.getElementById('dashStudentPhoto').src = studentData.photo || 'avatar_faculty1.png';
+      document.getElementById('dashStudentName').textContent = studentData.name || 'Student Name';
+      document.getElementById('dashStudentMeta').textContent = `${studentData.college || 'BCA College'} | ${studentData.semester || 'Semester'}`;
+      
+      // Load locations checks
+      acquireUserLocation();
+
+      // Check URL query parameters to route to check-in form
+      if (querySessionId) {
+        loadCheckinSession(querySessionId);
+      } else {
+        loadDashboardStats();
+        loadLiveSessionsRoster();
+        checkActiveCheckinRecord();
+      }
+      
+      fetchHistoricalLogs();
+      fetchCorrectionsList();
+    }
+
+    function handleLogout() {
+      if (confirm("Are you sure you want to sign out?")) {
+        if (window.clearSessionLocal) window.clearSessionLocal();
+        window.location.href = "index.html";
+      }
+    }
+
+    // Acquire GPS Coordinate status
+    function acquireUserLocation() {
+      const badge = document.getElementById('gpsStatusBadge');
+      if (!navigator.geolocation) {
+        gpsErrorMsg = "Geolocation not supported";
+        if (badge) badge.className = "text-rose-400 flex items-center gap-1.5 font-bold";
+        if (badge) badge.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Supported Error`;
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          gpsCoords = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          if (badge) {
+            badge.className = "text-emerald-400 flex items-center gap-1.5 font-bold font-mono";
+            badge.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${gpsCoords.lat.toFixed(5)}, ${gpsCoords.lng.toFixed(5)}`;
+          }
+          if (activeSession) {
+            validateGeofenceBoundaries();
+          }
+        },
+        error => {
+          console.warn("Location error:", error);
+          let reason = "Permission Denied";
+          if (error.code === 2) reason = "Location Unavailable";
+          if (error.code === 3) reason = "Timeout Error";
+          gpsErrorMsg = reason;
+          if (badge) {
+            badge.className = "text-amber-400 flex items-center gap-1.5 font-bold";
+            badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> GPS Disabled (${reason})`;
+          }
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+
+    // Switch between dashboard tab panels
+    function switchTab(tab) {
+      const tabs = ['mark', 'history', 'corrections'];
+      tabs.forEach(t => {
+        const pane = document.getElementById(`tab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        const btn = document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        
+        if (pane) {
+          if (t === tab) {
+            pane.classList.remove('hidden');
+            if (t === 'corrections') pane.classList.add('grid');
+          } else {
+            pane.classList.add('hidden');
+            pane.classList.remove('grid');
+          }
+        }
+        
+        if (btn) {
+          if (t === tab) {
+            btn.className = "py-2.5 px-5 rounded-lg text-sm font-semibold tracking-wide transition-all duration-300 border border-transparent flex items-center gap-2 bg-indigo-600 text-white shadow-lg shadow-indigo-600/10";
+          } else {
+            btn.className = "py-2.5 px-5 rounded-lg text-sm font-semibold tracking-wide transition-all duration-300 border border-transparent flex items-center gap-2 text-zinc-400 hover:text-white hover:bg-white/5";
+          }
+        }
+      });
+    }
+
+    // Check if the student has a session in-progress with missing checkout timestamp
+    async function checkActiveCheckinRecord() {
+      if (!db || !studentId) return;
+      
+      try {
+        const studentRoll = studentData.rollNo || '';
+        const recordsRef = db.ref('attendance-v2/records');
+        const snap = await recordsRef.once('value');
+        if (!snap.exists()) return;
+
+        let activeCoSessionId = '';
+        let activeCoRecord = null;
+        let activeCoSubject = 'Lecture';
+
+        snap.forEach(sessionSnap => {
+          const sId = sessionSnap.key;
+          const userRec = sessionSnap.child(studentRoll);
+          
+          if (userRec.exists()) {
+            const data = userRec.val();
+            if (data.studentId === studentId && !data.checkOutTime) {
+              activeCoSessionId = sId;
+              activeCoRecord = data;
+            }
+          }
+        });
+
+        if (activeCoSessionId && activeCoRecord) {
+          const sessSnap = await db.ref(`attendance-v2/sessions/${activeCoSessionId}`).once('value');
+          if (sessSnap.exists()) {
+            activeCoSubject = sessSnap.val().subject;
+          }
+
+          document.getElementById('coSubject').textContent = activeCoSubject;
+          document.getElementById('coTime').textContent = new Date(activeCoRecord.checkInTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+          
+          // Decrypt roll number if encrypted
+          const decRoll = await AttendanceSecurity.decryptData(activeCoRecord.rollNumber);
+          document.getElementById('coRoll').textContent = decRoll || activeCoRecord.rollNumber;
+          document.getElementById('coStatus').textContent = activeCoRecord.status;
+          
+          document.getElementById('defaultCheckinSearch').classList.add('hidden');
+          document.getElementById('activeCheckoutCard').classList.remove('hidden');
+          
+          window.currentCoSessionId = activeCoSessionId;
+          window.currentCoRoll = activeCoRecord.rollNumber; // Store the key (which could be the plain roll)
+        }
+      } catch (err) {
+        console.warn("Error checkActiveCheckinRecord:", err);
+      }
+    }
+
+    // Trigger Class checkout session
+    async function triggerClassCheckout() {
+      if (!db || !window.currentCoSessionId || !window.currentCoRoll) return;
+      
+      const recordsRef = db.ref(`attendance-v2/records/${window.currentCoSessionId}/${window.currentCoRoll}`);
+      
+      try {
+        await recordsRef.update({
+          checkOutTime: Date.now()
+        });
+
+        if (studentId) {
+          db.ref(`students/${studentId}/activityLogs`).push().set({
+            event: 'Attendance Check-Out',
+            timestamp: Date.now(),
+            details: `Checked out of session ${window.currentCoSessionId}`
+          });
+        }
+
+        alert("Checked-out successfully. Roster updated!");
+        document.getElementById('activeCheckoutCard').classList.add('hidden');
+        document.getElementById('defaultCheckinSearch').classList.remove('hidden');
+        
+        window.currentCoSessionId = null;
+        window.currentCoRoll = null;
+        
+        loadDashboardStats();
+        fetchHistoricalLogs();
+      } catch(e) {
+        alert("Failed to record Check-Out: " + e.message);
+      }
+    }
+
+    // Load active campaigns list from RTDB for students in the same sem/batch
+    function loadLiveSessionsRoster() {
+      if (!db) return;
+      
+      db.ref('attendance-v2/sessions')
+        .orderByChild('status')
+        .equalTo('active')
+        .on('value', snapshot => {
+          const list = document.getElementById('liveSessionsList');
+          if (!list) return;
+          
+          list.innerHTML = '';
+          
+          if (!snapshot.exists()) {
+            list.innerHTML = `
+              <div class="text-center py-6 text-xs text-zinc-500 border border-dashed border-white/10 rounded-xl bg-zinc-950/20">
+                No active classroom classroom sessions currently found.
+              </div>`;
+            return;
+          }
+
+          let itemsCount = 0;
+          snapshot.forEach(child => {
+            const s = child.val();
+            const sId = child.key;
+
+            if (s.semester === studentData.semester || !studentData.semester) {
+              itemsCount++;
+              
+              const start = new Date(s.startTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+              
+              const item = document.createElement('div');
+              item.className = "flex items-center justify-between p-3.5 bg-zinc-950/40 hover:bg-zinc-900/60 border border-white/5 rounded-xl transition-all";
+              item.innerHTML = `
+                <div class="text-left leading-tight">
+                  <span class="text-[9px] text-indigo-400 font-bold uppercase tracking-wider block">${s.semester || 'N/A'}</span>
+                  <h4 class="text-xs font-bold text-white mt-0.5">${s.subject || 'Lecture'}</h4>
+                  <span class="text-[10px] text-zinc-500 font-medium">By: ${s.teacher || 'Teacher'} | Started: ${start}</span>
+                </div>
+                <button onclick="loadCheckinSession('${sId}')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold text-[10px] tracking-wide transition-all shadow-md">
+                  Check-In
+                </button>
+              `;
+              list.appendChild(item);
+            }
+          });
+
+          if (itemsCount === 0) {
+            list.innerHTML = `
+              <div class="text-center py-6 text-xs text-zinc-500 border border-dashed border-white/10 rounded-xl bg-zinc-950/20">
+                No active classroom sessions matches your semester.
+              </div>`;
+          }
+        });
+    }
+
+    // Load active session into checking view
+    function loadCheckinSession(sessionId) {
+      if (!db) return;
+      
+      if (timerInterval) clearInterval(timerInterval);
+
+      // Verify if student has already completed attendance checkin
+      const cachedRoll = localStorage.getItem('cached_roll_number') || studentData.rollNo || '';
+      if (cachedRoll) {
+        db.ref(`attendance-v2/records/${sessionId}/${cachedRoll}`).once('value').then(async snap => {
+          if (snap.exists() && snap.val().studentId === studentId) {
+            const val = snap.val();
+            // Temporary set activeSession properties to build ticket details
+            const sessSnap = await db.ref(`attendance-v2/sessions/${sessionId}`).once('value');
+            if (sessSnap.exists()) {
+              activeSession = sessSnap.val();
+              activeSession.id = sessionId;
+            }
+            showReceiptTicket(val, sessionId);
+            return;
+          }
+        });
+      }
+
+      db.ref(`attendance-v2/sessions/${sessionId}`).once('value', snapshot => {
+        if (!snapshot.exists()) {
+          alert("Selected attendance session does not exist or has been deleted.");
+          window.location.search = "";
+          return;
+        }
+
+        activeSession = snapshot.val();
+        activeSession.id = sessionId;
+
+        document.getElementById('classBadge').textContent = `${activeSession.semester || 'N/A'} | ${activeSession.batch || 'N/A'}`;
+        document.getElementById('classSubject').textContent = activeSession.subject || 'Lecture';
+        
+        const expTime = new Date(activeSession.endTime);
+        document.getElementById('classExpiry').textContent = `Expires at: ${expTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
+        
+        document.getElementById('formStudentName').textContent = studentData.name || 'Anonymous Student';
+        
+        const devId = localStorage.getItem('student_device_id') || 'DEV_GUEST';
+        document.getElementById('formDeviceFingerprint').textContent = devId;
+
+        const cached = localStorage.getItem('cached_roll_number') || studentData.rollNo || '';
+        document.getElementById('rollInput').value = cached;
+
+        if (queryQrSecret) {
+          scannedToken = queryQrSecret;
+          const statusLbl = document.getElementById('qrStatusLabel');
+          const statusDot = document.getElementById('qrDot');
+          if (statusLbl) statusLbl.textContent = `Scanned QR Token: ${scannedToken.substring(0, 10)}...`;
+          if (statusDot) statusDot.className = "w-2 h-2 rounded-full bg-emerald-400 pulse-glow";
+        }
+        
+        const isQrMode = activeSession.qrSecret !== undefined;
+        if (isQrMode) {
+          document.getElementById('qrScanRequiredSection').classList.remove('hidden');
+          document.getElementById('linkCampaignSection').classList.add('hidden');
+        } else {
+          document.getElementById('qrScanRequiredSection').classList.add('hidden');
+          document.getElementById('linkCampaignSection').classList.remove('hidden');
+        }
+
+        const now = Date.now();
+        const start = Number(activeSession.startTime);
+        const end = Number(activeSession.endTime);
+
+        if (activeSession.status !== 'active' || now >= end) {
+          showSessionClosedUI();
+          return;
+        }
+
+        startCountdown(end);
+        
+        document.getElementById('defaultCheckinSearch').classList.add('hidden');
+        document.getElementById('activeSessionCard').classList.remove('hidden');
+
+        validateGeofenceBoundaries();
+      });
+    }
+
+    function showSessionClosedUI() {
+      if (timerInterval) clearInterval(timerInterval);
+      document.getElementById('classCountdown').textContent = "00:00";
+      
+      const badge = document.getElementById('liveBadge');
+      if (badge) {
+        badge.className = "bg-rose-500/10 text-rose-400 border border-rose-500/20 text-xs px-3 py-1 rounded-full font-bold";
+        badge.textContent = "CLOSED";
+      }
+
+      const submit = document.getElementById('checkinSubmitBtn');
+      if (submit) {
+        submit.disabled = true;
+        submit.textContent = "Attendance Closed";
+        submit.className = "mt-6 w-full py-3.5 bg-zinc-800 text-zinc-500 rounded-xl text-sm font-bold cursor-not-allowed flex items-center justify-center";
+      }
+    }
+
+    function startCountdown(endTime) {
+      function updateTimer() {
+        const remaining = endTime - Date.now();
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          showSessionClosedUI();
+          return;
+        }
+        const totalSecs = Math.floor(remaining / 1000);
+        const mins = Math.floor(totalSecs / 60);
+        const secs = totalSecs % 60;
+        document.getElementById('classCountdown').textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      }
+
+      updateTimer();
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    // Geolocation constraints check
+    function validateGeofenceBoundaries() {
+      if (!activeSession || !activeSession.geofence) return;
+      
+      const geo = activeSession.geofence;
+      const targetLat = Number(geo.lat);
+      const targetLng = Number(geo.lng);
+      const radius = Number(geo.radius);
+
+      if (targetLat === 0 && targetLng === 0) return; // Geofence disabled
+
+      const row = document.getElementById('geofenceStatusRow');
+      const badge = document.getElementById('gpsStatusBadge');
+
+      if (!gpsCoords) {
+        if (badge) {
+          badge.className = "text-amber-400 flex items-center gap-1.5 font-bold";
+          badge.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Checking GPS Lock...`;
+        }
+        return;
+      }
+
+      const distance = getDistance(gpsCoords.lat, gpsCoords.lng, targetLat, targetLng);
+      
+      if (distance <= radius) {
+        if (badge) {
+          badge.className = "text-emerald-400 flex items-center gap-1.5 font-bold";
+          badge.innerHTML = `<i class="fa-solid fa-circle-check"></i> Inside Bounds (${distance.toFixed(1)}m)`;
+        }
+        document.getElementById('checkinSubmitBtn').disabled = false;
+        document.getElementById('checkinFormError').classList.add('hidden');
+      } else {
+        if (badge) {
+          badge.className = "text-rose-400 flex items-center gap-1.5 font-bold";
+          badge.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Outside Bounds (${distance.toFixed(1)}m)`;
+        }
+        document.getElementById('checkinSubmitBtn').disabled = true;
+        showCheckinError(`Roster Security Lock: You are outside the classroom boundary limit. Distance: ${distance.toFixed(1)}m. Geofence radius: ${radius}m.`);
+      }
+    }
+
+    function showCheckinError(msg) {
+      const el = document.getElementById('checkinFormError');
+      const text = document.getElementById('checkinFormErrorText');
+      if (el && text) {
+        text.textContent = msg;
+        el.classList.remove('hidden');
+      }
+    }
+
+    // Submit Check-In
+    async function handleCheckinSubmit(event) {
+      event.preventDefault();
+
+      // Rate limit check
+      if (!AttendanceSecurity.checkRateLimit()) {
+        showCheckinError("Rate Limit Triggered: Please wait a moment before trying again.");
+        return;
+      }
+
+      // CSRF check
+      const csrfInput = document.getElementById('formCsrfToken').value;
+      if (!AttendanceSecurity.verifyCSRFToken(csrfInput)) {
+        showCheckinError("Security Exception: Anti-Forgery Token (CSRF) is missing or invalid.");
+        return;
+      }
+      
+      let rollNumber = document.getElementById('rollInput').value.trim().toUpperCase();
+      rollNumber = AttendanceSecurity.sanitizeInput(rollNumber);
+      
+      const deviceId = localStorage.getItem('student_device_id') || 'DEV_GUEST';
+      
+      const submitBtn = document.getElementById('checkinSubmitBtn');
+      const spinner = document.getElementById('checkinBtnSpinner');
+      const errPanel = document.getElementById('checkinFormError');
+
+      if (!rollNumber) {
+        showCheckinError("Please enter your classroom roll number.");
+        return;
+      }
+
+      if (!AttendanceSecurity.validateRollNumber(rollNumber)) {
+        showCheckinError("Roll number format is invalid.");
+        return;
+      }
+
+      if (activeSession.status !== 'active' || Date.now() >= Number(activeSession.endTime)) {
+        showCheckinError("Roster locked. This session is closed.");
+        showSessionClosedUI();
+        return;
+      }
+
+      // Geofence enforcement
+      if (activeSession.geofence && activeSession.geofence.lat !== 0) {
+        if (!gpsCoords) {
+          showCheckinError("Submission blocked. A secure GPS coordinates lock is required.");
+          acquireUserLocation();
+          return;
+        }
+        const dist = getDistance(gpsCoords.lat, gpsCoords.lng, Number(activeSession.geofence.lat), Number(activeSession.geofence.lng));
+        if (dist > Number(activeSession.geofence.radius)) {
+          showCheckinError(`Blocked: You are physically outside the geofence perimeter. Distance: ${dist.toFixed(1)}m.`);
+          return;
+        }
+      }
+
+      // Dynamic QR secret validation
+      if (activeSession.qrSecret && !scannedToken) {
+        showCheckinError("Scanning the active dynamic class QR code is compulsory.");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      spinner.classList.remove('hidden');
+      errPanel.classList.add('hidden');
+
+      try {
+        const checkRef = db.ref(`attendance-v2/records/${activeSession.id}`);
+        const snap = await checkRef.once('value');
+        
+        let fingerprintMatch = false;
+        let rollRegistered = false;
+
+        if (snap.exists()) {
+          for (let key of Object.keys(snap.val())) {
+            const val = snap.val()[key];
+            const decRoll = await AttendanceSecurity.decryptData(key); // Decrypt database key or verify matching decryptions
+            const plainRoll = decRoll || key;
+
+            if (activeSession.deviceLock && val.deviceFingerprint === deviceId && plainRoll !== rollNumber) {
+              fingerprintMatch = true;
+            }
+            if (plainRoll === rollNumber) {
+              rollRegistered = true;
+            }
+          }
+        }
+
+        if (fingerprintMatch) {
+          throw new Error("Anti-Proxy Guard: This device has already checked in another student.");
+        }
+
+        if (rollRegistered) {
+          throw new Error("Duplicate check-in: This roll number is already marked.");
+        }
+
+        // Validate rotating QR passcode in real-time
+        if (activeSession.qrSecret) {
+          const dbSecretSnap = await db.ref(`attendance-v2/sessions/${activeSession.id}/qrSecret`).once('value');
+          const currentDbSecret = dbSecretSnap.val();
+          
+          if (scannedToken !== currentDbSecret) {
+            throw new Error("QR Expired: The scanned QR code has rotated. Please scan the current code on screen.");
+          }
+        }
+
+        let attendanceStatus = 'present';
+        const start = Number(activeSession.startTime);
+        const grace = Number(activeSession.lateGraceMinutes || 5);
+        if (Date.now() > start + (grace * 60 * 1000)) {
+          attendanceStatus = 'late';
+        }
+
+        localStorage.setItem('cached_roll_number', rollNumber);
+
+        // Detect device operating system
+        function getOS() {
+          const ua = window.navigator.userAgent;
+          if (/android/i.test(ua)) return "Android";
+          if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return "iOS";
+          if (/Windows/i.test(ua)) return "Windows";
+          if (/Macintosh/i.test(ua)) return "macOS";
+          if (/Linux/i.test(ua)) return "Linux";
+          return "Unknown Device";
+        }
+
+        // ENCRYPT coordinates and student name for database privacy
+        const encryptedName = await AttendanceSecurity.encryptData(studentData.name || 'Student');
+        const encryptedCoords = await AttendanceSecurity.encryptData(gpsCoords ? `${gpsCoords.lat},${gpsCoords.lng}` : "0,0");
+
+        const recordId = `ATT_${Date.now()}_${Math.floor(100 + Math.random() * 900)}`;
+        const studentCheckin = {
+          studentId: studentId,
+          studentName: encryptedName, // ENCRYPTED
+          rollNumber: rollNumber,
+          checkInTime: Date.now(),
+          checkOutTime: null,
+          status: attendanceStatus,
+          deviceFingerprint: deviceId,
+          deviceInfo: getOS(),
+          location: encryptedCoords, // ENCRYPTED
+          method: activeSession.qrSecret ? 'QR' : 'Link',
+          id: recordId
+        };
+
+        // Write to database
+        await db.ref(`attendance-v2/records/${activeSession.id}/${rollNumber}`).set(studentCheckin);
+
+        // Log to Student activity Logs
+        if (studentId) {
+          db.ref(`students/${studentId}/activityLogs`).push().set({
+            event: 'Checked In',
+            timestamp: Date.now(),
+            details: `Checked in to ${activeSession.subject} as ${attendanceStatus}`
+          });
+        }
+
+        showReceiptTicket({
+          studentName: studentData.name || 'Student',
+          rollNumber: rollNumber,
+          checkInTime: studentCheckin.checkInTime,
+          status: studentCheckin.status,
+          id: studentCheckin.id
+        }, activeSession.id);
+
+      } catch (err) {
+        console.error("Check-in failed:", err);
+        showCheckinError(err.message || "Roster write failed. Try again.");
+        submitBtn.disabled = false;
+      } finally {
+        spinner.classList.add('hidden');
+      }
+    }
+
+    // Success Screen
+    function showReceiptTicket(rec, sessionId) {
+      document.getElementById('recStudentName').textContent = rec.studentName;
+      document.getElementById('recRoll').textContent = rec.rollNumber;
+      document.getElementById('recSubject').textContent = activeSession ? activeSession.subject : 'Lecture Class';
+      document.getElementById('recTimestamp').textContent = new Date(rec.checkInTime).toLocaleString('en-IN', { hour12: true });
+      document.getElementById('recReceiptId').textContent = rec.id || `ATT_${rec.checkInTime}`;
+      
+      const badge = document.getElementById('recStatus');
+      badge.textContent = rec.status;
+      if (rec.status === 'present') {
+        badge.className = "absolute top-2 right-2 px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md font-bold text-[9px] uppercase tracking-wider font-mono";
+      } else {
+        badge.className = "absolute top-2 right-2 px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-md font-bold text-[9px] uppercase tracking-wider font-mono";
+      }
+
+      document.getElementById('activeSessionCard').classList.add('hidden');
+      document.getElementById('attendanceSuccessTicket').classList.remove('hidden');
+    }
+
+    function shareTicketWhatsApp() {
+      const name = document.getElementById('recStudentName').textContent;
+      const roll = document.getElementById('recRoll').textContent;
+      const sub = document.getElementById('recSubject').textContent;
+      const receipt = document.getElementById('recReceiptId').textContent;
+      const time = document.getElementById('recTimestamp').textContent;
+      const status = document.getElementById('recStatus').textContent.toUpperCase();
+      
+      const message = `*BCA STORE ATTENDANCE RECEIPT*%0A%0A*Student:* ${name}%0A*Roll No:* ${roll}%0A*Subject:* ${sub}%0A*Roster Status:* ${status}%0A*Time:* ${time}%0A*Receipt ID:* ${receipt}%0A%0A_Attendance marked securely via dynamic geofenced checks._`;
+      window.open(`https://api.whatsapp.com/send?text=${message}`, '_blank');
+    }
+
+    function dismissTicketView() {
+      document.getElementById('attendanceSuccessTicket').classList.add('hidden');
+      document.getElementById('defaultCheckinSearch').classList.remove('hidden');
+      
+      activeSession = null;
+      scannedToken = '';
+      window.location.search = '';
+      
+      loadDashboardStats();
+      checkActiveCheckinRecord();
+      fetchHistoricalLogs();
+    }
+
+    // QR Camera Scanner implementation
+    function startCameraScanner() {
+      document.getElementById('scannerOverlay').classList.remove('hidden');
+      
+      html5QrScanner = new Html5Qrcode("qrReader");
+      const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+      
+      html5QrScanner.start(
+        { facingMode: "environment" },
+        config,
+        onQrScanSuccess,
+        onQrScanFailure
+      ).catch(err => {
+        console.error("Camera start error:", err);
+        alert("Unable to open camera lens. Input 6-digit passcode instead.");
+        stopCameraScanner();
+        showPasscodeFallback();
+      });
+    }
+
+    function stopCameraScanner() {
+      document.getElementById('scannerOverlay').classList.add('hidden');
+      if (html5QrScanner) {
+        html5QrScanner.stop().then(() => {
+          html5QrScanner = null;
+        }).catch(err => console.warn(err));
+      }
+    }
+
+    function onQrScanSuccess(decodedText, decodedResult) {
+      stopCameraScanner();
+      
+      try {
+        const url = new URL(decodedText);
+        const sId = url.searchParams.get('session');
+        const secret = url.searchParams.get('qrSecret');
+        
+        if (!sId || !secret) {
+          alert("Invalid Attendance QR Code format.");
+          return;
+        }
+
+        scannedToken = secret;
+        
+        const statusLbl = document.getElementById('qrStatusLabel');
+        const statusDot = document.getElementById('qrDot');
+        if (statusLbl) statusLbl.textContent = `Scanned QR Token: ${scannedToken.substring(0, 10)}...`;
+        if (statusDot) statusDot.className = "w-2 h-2 rounded-full bg-emerald-400";
+        
+        if (activeSession && activeSession.id === sId) {
+          document.getElementById('checkinFormError').classList.add('hidden');
+        } else {
+          loadCheckinSession(sId);
+        }
+      } catch (err) {
+        scannedToken = decodedText.trim();
+        const statusLbl = document.getElementById('qrStatusLabel');
+        const statusDot = document.getElementById('qrDot');
+        if (statusLbl) statusLbl.textContent = `Token Code: ${scannedToken}`;
+        if (statusDot) statusDot.className = "w-2 h-2 rounded-full bg-emerald-400";
+      }
+    }
+
+    function onQrScanFailure(error) {
+      // Normal frames checking failure (can be ignored)
+    }
+
+    function showPasscodeFallback() {
+      const wrap = document.getElementById('passcodeFallbackWrap');
+      if (wrap) wrap.classList.toggle('hidden');
+    }
+
+    function verifyPasscodeFromInput() {
+      const code = document.getElementById('qrPasscodeInput').value.trim();
+      if (!code) {
+        alert("Enter the dynamic passcode shown on teacher's dashboard.");
+        return;
+      }
+      scannedToken = code;
+      
+      const statusLbl = document.getElementById('qrStatusLabel');
+      const statusDot = document.getElementById('qrDot');
+      if (statusLbl) statusLbl.textContent = `Passcode Entered: ${scannedToken}`;
+      if (statusDot) statusDot.className = "w-2 h-2 rounded-full bg-emerald-400";
+      
+      alert("Passcode linked! Submit form to complete verification.");
+    }
+
+    // Load overall Stats Gauge
+    async function loadDashboardStats() {
+      if (!db || !studentId) return;
+
+      const roll = studentData.rollNo || '';
+      
+      try {
+        const recordsRef = db.ref('attendance-v2/records');
+        const sessionsRef = db.ref('attendance-v2/sessions');
+        
+        const [recSnap, sessSnap] = await Promise.all([recordsRef.once('value'), sessionsRef.once('value')]);
+        
+        let totalSessionsCount = 0;
+        let presentCount = 0;
+        let lateCount = 0;
+        
+        if (sessSnap.exists()) {
+          sessSnap.forEach(child => {
+            const s = child.val();
+            if (s.semester === studentData.semester) {
+              totalSessionsCount++;
+            }
+          });
+        }
+
+        if (recSnap.exists()) {
+          recSnap.forEach(sessRecSnap => {
+            const userRec = sessRecSnap.child(roll);
+            if (userRec.exists() && userRec.val().studentId === studentId) {
+              const status = userRec.val().status;
+              if (status === 'present') presentCount++;
+              if (status === 'late') {
+                presentCount++;
+                lateCount++;
+              }
+            }
+          });
+        }
+
+        const overallPresent = presentCount;
+        const rate = totalSessionsCount > 0 ? (overallPresent / totalSessionsCount) * 100 : 0.0;
+
+        document.getElementById('dashAttendanceRate').textContent = `${rate.toFixed(1)}%`;
+        document.getElementById('dashClassesPresent').textContent = overallPresent;
+        document.getElementById('dashTotalClassesLabel').textContent = `Out of ${totalSessionsCount} overall`;
+        
+        const rateTxt = totalSessionsCount > 0 ? `${lateCount} Late entries` : 'No lectures logged';
+        document.getElementById('dashAttendanceSubText').textContent = rateTxt;
+
+        const circle = document.getElementById('dashRateProgressCircle');
+        const centerTxt = document.getElementById('dashRateCenterText');
+        if (circle && centerTxt) {
+          const circumference = 175.9;
+          const offset = circumference - (rate / 100) * circumference;
+          circle.style.strokeDashoffset = offset;
+          centerTxt.textContent = `${Math.round(rate)}%`;
+        }
+
+      } catch (err) {
+        console.warn("Stats calculations error:", err);
+      }
+    }
+
+    // Fetch historical records and decrypt coordinates/names dynamically
+    async function fetchHistoricalLogs() {
+      if (!db || !studentId) return;
+
+      const roll = studentData.rollNo || '';
+      const body = document.getElementById('historyTableBody');
+      if (!body) return;
+
+      try {
+        const recordsRef = db.ref('attendance-v2/records');
+        const sessionsRef = db.ref('attendance-v2/sessions');
+        
+        const [recSnap, sessSnap] = await Promise.all([recordsRef.once('value'), sessionsRef.once('value')]);
+        
+        body.innerHTML = '';
+        
+        let records = [];
+        let sessionsMap = {};
+
+        if (sessSnap.exists()) {
+          sessionsMap = sessSnap.val();
+        }
+
+        if (recSnap.exists()) {
+          for (let sessKey of Object.keys(recSnap.val())) {
+            const sessRecSnap = recSnap.val()[sessKey];
+            if (sessRecSnap[roll]) {
+              const item = sessRecSnap[roll];
+              if (item.studentId === studentId) {
+                // Decrypt student name
+                const decName = await AttendanceSecurity.decryptData(item.studentName);
+                records.push({
+                  sessionId: sessKey,
+                  ...item,
+                  studentNameDecrypted: decName || "Student"
+                });
+              }
+            }
+          }
+        }
+
+        if (records.length === 0) {
+          body.innerHTML = `
+            <tr>
+              <td colspan="6" class="py-10 text-center text-zinc-500 font-medium">
+                No attendance logs found in your roster.
+              </td>
+            </tr>`;
+          return;
+        }
+
+        records.sort((a, b) => b.checkInTime - a.checkInTime);
+        
+        window.historyRecordsList = records;
+        window.sessionsMap = sessionsMap;
+
+        renderHistoryRows(records);
+
+      } catch(e) {
+        console.error("fetchHistoricalLogs error:", e);
+        body.innerHTML = `
+          <tr>
+            <td colspan="6" class="py-10 text-center text-rose-400">
+              Error fetching logs: ${e.message}
+            </td>
+          </tr>`;
+      }
+    }
+
+    function renderHistoryRows(list) {
+      const body = document.getElementById('historyTableBody');
+      body.innerHTML = '';
+
+      list.forEach(r => {
+        const sess = window.sessionsMap ? window.sessionsMap[r.sessionId] : null;
+        const subject = sess ? sess.subject : 'Lecture Class';
+        const teacher = sess ? sess.teacher : 'Teacher';
+        
+        const date = new Date(r.checkInTime).toLocaleDateString('en-IN');
+        const checkinTime = new Date(r.checkInTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        
+        const checkoutTime = r.checkOutTime 
+          ? new Date(r.checkOutTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+          : '--:--';
+        
+        let statusBadge = '';
+        if (r.status === 'present') {
+          statusBadge = '<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold uppercase text-[9px] tracking-wide font-mono">Present</span>';
+        } else if (r.status === 'late') {
+          statusBadge = '<span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-bold uppercase text-[9px] tracking-wide font-mono">Late</span>';
+        } else {
+          statusBadge = '<span class="bg-zinc-500/10 text-zinc-400 border border-zinc-500/20 px-2 py-0.5 rounded-full font-bold uppercase text-[9px] tracking-wide font-mono">Absent</span>';
+        }
+
+        const coBtn = (!r.checkOutTime)
+          ? `<button onclick="triggerHistoryCheckout('${r.sessionId}', '${r.rollNumber}')" class="px-2.5 py-1 bg-white/5 border border-white/10 hover:border-rose-500/30 hover:bg-rose-500/10 hover:text-rose-400 rounded-md text-[10px] font-bold transition-all">Check-Out</button>`
+          : '<span class="text-zinc-600 font-bold"><i class="fa-solid fa-circle-check"></i> Sync</span>';
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-white/5 transition-colors border-b border-white/5";
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-bold text-white">${subject}<span class="block text-[10px] font-normal text-zinc-500">By: ${teacher}</span></td>
+          <td class="py-3 px-4 text-zinc-300 font-medium">${date}</td>
+          <td class="py-3 px-4 text-zinc-300 font-mono">${checkinTime}</td>
+          <td class="py-3 px-4 text-zinc-300 font-mono">${checkoutTime}</td>
+          <td class="py-3 px-4">${statusBadge}</td>
+          <td class="py-3 px-4 text-center">${coBtn}</td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    function filterHistory() {
+      const query = document.getElementById('historySearch').value.toLowerCase().trim();
+      if (!window.historyRecordsList) return;
+
+      const filtered = window.historyRecordsList.filter(r => {
+        const sess = window.sessionsMap ? window.sessionsMap[r.sessionId] : null;
+        const subject = sess ? sess.subject.toLowerCase() : '';
+        return subject.includes(query);
+      });
+
+      renderHistoryRows(filtered);
+    }
+
+    async function triggerHistoryCheckout(sId, roll) {
+      if (!db) return;
+      if (confirm("Check-out of this lecture now?")) {
+        try {
+          await db.ref(`attendance-v2/records/${sId}/${roll}`).update({
+            checkOutTime: Date.now()
+          });
+          alert("Checked-out!");
+          fetchHistoricalLogs();
+          checkActiveCheckinRecord();
+        } catch (e) {
+          alert("Checkout failed: " + e.message);
+        }
+      }
+    }
+
+    // Submit Correction request
+    async function handleCorrectionSubmit(e) {
+      e.preventDefault();
+
+      const dateVal = document.getElementById('corrDate').value;
+      let subVal = document.getElementById('corrSubject').value;
+      let rollVal = document.getElementById('corrRoll').value.trim().toUpperCase();
+      const statusVal = document.getElementById('corrStatus').value;
+      let reasonVal = document.getElementById('corrReason').value;
+
+      const submitBtn = document.getElementById('corrSubmitBtn');
+      const spinner = document.getElementById('corrBtnSpinner');
+      const errorDiv = document.getElementById('corrFormError');
+
+      // Sanitize inputs
+      subVal = AttendanceSecurity.sanitizeInput(subVal);
+      rollVal = AttendanceSecurity.sanitizeInput(rollVal);
+      reasonVal = AttendanceSecurity.sanitizeInput(reasonVal);
+
+      if (!dateVal || !subVal || !rollVal || !reasonVal) {
+        alert("Please fill all required correction inputs.");
+        return;
+      }
+
+      if (!AttendanceSecurity.validateRollNumber(rollVal)) {
+        alert("Invalid roll number format.");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      spinner.classList.remove('hidden');
+      errorDiv.classList.add('hidden');
+
+      try {
+        const corrId = `CORR_${Date.now()}_${Math.floor(100 + Math.random() * 900)}`;
+        const correctionRecord = {
+          studentId: studentId,
+          studentName: studentData.name || 'Student',
+          rollNumber: rollVal,
+          subject: subVal,
+          lectureDate: dateVal,
+          requestedStatus: statusVal,
+          reason: reasonVal,
+          status: 'pending',
+          requestedAt: Date.now(),
+          id: corrId
+        };
+
+        await db.ref(`attendance-v2/corrections/${corrId}`).set(correctionRecord);
+
+        if (studentId) {
+          db.ref(`students/${studentId}/activityLogs`).push().set({
+            event: 'Correction Requested',
+            timestamp: Date.now(),
+            details: `Requested correction for ${subVal} on ${dateVal}`
+          });
+        }
+
+        alert("Correction request submitted to the administration queue.");
+        document.getElementById('correctionForm').reset();
+        
+        fetchCorrectionsList();
+      } catch(err) {
+        errorDiv.textContent = err.message || "Failed to submit request.";
+        errorDiv.classList.remove('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        spinner.classList.add('hidden');
+      }
+    }
+
+    // Corrections lists status
+    function fetchCorrectionsList() {
+      if (!db || !studentId) return;
+
+      db.ref('attendance-v2/corrections')
+        .orderByChild('studentId')
+        .equalTo(studentId)
+        .on('value', snapshot => {
+          const body = document.getElementById('correctionsTableBody');
+          if (!body) return;
+
+          body.innerHTML = '';
+          
+          if (!snapshot.exists()) {
+            body.innerHTML = `
+              <tr>
+                <td colspan="5" class="py-8 text-center text-zinc-500">
+                  No correction requests submitted.
+                </td>
+              </tr>`;
+            return;
+          }
+
+          let items = [];
+          snapshot.forEach(child => {
+            items.push(child.val());
+          });
+
+          items.sort((a,b) => b.requestedAt - a.requestedAt);
+
+          items.forEach(c => {
+            const date = new Date(c.requestedAt).toLocaleDateString('en-IN');
+            
+            let reqStatusBadge = '';
+            if (c.requestedStatus === 'present') {
+              reqStatusBadge = '<span class="text-emerald-400 font-bold uppercase tracking-wider text-[10px]">Present</span>';
+            } else {
+              reqStatusBadge = '<span class="text-amber-400 font-bold uppercase tracking-wider text-[10px]">Late</span>';
+            }
+
+            let statusLabel = '';
+            if (c.status === 'pending') {
+              statusLabel = '<span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-bold uppercase text-[9px] tracking-wide">Pending</span>';
+            } else if (c.status === 'approved') {
+              statusLabel = '<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold uppercase text-[9px] tracking-wide">Approved</span>';
+            } else {
+              statusLabel = '<span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2 py-0.5 rounded-full font-bold uppercase text-[9px] tracking-wide">Rejected</span>';
+            }
+
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-white/5 border-b border-white/5 transition-colors";
+            tr.innerHTML = `
+              <td class="py-3 px-3 font-bold text-white">${c.subject}<span class="block text-[10px] text-zinc-500 font-normal">Class Date: ${c.lectureDate}</span></td>
+              <td class="py-3 px-3">${reqStatusBadge}</td>
+              <td class="py-3 px-3 text-zinc-400 max-w-[150px] truncate" title="${c.reason}">${c.reason}</td>
+              <td class="py-3 px-3 text-zinc-500 font-mono">${date}</td>
+              <td class="py-3 px-3 text-right">${statusLabel}</td>
+            `;
+            body.appendChild(tr);
+          });
+        });
+    }
+
+    let selectedModalIdCardBase64 = '';
+
+    window.showReuploadSection = function() {
+      selectedModalIdCardBase64 = '';
+      document.getElementById('modalIdCardPreviewContainer').classList.add('hidden');
+      document.getElementById('modalIdCardFileInput').value = '';
+      document.getElementById('modalIdCardSubmitBtn').disabled = true;
+      document.getElementById('modalIdCardUploadIcon').className = "fa-solid fa-cloud-arrow-up text-3xl text-zinc-500 mb-2";
+      document.getElementById('modalIdCardUploadLabel').textContent = "Choose ID Card Image";
+      document.getElementById('idReuploadModal').classList.remove('hidden');
+    };
+
+    window.closeReuploadModal = function() {
+      document.getElementById('idReuploadModal').classList.add('hidden');
+    };
+
+    window.previewModalIdCard = function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (!['image/png', 'image/jpeg', 'image/jpg', 'image/webp'].includes(file.type)) {
+        alert("Invalid image format. Select WebP, JPG, or PNG.");
+        event.target.value = '';
+        return;
+      }
+      if (file.size > 1 * 1024 * 1024) {
+        alert("Image size must be 1 MB or less.");
+        event.target.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        selectedModalIdCardBase64 = e.target.result;
+        document.getElementById('modalIdCardPreviewImg').src = selectedModalIdCardBase64;
+        document.getElementById('modalIdCardPreviewContainer').classList.remove('hidden');
+        
+        const uploadIcon = document.getElementById('modalIdCardUploadIcon');
+        if (uploadIcon) {
+          uploadIcon.className = "fa-solid fa-circle-check text-3xl text-emerald-400 mb-2 animate-bounce";
+        }
+        
+        const label = document.getElementById('modalIdCardUploadLabel');
+        if (label) {
+          label.textContent = file.name;
+        }
+        
+        document.getElementById('modalIdCardSubmitBtn').disabled = false;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.submitModalIdCard = async function() {
+      if (!selectedModalIdCardBase64 || !studentId || !db) {
+        alert("Please select a file and ensure your connection is active.");
+        return;
+      }
+      
+      const btn = document.getElementById('modalIdCardSubmitBtn');
+      const loader = document.getElementById('modalIdCardSubmitLoader');
+      
+      btn.disabled = true;
+      if (loader) loader.classList.remove('hidden');
+      
+      try {
+        await db.ref(`students/${studentId}`).update({
+          idCard: selectedModalIdCardBase64,
+          idCardStatus: 'pending'
+        });
+        
+        alert("ID Card re-uploaded successfully! Awaiting administrator verification.");
+        selectedModalIdCardBase64 = '';
+        closeReuploadModal();
+        
+        await checkUserAuth();
+      } catch(e) {
+        alert("Upload failed: " + e.message);
+      } finally {
+        btn.disabled = false;
+        if (loader) loader.classList.add('hidden');
+      }
+    };
+  </script>
+
+  <!-- ID RE-UPLOAD MODAL -->
+  <div id="idReuploadModal" class="hidden fixed inset-0 z-[2500] bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="max-w-md w-full glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 text-center space-y-6 relative">
+      <button onclick="closeReuploadModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white text-lg p-1.5 border-none bg-transparent cursor-pointer transition-all hover:scale-110">
+        ✕
+      </button>
+      <div class="w-16 h-16 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl flex items-center justify-center text-2xl mx-auto">
+        <i class="fa-solid fa-id-badge"></i>
+      </div>
+      <div>
+        <h2 class="text-2xl font-black text-white tracking-tight font-[Outfit]">Re-upload College ID Card</h2>
+        <p class="text-zinc-400 text-xs mt-2 leading-relaxed">Please upload a clear photo of your official college ID card. This will be sent to the administrator for verification.</p>
+      </div>
+
+      <!-- Upload Form -->
+      <div class="space-y-4 text-left">
+        <div class="border-2 border-dashed border-white/10 hover:border-indigo-500/30 rounded-2xl p-6 relative bg-zinc-950/40 transition-all cursor-pointer flex flex-col items-center justify-center" onclick="document.getElementById('modalIdCardFileInput').click()">
+          <input type="file" id="modalIdCardFileInput" accept="image/*" class="hidden" onchange="previewModalIdCard(event)">
+          <i class="fa-solid fa-cloud-arrow-up text-3xl text-zinc-500 mb-2" id="modalIdCardUploadIcon"></i>
+          <span class="text-xs text-zinc-300 font-bold block" id="modalIdCardUploadLabel">Choose ID Card Image</span>
+          <span class="text-[10px] text-zinc-600 block mt-1">PNG, JPG up to 5MB</span>
+          
+          <div id="modalIdCardPreviewContainer" class="hidden mt-4 w-full h-40 rounded-xl overflow-hidden border border-white/10 relative">
+            <img id="modalIdCardPreviewImg" src="" alt="ID card preview" class="w-full h-full object-contain">
+          </div>
+        </div>
+
+        <button id="modalIdCardSubmitBtn" onclick="submitModalIdCard()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white rounded-xl text-sm font-bold tracking-wide transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 btn-haptic" disabled>
+          <span>📤 Upload & Verify</span>
+          <div id="modalIdCardSubmitLoader" class="hidden w-4 h-4 border-2 border-white/30 border-top-color-white rounded-full animate-spin"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

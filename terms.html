@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service | BCA STORE</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="modern-theme.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --legal-primary: #6366f1;
+      --legal-glass: rgba(255, 255, 255, 0.7);
+      --legal-border: rgba(99, 102, 241, 0.1);
+    }
+    [data-theme="dark"] {
+      --legal-glass: rgba(15, 23, 42, 0.8);
+      --legal-border: rgba(99, 102, 241, 0.2);
+    }
+
+    body {
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    /* Premium Mesh Background */
+    .mesh-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      filter: blur(100px);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .orb {
+      position: absolute;
+      width: 50vw;
+      height: 50vw;
+      border-radius: 50%;
+      animation: float 20s infinite alternate;
+    }
+    .orb-1 { background: #6366f1; top: -10%; left: -10%; animation-delay: 0s; }
+    .orb-2 { background: #a855f7; bottom: -10%; right: -10%; animation-delay: -5s; }
+    .orb-3 { background: #22d3ee; top: 40%; left: 30%; animation-delay: -10s; }
+
+    @keyframes float {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(10%, 10%) scale(1.1); }
+    }
+
+    .legal-header {
+      padding: 160px 0 80px;
+      text-align: center;
+      position: relative;
+    }
+    .legal-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, var(--legal-primary), #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+    .legal-subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .legal-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      padding-bottom: 120px;
+    }
+
+    .legal-sidebar {
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+    }
+    .nav-card {
+      background: var(--legal-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--legal-border);
+      border-radius: 24px;
+      padding: 24px;
+    }
+    .nav-card h4 { margin-bottom: 16px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+    .nav-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .nav-item a {
+      display: block;
+      padding: 10px 16px;
+      border-radius: 12px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+    .nav-item a:hover { background: rgba(99, 102, 241, 0.1); color: var(--legal-primary); }
+    .nav-item.active a { background: var(--legal-primary); color: #fff; }
+
+    .legal-main {
+      background: var(--legal-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--legal-border);
+      border-radius: 32px;
+      padding: 60px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    }
+
+    .legal-section { margin-bottom: 60px; scroll-margin-top: 120px; }
+    .legal-section h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .legal-section h2::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: var(--legal-primary);
+      border-radius: 4px;
+    }
+    .legal-section p { font-size: 1.05rem; line-height: 1.8; color: var(--text-secondary); margin-bottom: 20px; }
+    .legal-section ul { list-style: none; padding: 0; }
+    .legal-section li {
+      position: relative;
+      padding-left: 28px;
+      margin-bottom: 16px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    .legal-section li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--legal-primary);
+      font-weight: 700;
+    }
+
+    .developer-card {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+      border: 1px solid var(--legal-border);
+      border-radius: 24px;
+      padding: 32px;
+      margin-top: 40px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .dev-avatar {
+      width: 80px;
+      height: 80px;
+      background: var(--legal-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+    }
+    .dev-info h3 { margin-bottom: 8px; color: var(--text); }
+    .dev-info p { margin: 0; font-size: 0.95rem; color: var(--text-muted); }
+
+    @media (max-width: 1024px) {
+      .legal-container { grid-template-columns: 1fr; }
+      .legal-sidebar { display: none; }
+      .legal-main { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mesh-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">🏠 Home</a>
+        <a href="attendance.html" class="nav-link">📋 Attendance</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="legal-header">
+    <div class="container">
+      <h1 class="legal-title">Terms of Service</h1>
+      <p class="legal-subtitle">Agreement and guidelines for using the BCA STORE platform.</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="legal-container">
+      <aside class="legal-sidebar">
+        <div class="nav-card">
+          <h4>Navigation</h4>
+          <ul class="nav-list">
+            <li class="nav-item"><a href="#rules">1. Usage Rules</a></li>
+            <li class="nav-item"><a href="#content">2. Study Content</a></li>
+            <li class="nav-item"><a href="#availability">3. Availability</a></li>
+            <li class="nav-item"><a href="#updates">4. Modifications</a></li>
+            <li class="nav-item"><a href="#ip">5. Intellectual Property</a></li>
+            <li class="nav-item"><a href="#limit">6. Liability</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="legal-main">
+        <section class="legal-section" id="rules">
+          <h2>Usage Rules</h2>
+          <p>Welcome to <strong>BCA Store</strong>. By accessing or using this platform, you agree to follow these Terms of Service. This platform is designed to empower students with high-quality educational resources.</p>
+          <ul>
+            <li>The platform is intended for educational and personal learning purposes only.</li>
+            <li>Users must not copy, redistribute, re-upload, or commercially use any platform content without permission.</li>
+            <li>Any misuse, spam activity, abusive behavior, unauthorized access attempts, or actions that may harm the platform can result in account restriction or removal.</li>
+            <li>Users are responsible for maintaining the privacy and security of their account information.</li>
+          </ul>
+        </section>
+
+        <section class="legal-section" id="content">
+          <h2>Video & Study Content</h2>
+          <p>We take pride in curated academic content, but please be aware of the following guidelines regarding our materials:</p>
+          <ul>
+            <li>All videos, notes, PDFs, and study materials are provided strictly for learning purposes.</li>
+            <li>Some content may be embedded from third-party platforms such as YouTube.</li>
+            <li>Third-party content availability may change, be removed, or become unavailable at any time.</li>
+          </ul>
+        </section>
+
+        <section class="legal-section" id="availability">
+          <h2>Service Availability</h2>
+          <p>While we strive for 99.9% uptime, technology occasionally has its own plans:</p>
+          <ul>
+            <li>We aim to keep BCA Store stable and accessible at all times.</li>
+            <li>However, temporary downtime, maintenance, server issues, or technical interruptions may occasionally occur.</li>
+          </ul>
+        </section>
+
+        <section class="legal-section" id="updates">
+          <h2>Updates & Modifications</h2>
+          <ul>
+            <li>BCA Store may update, improve, modify, or remove platform features, policies, or services at any time without prior notice.</li>
+          </ul>
+        </section>
+
+        <section class="legal-section" id="ip">
+          <h2>Intel Property</h2>
+          <ul>
+            <li>All branding, design, notes, and platform content belong to BCA Store unless otherwise stated.</li>
+            <li>Unauthorized use or reproduction of platform materials is prohibited.</li>
+          </ul>
+        </section>
+
+        <section class="legal-section" id="limit">
+          <h2>Limitation of Responsibility</h2>
+          <ul>
+            <li>BCA Store is provided on an “as available” basis.</li>
+            <li>We are not responsible for temporary content unavailability, third-party service issues, or unexpected technical problems.</li>
+          </ul>
+        </section>
+
+        <div class="developer-card">
+          <div class="dev-avatar">V</div>
+          <div class="dev-info">
+            <h3>Vishal Kumar</h3>
+            <p>Lead Developer • LND College (Sem 2)</p>
+            <p><a href="mailto:10717vishal@gmail.com" style="color:var(--legal-primary); text-decoration:none; font-weight:600;">10717vishal@gmail.com</a></p>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container" style="text-align:center; padding: 60px 0;">
+      <div class="dev-credit-box" style="margin-bottom: 12px;">
+        Designed & Developed with 🖤 by 
+        <a href="developer.html" class="dev-link">VISHAL 🖤</a>
+      </div>
+      <p style="opacity:0.7;">&copy; 2026 BCA STORE. Babasaheb Bhim Rao Ambedkar Bihar University.</p>
+    </div>
+  </footer>
+
+  <script>
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    if (isDark) document.documentElement.setAttribute('data-theme', 'dark');
+
+    // Simple scroll active nav
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.legal-section');
+      const navItems = document.querySelectorAll('.nav-item');
+      let current = '';
+      sections.forEach(s => {
+        const top = s.offsetTop;
+        if (pageYOffset >= top - 150) current = s.getAttribute('id');
+      });
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.querySelector('a').getAttribute('href') === `#${current}`) {
+          item.classList.add('active');
+        }
+      });
+    });
+  </script>
+  <!-- Firebase SDK (compat version for simpler syntax) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="knowledge_data.js"></script>
+  <script src="script.js"></script>
+  <script src="modern-effects.js"></script>
+  <script src="enhancements.js"></script>
+</body>
+</html>

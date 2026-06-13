@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Founder & CEO of BCA Store, Vishal Kumar - Full Stack Developer, Student Entrepreneur, and EdTech Innovator building India's smartest BCA study platform." />
+  <meta name="keywords" content="Vishal Kumar, Founder BCA Store, CEO BCA Store, Vishal Kumar Developer, Motihari, BRABU BCA, motihari college, Laxmi Narayan Dubey College Motihari" />
+  
+  <!-- SEO & Open Graph tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Vishal Kumar | Founder & CEO of BCA Store" />
+  <meta property="og:description"
+    content="Meet Vishal Kumar, Full Stack Developer and Founder building India's Smartest Learning Ecosystem for BCA Students." />
+  <meta property="og:image" content="dev_avatar.png" />
+
+  <title>Vishal Kumar | Founder & CEO of BCA Store — Developer Profile</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Orbitron:wght@400;700;900&display=swap"
+    rel="stylesheet" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="modern-theme.css" />
+  <link rel="stylesheet" href="developer.css" />
+</head>
+
+<body class="dev-profile-page">
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-link">🏠 Home</a>
+        <a href="my-batches.html" class="nav-link">🎓 My Batch</a>
+        <a href="attendance.html" class="nav-link">📋 Attendance</a>
+        <a href="elite-plus.html" class="nav-link">💎 Elite Plus</a>
+        <a href="exam.html" class="nav-link">📝 Exam</a>
+        <a href="test-hub.html" class="nav-link">🧠 Tests</a>
+        <a href="community.html" class="nav-link">🧑‍🤝‍🧑 Community</a>
+        <a href="analytics.html" class="nav-link">📊 Stats</a>
+        <a href="javascript:void(0)" class="nav-link" onclick="openSuggestionModal()">💬 Suggestion</a>
+        <button class="nav-bookmark-btn" onclick="openSearchModal()" title="Search"
+          style="margin-right:10px; font-size:1.2rem;">🔍</button>
+        <button class="nav-bookmark-btn" id="navBkBtn" onclick="openBkPanel()" title="My Bookmarks">🔖<span
+            class="bk-count-badge" id="bkBadgeDesktop"></span></button>
+        <button class="dark-toggle" id="darkToggle" title="Toggle Dark Mode">🌙</button>
+      </div>
+      <a href="install.html" class="nav-premium-install-btn">
+        <span>📲 Install</span>
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Glowing background blobs -->
+  <div class="dev-spotlight spotlight-1"></div>
+  <div class="dev-spotlight spotlight-2"></div>
+  <div class="dev-spotlight spotlight-3"></div>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="dev-hero dev-section" id="hero">
+    <div class="dev-hero-content">
+      <div class="dev-hero-badge">
+        <span>⚡ Entrepreneur Portfolio</span>
+      </div>
+      <h1 class="dev-hero-title dev-title-font dev-gradient-text">Vishal Kumar</h1>
+      <h2 class="dev-hero-subtitle">Founder of BCA STORE | Full Stack Developer | Student Entrepreneur</h2>
+      <p class="dev-hero-description">
+        Transforming BCA Education Through Technology, Innovation, and Smart Learning Solutions. 
+        "Building India's Smartest Learning Ecosystem for BCA Students."
+      </p>
+      <div class="dev-hero-actions">
+        <a href="#about" class="dev-btn dev-btn-primary">🚀 Explore My Journey</a>
+        <a href="#projects" class="dev-btn dev-btn-secondary">💼 View Projects</a>
+        <a href="#contact" class="dev-btn dev-btn-secondary">📞 Contact Me</a>
+        <a href="#" id="portCvDownloadBtn" class="dev-btn dev-btn-secondary" style="display:none;">📄 Download CV</a>
+        <button onclick="downloadVCardBusinessCard()" class="dev-btn dev-btn-secondary">🗂️ Save vCard</button>
+      </div>
+    </div>
+    <div class="dev-hero-visual">
+      <div class="dev-avatar-container">
+        <img src="dev_avatar.png" alt="Vishal Kumar Avatar" class="dev-avatar-img" />
+        <div class="floating-code badge-tag-1">&lt;code&gt;</div>
+        <div class="floating-code badge-tag-2">const CEO</div>
+        <div class="floating-code badge-tag-3">React.js</div>
+        <div class="floating-code badge-tag-4">Firebase</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== ABOUT ME SECTION ==================== -->
+  <section class="dev-section" id="about">
+    <div class="dev-section-header">
+      <h2 class="dev-title-font dev-gradient-text">🏆 About Me</h2>
+      <p>My journey of bridging technology and education</p>
+    </div>
+    <div class="dev-about-grid">
+      <div class="dev-about-graphic">
+        <div class="dev-code-box">
+          <span class="dev-code-comment">// Empowering Indian BCA Students</span><br>
+          <span class="dev-code-keyword">const</span> <span class="dev-code-name">founder</span> = {<br>
+          &nbsp;&nbsp;name: <span class="dev-code-string">"Vishal Kumar"</span>,<br>
+          &nbsp;&nbsp;role: <span class="dev-code-string">"Full Stack Developer"</span>,<br>
+          &nbsp;&nbsp;mission: <span class="dev-code-string">"Revolutionizing EdTech"</span>,<br>
+          &nbsp;&nbsp;company: <span class="dev-code-string">"BCA STORE"</span>,<br>
+          &nbsp;&nbsp;belief: <span class="dev-code-string">"Tech transforms lives"</span><br>
+          };<br><br>
+          <span class="dev-code-comment">// Let's build the future together</span>
+        </div>
+      </div>
+      <div class="dev-about-text">
+        <div class="dev-about-bio" style="font-size:1.15rem; line-height:1.8; color:var(--color-text-muted);">
+          Loading professional profile bio...
+        </div>
+        <div style="margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:1.2rem;">📍</span> 
+            <div>
+              <div style="font-size:0.75rem; color:var(--color-text-muted); text-transform:uppercase; font-weight:700;">Location</div>
+              <span class="dev-location-lbl" style="font-weight:600; color:#fff; font-size:0.95rem;">Loading...</span>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:1.2rem;">🎓</span> 
+            <div>
+              <div style="font-size:0.75rem; color:var(--color-text-muted); text-transform:uppercase; font-weight:700;">Education</div>
+              <span class="dev-education-lbl" style="font-weight:600; color:#fff; font-size:0.95rem;">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== STATISTICS SECTION ==================== -->
+  <section class="dev-section" id="stats">
+    <div class="dev-stats-grid">
+      <div class="dev-glass-card dev-stat-card">
+        <div class="dev-stat-number dev-title-font" data-target="1000">0</div>
+        <div class="dev-stat-label">Students Served</div>
+      </div>
+      <div class="dev-glass-card dev-stat-card">
+        <div class="dev-stat-number dev-title-font" data-target="500">0</div>
+        <div class="dev-stat-label">Study Resources</div>
+      </div>
+      <div class="dev-glass-card dev-stat-card">
+        <div class="dev-stat-number dev-title-font" data-target="100">0</div>
+        <div class="dev-stat-label">Video Lectures</div>
+      </div>
+      <div class="dev-glass-card dev-stat-card">
+        <div class="dev-stat-number dev-title-font" data-target="50">0</div>
+        <div class="dev-stat-label">Coding Programs</div>
+      </div>
+      <div class="dev-glass-card dev-stat-card">
+        <div class="dev-stat-number dev-title-font" data-prefix="" data-target="24">24/7</div>
+        <div class="dev-stat-label">AI Support</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOUNDER OF BCA STORE ==================== -->
+  <section class="dev-section" id="founder-store">
+    <div class="dev-section-header">
+      <h2 class="dev-title-font dev-gradient-text">🚀 Founder of BCA STORE</h2>
+      <p>India's Smartest Learning Hub for BCA Students</p>
+    </div>
+    <p class="dev-store-desc">Empowering Ambition with Next-Gen Features</p>
+    
+    <div class="dev-store-grid">
+      <div class="dev-glass-card dev-store-card">
+        <div class="dev-store-card-icon">📄</div>
+        <div class="dev-store-card-body">
+          <h4>Premium Notes</h4>
+          <p>Well-structured, comprehensive notes designed for exam success.</p>
+        </div>
+      </div>
+      <div class="dev-glass-card dev-store-card">
+        <div class="dev-store-card-icon">🎥</div>
+        <div class="dev-store-card-body">
+          <h4>Video Lectures</h4>
+          <p>Curated and masterfully taught video tutorials for complex concepts.</p>
+        </div>
+      </div>
+      <div class="dev-glass-card dev-store-card">
+        <div class="dev-store-card-icon">📚</div>
+        <div class="dev-store-card-body">
+          <h4>Previous Year Questions</h4>
+          <p>Complete directory of historical board/university exam papers.</p>
+        </div>
+      </div>
+      <div class="dev-glass-card dev-store-card">
+        <div class="dev-store-card-icon">💻</div>
+        <div class="dev-store-card-body">
+          <h4>Coding Programs</h4>
+          <p>Practical coding labs with solved program manuals for practice.</p>
+        </div>
+      </div>
+      <div class="dev-glass-card dev-store-card">
+        <div class="dev-store-card-icon">🤖</div>
+        <div class="dev-store-card-body">
+          <h4>AI Assistant</h4>
+          <p>Personalized virtual coach solving student academic queries instantly.</p>
+        </div>
+      </div>
+      <div class="dev-glass-card dev-store-card">
+        <div class="dev-store-card-icon">📈</div>
+        <div class="dev-store-card-body">
+          <h4>Progress Tracking</h4>
+          <p>Advanced metrics mapping unit completions and student readiness.</p>
+        </div>
+      </div>
+      <div class="dev-glass-card dev-store-card">
+        <div class="dev-store-card-icon">👨‍🏫</div>
+        <div class="dev-store-card-body">
+          <h4>Expert Guidance</h4>
+          <p>One-on-one direct advisory channels from top academic mentors.</p>
+        </div>
+      </div>
+      <div class="dev-glass-card dev-store-card">
+        <div class="dev-store-card-icon">🏆</div>
+        <div class="dev-store-card-body">
+          <h4>Premium Membership</h4>
+          <p>Premium plans unlocking premium batched classrooms & study modules.</p>
+        </div>
+      </div>
+      <div class="dev-glass-card dev-store-card">
+        <div class="dev-store-card-icon">📱</div>
+        <div class="dev-store-card-body">
+          <h4>Mobile Friendly</h4>
+          <p>SaaS platform responsive layout built for reading on-the-go.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SKILLS SECTION ==================== -->
+  <section class="dev-section" id="skills">
+    <div class="dev-section-header">
+      <h2 class="dev-title-font dev-gradient-text">💻 Core Skills</h2>
+      <p>A balanced synthesis of engineering capability and business leadership</p>
+    </div>
+    
+    <div class="dev-skills-layout">
+      <!-- Programming Skills -->
+      <div class="dev-skills-column">
+        <h3 class="dev-title-font">Technical Stack</h3>
+        <div class="dev-skills-grid">
+          <!-- Dynamically populated by JS -->
+        </div>
+      </div>
+      
+      <!-- Professional Skills -->
+      <div class="dev-skills-column">
+        <h3 class="dev-title-font">Leadership & Strategy</h3>
+        <div class="dev-skills-grid">
+          <!-- Dynamically populated by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FEATURED PROJECTS ==================== -->
+  <section class="dev-section" id="projects">
+    <div class="dev-section-header">
+      <h2 class="dev-title-font dev-gradient-text">💼 Featured Projects</h2>
+      <p>A showcase of core software initiatives and production platforms</p>
+    </div>
+    
+    <div class="dev-projects-grid">
+      <div style="grid-column: 1/-1; text-align:center; padding:40px 0; color:var(--color-text-muted);">
+        Loading showcase gallery...
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== EXPERIENCE TIMELINE ==================== -->
+  <section class="dev-section" id="experience" style="display:none; border-top: 1px solid rgba(255,255,255,0.05); padding-top:60px;">
+    <div class="dev-section-header">
+      <h2 class="dev-title-font dev-gradient-text">💼 Experience Timeline</h2>
+      <p>Professional path, milestones, and engineering roles</p>
+    </div>
+    <div id="portExperienceTimelineClient" style="display:flex; flex-direction:column; gap:16px;"></div>
+  </section>
+
+  <!-- ==================== VISION & ACHIEVEMENTS ==================== -->
+  <section class="dev-section" id="vision-ach">
+    <div class="dev-vision-ach-grid">
+      <!-- Vision -->
+      <div class="dev-glass-card dev-vision-card">
+        <h3 class="dev-title-font dev-gradient-text">🌟 My Vision</h3>
+        <p>
+          "My vision is to create the largest technology-driven learning platform specifically designed for BCA students and future software professionals across India."
+        </p>
+        <p style="margin-top: 15px;">
+          Through constant code iteration, custom AI capabilities, and scalable digital systems, my aim is to make learning simple, structured, and modern for the next generation of engineers.
+        </p>
+      </div>
+      
+      <!-- Achievements -->
+      <div>
+        <h3 class="dev-title-font dev-gradient-text" style="font-size: 1.8rem; margin-bottom: 24px;">🏅 Key Achievements</h3>
+        <div class="dev-achievements-list">
+          <div class="dev-glass-card dev-ach-item">
+            <div class="dev-ach-icon">💡</div>
+            <div class="dev-ach-text">Founder & CEO of BCA STORE</div>
+          </div>
+          <div class="dev-glass-card dev-ach-item">
+            <div class="dev-ach-icon">🚀</div>
+            <div class="dev-ach-text">Student Entrepreneur & Innovator</div>
+          </div>
+          <div class="dev-glass-card dev-ach-item">
+            <div class="dev-ach-icon">🎓</div>
+            <div class="dev-ach-text">Education Technology Pioneer</div>
+          </div>
+          <div class="dev-glass-card dev-ach-item">
+            <div class="dev-ach-icon">💻</div>
+            <div class="dev-ach-text">Full Stack Web Developer</div>
+          </div>
+          <div class="dev-glass-card dev-ach-item">
+            <div class="dev-ach-icon">🧑‍🤝‍🧑</div>
+            <div class="dev-ach-text">Student Community Architect</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CONTACT SECTION ==================== -->
+  <section class="dev-section" id="contact">
+    <div class="dev-section-header">
+      <h2 class="dev-title-font dev-gradient-text">📞 Get In Touch</h2>
+      <p>Let's build something amazing together!</p>
+    </div>
+    
+    <div class="dev-contact-grid">
+      <!-- Contact Info -->
+      <div class="dev-contact-info">
+        <h3 class="dev-title-font">Let's Connect</h3>
+        <p>
+          Whether you want to discuss a new collaboration project, academic support modules, EdTech advancements, or premium student plans, drop a message!
+        </p>
+        <div class="dev-social-list" style="margin-bottom: 24px;">
+          <!-- Dynamically populated by JS -->
+        </div>
+        
+        <!-- QR Code Placeholder -->
+        <div id="portQrCodeContainer" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px; border-radius:16px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); max-width:160px; text-align:center;">
+          <!-- Generated QR Code image -->
+        </div>
+      </div>
+      
+      <!-- Contact Form -->
+      <form class="dev-glass-card dev-contact-form" onsubmit="submitDynamicPortfolioContact(event)">
+        <div class="dev-form-row">
+          <div class="dev-form-group">
+            <label for="contact-name">Name</label>
+            <input type="text" id="contact-name" placeholder="Your Name" required />
+          </div>
+          <div class="dev-form-group">
+            <label for="contact-email">Email</label>
+            <input type="email" id="contact-email" placeholder="Your Email" required />
+          </div>
+        </div>
+        <div class="dev-form-group">
+          <label for="contact-subject">Subject</label>
+          <input type="text" id="contact-subject" placeholder="Collaboration / Inquiry" required />
+        </div>
+        <div class="dev-form-group">
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message" rows="5" placeholder="How can we help each other?" required></textarea>
+        </div>
+        
+        <!-- Anti-Spam Verification -->
+        <div class="dev-form-group" id="captchaContainer"></div>
+        
+        <button type="submit" class="dev-btn dev-btn-primary" style="margin-top:10px;">Send Message 🚀</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3 class="footer-brand"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"
+              style="width: 32px; height: 32px; margin-right: 8px; border-radius: 8px;"> <span
+              class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></h3>
+          <p>Your one-stop destination for BRABU BCA study materials. Notes, PYQs, and Video Lectures at your
+            fingertips.</p>
+          <div class="footer-socials">
+            <a href="#" title="Facebook">📘</a>
+            <a href="#" title="Instagram">📸</a>
+            <a href="#" title="YouTube">📺</a>
+            <a href="#" title="Telegram">✈️</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="my-batches.html">🎓 My Batch</a></li>
+            <li><a href="exam.html">📝 Exam Pattern</a></li>
+            <li><a href="developer.html" class="active">👨‍💻 Founder & Developer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul class="footer-links">
+            <li><a href="#" onclick="openSuggestionModal()">💬 Suggestion</a></li>
+            <li><a href="contact.html">📧 Contact Us</a></li>
+            <li><a href="privacy.html">🛡️ Privacy Policy</a></li>
+            <li><a href="terms.html">📜 Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="dev-credit-box">
+          Designed & Developed with 🖤 by
+          <a href="developer.html" class="dev-link">VISHAL 🖤</a>
+        </div>
+        <p>&copy; 2026 BCA STORE. Babasaheb Bhim Rao Ambedkar Bihar University.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== SUGGESTION MODAL ==================== -->
+  <div class="modal-overlay" id="suggestionModal">
+    <div class="modal glass-card">
+      <div class="modal-header">
+        <div style="display:flex; gap:16px;">
+          <h3 class="sugg-tab active" id="tabSend" onclick="switchSuggTab('send')">💬 Send Suggestion</h3>
+          <h3 class="sugg-tab" id="tabHistory" onclick="switchSuggTab('history')">📜 My History</h3>
+        </div>
+        <button class="modal-close" onclick="closeSuggestionModal()">✕</button>
+      </div>
+      <div id="suggSendView">
+        <div class="modal-body" id="suggestionBody">
+          <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label>Your Name</label>
+              <input type="text" id="suggName" placeholder="Enter your name..." />
+            </div>
+            <div class="form-group">
+              <label>Your Email</label>
+              <input type="email" id="suggEmail" placeholder="Enter your email..." />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Subject <span class="required">*</span></label>
+            <input type="text" id="suggSubject" placeholder="What is this about?" />
+          </div>
+          <div class="form-group">
+            <label>Category <span class="required">*</span></label>
+            <select id="suggCategory">
+              <option value="General">✨ General Feedback</option>
+              <option value="Content Missing">📝 Content Missing</option>
+              <option value="Bug Report">🐛 Bug Report</option>
+              <option value="Feature Request">💡 Feature Request</option>
+              <option value="UI/UX Issue">🎨 UI/UX Issue</option>
+              <option value="Video Issue">🎥 Video Playback</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Your Message <span class="required">*</span></label>
+            <textarea id="suggMessage" placeholder="Describe your suggestion or feedback..." rows="4" maxlength="500"
+              oninput="updateCharCount(this)"></textarea>
+            <div class="char-count"
+              style="text-align:right; font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+              <span id="charCurrent">0</span>/500
+            </div>
+          </div>
+          <input type="hidden" id="suggContext" value="" />
+        </div>
+        <div class="modal-footer" id="suggestionFooter">
+          <button class="btn-outline" onclick="closeSuggestionModal()">Cancel</button>
+          <button class="btn-primary" onclick="submitSuggestion()">Send Suggestion ✈️</button>
+        </div>
+      </div>
+      <div id="suggHistoryView" style="display:none;">
+        <div class="modal-body" id="suggestionHistoryBody" style="max-height:400px; overflow-y:auto;">
+          <!-- Generated by JS -->
+        </div>
+        <div class="modal-footer">
+          <button class="btn-outline" style="width:100%" onclick="closeSuggestionModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Modal -->
+  <div id="navSearchOverlay"
+    style="display:none; position:fixed; inset:0; background:rgba(10,10,15,0.85); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:999999; align-items:flex-start; justify-content:center; padding-top:100px; animation:regFadeIn 0.3s ease;">
+    <div
+      style="background:var(--card-bg); border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:24px; width:90%; max-width:600px; box-shadow:0 20px 40px rgba(0,0,0,0.5); position:relative;">
+      <button onclick="closeSearchModal()"
+        style="position:absolute; top:16px; right:20px; background:transparent; border:none; color:var(--text-secondary); font-size:1.2rem; cursor:pointer;">✕</button>
+      <h3 style="margin-bottom:16px; color:var(--text-primary); font-family:'Plus Jakarta Sans', sans-serif;">🔍 Search
+        Resources</h3>
+      <div style="display:flex; gap:12px;">
+        <input type="text" id="globalSearch" placeholder="Search subjects, topics, notes..." autocomplete="off"
+          style="flex:1; padding:14px 20px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); background:rgba(0,0,0,0.2); color:white; font-size:1rem; outline:none;"
+          onfocus="this.style.borderColor='rgba(139, 92, 246, 0.5)'"
+          onblur="this.style.borderColor='rgba(255,255,255,0.1)'"
+          onkeypress="if(event.key === 'Enter') { performGlobalSearch(); closeSearchModal(); }" />
+        <button onclick="performGlobalSearch(); closeSearchModal();"
+          style="padding:14px 24px; border-radius:12px; border:none; background:linear-gradient(135deg, #8b5cf6, #3b82f6); color:white; font-weight:800; cursor:pointer; box-shadow:0 4px 15px rgba(139, 92, 246, 0.3); transition:all 0.2s;"
+          onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Search</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="knowledge_data.js"></script>
+  <script src="analytics.js"></script>
+  <script src="business_comm_data.js"></script>
+  <script src="c_programming_data.js"></script>
+  <script src="project_data.js"></script>
+  <script src="ms_dos_data.js"></script>
+  <script src="ms_office_data.js"></script>
+  <script src="chat_data.js"></script>
+  <script src="c_lab_data.js"></script>
+  <script src="ds_data.js"></script>
+  <script src="architecture_data.js"></script>
+  <script src="html_data.js"></script>
+  <script src="cpp_data.js"></script>
+  <script src="student-registration.js"></script>
+  <script src="script.js"></script>
+  <script src="modern-effects.js"></script>
+  <script src="enhancements.js"></script>
+  <script src="ultra-fx.js"></script>
+  <script src="developer-portfolio.js"></script>
+  
+  <script>
+    // Modal helpers for navigation script compatibility
+    function openSearchModal() {
+      const modal = document.getElementById('navSearchOverlay');
+      if (modal) {
+        modal.style.display = 'flex';
+        setTimeout(() => { const input = document.getElementById('globalSearch'); if (input) input.focus(); }, 100);
+      }
+    }
+    function closeSearchModal() {
+      const modal = document.getElementById('navSearchOverlay');
+      if (modal) modal.style.display = 'none';
+    }
+  </script>
+</body>
+
+</html>

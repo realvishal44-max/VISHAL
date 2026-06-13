@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="View your enrolled batches and progress at BCA STORE." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="My Batches | BCA STORE" />
+  <meta property="og:description" content="Track your learning journey and access your enrolled semesters." />
+  <meta property="og:type" content="website" />
+
+  <title>My Batches | BCA STORE</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="modern-theme.css" />
+  <link rel="stylesheet" href="elite-plus.css" />
+</head>
+
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-link">🏠 Home</a>
+        <a href="my-batches.html" class="nav-link active">🎓 My Batch</a>
+        <a href="attendance.html" class="nav-link">📋 Attendance</a>
+        <a href="exam.html" class="nav-link">📝 Exam</a>
+        <a href="semester.html?sem=1" class="nav-link">📖 Subjects</a>
+        <a href="test-hub.html" class="nav-link">🧠 Tests</a>
+        <a href="community.html" class="nav-link">🧑‍🤝‍🧑 Community</a>
+        <a href="analytics.html" class="nav-link">📊 Stats</a>
+
+        <a href="#" class="nav-link" onclick="openSuggestionModal()">💬 Suggestion</a>
+        <button class="nav-bookmark-btn" id="navBkBtn" onclick="openBkPanel()" title="My Bookmarks">🔖<span
+            class="bk-count-badge" id="bkBadgeDesktop"></span></button>
+        <button class="dark-toggle" id="darkToggle" title="Toggle Dark Mode">🌙</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==================== PAGE HEADER ==================== -->
+  <header class="page-header">
+    <div class="hero-bg-orb orb1"></div>
+    <div class="hero-bg-orb orb2"></div>
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a> <span>/</span> <span>My Batches</span>
+      </div>
+      <h1 class="page-title">🎯 My <span class="gradient-text">Batches</span></h1>
+      <p class="page-subtitle">Manage and access your enrolled study programs</p>
+    </div>
+  </header>
+
+  <!-- ==================== MY BATCHES CONTENT ==================== -->
+  <section class="section my-batches-page" id="myBatchesSection">
+    <div class="container">
+      <div class="section-header"
+        style="text-align:left; display:flex; align-items:center; justify-content:space-between; margin-bottom: 30px;">
+        <div>
+          <h2>🎓 Your Batches</h2>
+          <p>Pick up where you left off.</p>
+        </div>
+        <div class="batch-count-pill" id="myBatchCount">0 Batches</div>
+      </div>
+
+      <div id="noBatchesMsg"
+        style="display:none; text-align:center; padding: 60px 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.06);">
+        <div style="font-size: 4rem; margin-bottom: 16px;">🔍</div>
+        <h3>No batches yet</h3>
+        <p style="margin-bottom: 24px; color: var(--text-muted);">You haven't joined any batch. Explore and start
+          learning.</p>
+        <a href="index.html#semesters" class="btn-primary">Browse Batches</a>
+      </div>
+
+      <div class="semester-grid" id="myBatchesGrid">
+        <!-- Enrolled batches will appear here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== VISIT COUNTER ==================== -->
+  <section class="visit-counter-section">
+    <div class="container">
+      <div class="vc-card glass-card">
+        <div class="vc-icon">🌍</div>
+        <div class="vc-info">
+          <h3 id="totalVisits">0</h3>
+          <p>Global Students Visited</p>
+        </div>
+        <div class="vc-pulse" title="Live Counter Enabled"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MASTER FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3 class="footer-brand"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"
+              style="width: 32px; height: 32px; margin-right: 8px; border-radius: 8px;"> <span
+              class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></h3>
+          <p>Your one-stop destination for BRABU BCA study materials. Notes, PYQs, and Video Lectures at your
+            fingertips.</p>
+          <div class="footer-socials">
+            <a href="#" title="Facebook">📘</a>
+            <a href="#" title="Instagram">📸</a>
+            <a href="#" title="YouTube">📺</a>
+            <a href="#" title="Telegram">✈️</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="my-batches.html">🎓 My Batch</a></li>
+            <li><a href="exam.html">📝 Exam Pattern</a></li>
+            <li><a href="developer.html">👨‍💻 Founder & Developer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul class="footer-links">
+            <li><a href="#" onclick="openSuggestionModal()">💬 Suggestion</a></li>
+            <li><a href="mailto:vishal@example.com">📧 Contact Us</a></li>
+            <li><a href="#">🛡️ Privacy Policy</a></li>
+            <li><a href="#">📜 Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="dev-credit-box">
+          Designed & Developed with 🖤 by
+          <a href="developer.html" class="dev-link">VISHAL 🖤</a>
+        </div>
+        <p>&copy; 2026 BCA STORE. Babasaheb Bhim Rao Ambedkar Bihar University.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== FLOATING ACTION BUTTONS ==================== -->
+
+  <!-- ==================== SUGGESTION MODAL ==================== -->
+  <div class="modal-overlay" id="suggestionModal">
+    <div class="modal glass-card">
+      <div class="modal-header">
+        <h3>💬 Send a Suggestion</h3>
+        <button class="modal-close" onclick="closeSuggestionModal()">✕</button>
+      </div>
+      <div class="modal-body" id="suggestionBody">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="suggName" placeholder="Enter your name..." />
+        </div>
+        <div class="form-group">
+          <label>Category <span class="required">*</span></label>
+          <select id="suggCategory">
+            <option value="General">✨ General Feedback</option>
+            <option value="Content Missing">📝 Content Missing</option>
+            <option value="Bug Report">🐛 Bug Report</option>
+            <option value="Feature Request">💡 Feature Request</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Your Message <span class="required">*</span></label>
+          <textarea id="suggMessage" placeholder="Describe your suggestion or feedback..." rows="4" maxlength="500"
+            oninput="updateCharCount(this)"></textarea>
+          <div class="char-count" style="text-align:right; font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+            <span id="charCurrent">0</span>/500
+          </div>
+        </div>
+        <input type="hidden" id="suggContext" value="" />
+      </div>
+      <div class="modal-footer" id="suggestionFooter">
+        <button class="btn-outline" onclick="closeSuggestionModal()">Cancel</button>
+        <button class="btn-primary" onclick="submitSuggestion()">Send Suggestion ✈️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST ==================== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="analytics.js"></script>
+  <script src="student-registration.js"></script>
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initMyBatchesPage();
+    });
+  </script>
+  <script src="modern-effects.js"></script>
+  <script src="enhancements.js"></script>
+</body>
+
+</html>

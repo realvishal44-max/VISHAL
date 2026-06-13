@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="BCA STORE Community — Ask doubts, chat with students, and get real-time announcements." />
+  <title>Community | BCA STORE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧑‍🤝‍🧑</text></svg>">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="modern-theme.css" />
+  <link rel="stylesheet" href="community.css" />
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-link">🏠 Home</a>
+        <a href="attendance.html" class="nav-link">📋 Attendance</a>
+        <a href="exam.html" class="nav-link">📝 Exam</a>
+        <a href="semester.html?sem=1" class="nav-link">📖 Subjects</a>
+        <a href="community.html" class="nav-link active">🧑‍🤝‍🧑 Community</a>
+
+        <a href="#" class="nav-link" onclick="openSuggestionModal()">💬 Suggestion</a>
+        <button class="nav-bookmark-btn" id="navBkBtn" onclick="openBkPanel()" title="My Bookmarks">🔖<span
+            class="bk-count-badge" id="bkBadgeDesktop"></span></button>
+        <button class="dark-toggle" id="darkToggle" title="Toggle Dark Mode">🌙</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN COMMUNITY PAGE -->
+  <div class="comm-page" id="commPage" style="display:none;">
+
+    <!-- Header -->
+    <div class="comm-header">
+      <div class="hero-bg-orb orb1"></div>
+      <div class="hero-bg-orb orb2"></div>
+      <h1>🧑‍🤝‍🧑 <span class="gradient-text">Community</span></h1>
+      <p>Ask doubts, chat live, and stay updated with announcements</p>
+      <div class="comm-online-pill">
+        <span class="comm-online-dot"></span>
+        <span id="commOnlineCount">0</span> online now
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="comm-tabs">
+      <button class="comm-tab active" onclick="commSwitchTab('doubts')">🧠 Doubts</button>
+      <button class="comm-tab" onclick="commSwitchTab('chat')">💬 Live Chat</button>
+      <button class="comm-tab" onclick="commSwitchTab('announcements')">📢 Announcements</button>
+      <button class="comm-tab" onclick="commSwitchTab('voting')">🔥 Live Voting</button>
+    </div>
+
+    <!-- ====== DOUBTS TAB ====== -->
+    <div class="comm-tab-content active container" id="comm-tab-doubts">
+      <div class="comm-doubt-toolbar">
+        <input type="text" id="commDoubtSearch" placeholder="🔍 Search doubts..." oninput="commFilterDoubts()" />
+        <select id="commDoubtFilterSem" onchange="commFilterDoubts()">
+          <option value="">All Semesters</option>
+          <option value="1">Sem 1</option>
+          <option value="2">Sem 2</option>
+          <option value="3">Sem 3</option>
+          <option value="4">Sem 4</option>
+          <option value="5">Sem 5</option>
+          <option value="6">Sem 6</option>
+        </select>
+        <button class="comm-post-btn" onclick="commOpenDoubtModal()">➕ Ask Doubt</button>
+      </div>
+      <div id="commDoubtsList">
+        <div class="comm-skeleton">
+          <div class="comm-skel-line"></div>
+          <div class="comm-skel-line"></div>
+          <div class="comm-skel-line"></div>
+        </div>
+      </div>
+      <div class="comm-empty" id="commDoubtsEmpty" style="display:none;">
+        <div class="comm-empty-icon">🧠</div>
+        <h3>No Doubts Yet</h3>
+        <p>Be the first to ask a doubt!</p>
+      </div>
+    </div>
+
+    <!-- ====== CHAT TAB ====== -->
+    <div class="comm-tab-content container" id="comm-tab-chat">
+      <div class="comm-chat-container">
+        <div class="comm-chat-header">
+          <h4>💬 Global Chat Room</h4>
+          <div class="comm-online-pill" style="margin:0;">
+            <span class="comm-online-dot"></span>
+            <span id="commChatOnline">0</span> online
+          </div>
+        </div>
+        <div class="comm-chat-messages" id="commChatMessages">
+          <!-- Messages rendered by JS -->
+        </div>
+        <div class="comm-chat-typing" id="commChatTyping">
+          <div class="comm-typing-dots"><span></span><span></span><span></span></div>
+          <span id="commTypingText">Someone is typing...</span>
+        </div>
+        <div class="comm-chat-input-bar">
+          <input type="text" id="commChatInput" placeholder="Type a message..." maxlength="500"
+            oninput="commTypingSignal()" onkeydown="if(event.key==='Enter')commSendChat()" autocomplete="off" />
+          <button class="comm-chat-send" onclick="commSendChat()">Send ✈️</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== ANNOUNCEMENTS TAB ====== -->
+    <div class="comm-tab-content container" id="comm-tab-announcements">
+      <div id="commAnnounceList">
+        <div class="comm-skeleton">
+          <div class="comm-skel-line"></div>
+          <div class="comm-skel-line"></div>
+          <div class="comm-skel-line"></div>
+        </div>
+      </div>
+      <div class="comm-empty" id="commAnnounceEmpty" style="display:none;">
+        <div class="comm-empty-icon">📢</div>
+        <h3>No Announcements</h3>
+        <p>Admin announcements will appear here.</p>
+      </div>
+    </div>
+
+    <!-- ====== VOTING TAB ====== -->
+    <div class="comm-tab-content container" id="comm-tab-voting">
+      <div class="comm-voting-header">
+        <div class="comm-v-label">🔥 Live Community Polls</div>
+        <p>Participate in active polls and see what the community thinks. Results are revealed after the poll ends!</p>
+      </div>
+      <div id="commVotingList" class="comm-voting-grid">
+        <!-- Polls rendered by JS -->
+        <div class="comm-skeleton">
+          <div class="comm-skel-line"></div>
+          <div class="comm-skel-line"></div>
+          <div class="comm-skel-line"></div>
+        </div>
+      </div>
+      <div class="comm-empty" id="commVotingEmpty" style="display:none;">
+        <div class="comm-empty-icon">🗳️</div>
+        <h3>No Active Polls</h3>
+        <p>Check back later for new community polls!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST DOUBT MODAL -->
+  <div class="comm-modal-overlay" id="commDoubtModal" style="display:none;">
+    <div class="comm-modal">
+      <h3>🧠 Ask a New Doubt</h3>
+      <div class="comm-reg-field">
+        <label>Title *</label>
+        <input type="text" id="commDoubtTitle" placeholder="e.g. What is normalization in DBMS?" maxlength="120" />
+      </div>
+      <div class="comm-reg-field">
+        <label>Description</label>
+        <textarea id="commDoubtDesc" placeholder="Explain your doubt in detail..." rows="4"
+          style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.9rem;font-family:inherit;resize:vertical;outline:none;"></textarea>
+      </div>
+      <div class="comm-reg-field">
+        <label>Subject</label>
+        <input type="text" id="commDoubtSubject" placeholder="e.g. DBMS, C++, Java..." maxlength="50" />
+      </div>
+      <div class="comm-reg-field">
+        <label>Semester</label>
+        <select id="commDoubtSem">
+          <option value="">— Select —</option>
+          <option value="1">Sem 1</option>
+          <option value="2">Sem 2</option>
+          <option value="3">Sem 3</option>
+          <option value="4">Sem 4</option>
+          <option value="5">Sem 5</option>
+          <option value="6">Sem 6</option>
+        </select>
+      </div>
+      <div class="comm-modal-actions">
+        <button class="comm-modal-cancel" onclick="commCloseDoubtModal()">Cancel</button>
+        <button class="comm-modal-submit" onclick="commPostDoubt()">Post Doubt 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAB -->
+  <button class="comm-fab" onclick="commOpenDoubtModal()" title="Ask a Doubt">❓</button>
+
+  <!-- VISIT COUNTER -->
+  <section class="visit-counter-section">
+    <div class="container">
+      <div class="vc-card glass-card">
+        <div class="vc-icon">🌍</div>
+        <div class="vc-info">
+          <h3 id="totalVisits">0</h3>
+          <p>Global Students Visited</p>
+        </div>
+        <div class="vc-pulse" title="Live Counter Enabled"></div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="knowledge_data.js"></script>
+  <script src="business_comm_data.js"></script>
+  <script src="c_programming_data.js"></script>
+  <script src="project_data.js"></script>
+  <script src="ms_dos_data.js"></script>
+  <script src="ms_office_data.js"></script>
+  <script src="chat_data.js"></script>
+  <script src="c_lab_data.js"></script>
+  <script src="ds_data.js"></script>
+  <script src="architecture_data.js"></script>
+  <script src="html_data.js"></script>
+  <script src="cpp_data.js"></script>
+  <script src="student-registration.js"></script>
+  <script src="script.js"></script>
+  <script src="community.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initCommunityPage();
+    });
+  </script>
+  <script src="modern-effects.js"></script>
+  <script src="enhancements.js"></script>
+</body>
+
+</html>

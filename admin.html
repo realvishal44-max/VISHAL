@@ -1,0 +1,3077 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel | BCA STORE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="admin-panel.css" />
+  <link rel="stylesheet" href="admin-login-system.css" />
+  <link rel="stylesheet" href="modern-theme.css" />
+  <link rel="stylesheet" href="admin-dashboard-modern.css" />
+  <link rel="stylesheet" href="admin-premium.css" />
+  <style>
+    /* Real-Time Highlight for New Records */
+    .record-row-new {
+        animation: highlightRow 3s ease-out;
+    }
+    @keyframes highlightRow {
+        0% { background-color: rgba(16, 185, 129, 0.2); }
+        100% { background-color: transparent; }
+    }
+    .glass-input {
+      background: rgba(9, 9, 11, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-input:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
+      background: rgba(9, 9, 11, 0.8);
+    }
+  </style>
+  <!-- Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+<div class="admin-login-gate" id="adminLoginGate"></div>
+
+<!-- ==================== ADMIN PANEL ==================== -->
+<div class="admin-panel adm-shell" id="adminPanel" style="display:none;">
+
+  <!-- SIDEBAR -->
+  <aside class="adm-sidebar" id="admSidebar">
+    <div class="adm-sb-brand">
+      <span class="adm-sb-brand-icon">🛡️</span>
+      <div class="adm-sb-brand-text">
+        <span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span>
+        <div class="adm-sb-brand-sub">Admin Console</div>
+      </div>
+    </div>
+    <button class="adm-sb-toggle" id="admSbToggle" onclick="toggleAdmSidebar()" title="Collapse">◀</button>
+    <div class="adm-sb-section">
+      <button class="adm-sb-item active btn-haptic" data-label="Dashboard" onclick="switchAdminTab('dashboard')" id="tabDashboard"><span class="adm-sb-icon">📊</span><span class="adm-sb-label">Dashboard</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Add Material" onclick="switchAdminTab('add')" id="tabAdd"><span class="adm-sb-icon">➕</span><span class="adm-sb-label">Add Material</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Manage" onclick="switchAdminTab('manage')" id="tabManage"><span class="adm-sb-icon">📋</span><span class="adm-sb-label">Manage</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Test Hub" onclick="switchAdminTab('test')" id="tabTest"><span class="adm-sb-icon">🧠</span><span class="adm-sb-label">Test Hub</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Registered Students" onclick="switchAdminTab('registered-students')" id="tabRegisteredStudents"><span class="adm-sb-icon">💎</span><span class="adm-sb-label">Students</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Attendance" onclick="window.location.href='attendance-admin.html'" id="tabAttendance" style="display: flex; align-items: center;"><span class="adm-sb-icon">📅</span><span class="adm-sb-label">Attendance</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Notices" onclick="switchAdminTab('notifications')" id="tabNotifications"><span class="adm-sb-icon">📢</span><span class="adm-sb-label">Notices</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Inbox" onclick="switchAdminTab('inbox')" id="tabInbox" style="position:relative;"><span class="adm-sb-icon">📥</span><span class="adm-sb-label">Inbox</span><span class="adm-sb-badge" id="inboxBadge" style="display:none; position:absolute; top:4px; right:12px; padding: 2px 6px; border-radius: 10px; font-size: 9px; min-width: 14px; text-align: center; background:#ef4444; color:#fff;">0</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Visitors" onclick="switchAdminTab('visitors')" id="tabVisitors"><span class="adm-sb-icon">👥</span><span class="adm-sb-label">Visitors</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Stats" onclick="switchAdminTab('analytics')" id="tabAnalytics"><span class="adm-sb-icon">📈</span><span class="adm-sb-label">Stats</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Community" onclick="switchAdminTab('community')" id="tabCommunity"><span class="adm-sb-icon">🧑‍🤝‍🧑</span><span class="adm-sb-label">Community</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Votes" onclick="switchAdminTab('voting')" id="tabVoting"><span class="adm-sb-icon">🔥</span><span class="adm-sb-label">Votes</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="AI Config" onclick="switchAdminTab('ai-settings')" id="tabAiSettings"><span class="adm-sb-icon">🤖</span><span class="adm-sb-label">AI Config</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Portfolio Management" onclick="switchAdminTab('portfolio')" id="tabPortfolio"><span class="adm-sb-icon">💼</span><span class="adm-sb-label">Portfolio</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Batches Management" onclick="switchAdminTab('batches')" id="tabBatches"><span class="adm-sb-icon">📚</span><span class="adm-sb-label">Batches</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Settings" onclick="switchAdminTab('settings')" id="tabSettings"><span class="adm-sb-icon">⚙️</span><span class="adm-sb-label">Settings</span></button>
+      <button class="adm-sb-item btn-haptic logout-btn" data-label="Logout" onclick="adminLogout()" id="tabLogout" style="margin-top:auto;"><span class="adm-sb-icon">🚪</span><span class="adm-sb-label">Logout</span></button>
+    </div>
+  </aside>
+  <div class="adm-sidebar-overlay" id="admOverlay" onclick="closeAdmSidebar()"></div>
+
+  <!-- MAIN AREA -->
+  <div class="adm-main">
+    <!-- TOP BAR -->
+    <div class="adm-topbar">
+      <button class="adm-mobile-toggle" id="admMobileToggle" onclick="toggleAdmSidebar()">⋮</button>
+      <div class="adm-search">
+        <span class="adm-search-icon">🔍</span>
+        <input type="text" id="admGlobalSearch" placeholder="Search anything..." />
+      </div>
+      <div class="adm-topbar-actions">
+        <button class="adm-top-btn" id="darkToggle" title="Toggle Theme" style="font-size: 1rem;">🌙</button>
+        <button class="adm-top-btn" title="Settings" onclick="switchAdminTab('settings')" style="font-size: 1rem;">⚙️</button>
+        <button class="adm-top-btn" title="Notifications" onclick="switchAdminTab('notifications')">🔔<span class="adm-top-badge"></span></button>
+        <div class="adm-topbar-divider"></div>
+        
+        <!-- System Health Monitor -->
+        <div class="adm-health-widget" title="System Health: 100% Operational">
+          <div class="health-pulse"></div>
+          <div class="health-info">
+            <span class="health-label">SYSTEM HEALTH</span>
+            <span class="health-status">OPTIMAL</span>
+          </div>
+        </div>
+
+        <!-- Maintenance Mode Status & Bypass Toggle -->
+        <div id="maintBypassWidget" class="adm-health-widget" style="display: none; background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.25); cursor: pointer;" onclick="toggleSuperAdminBypass()" title="Click to toggle Super Admin Maintenance Bypass">
+          <div class="health-pulse" style="background: #ef4444; box-shadow: 0 0 8px #ef4444;"></div>
+          <div class="health-info">
+            <span class="health-label" style="color: #ef4444;">MAINTENANCE ACTIVE</span>
+            <span class="health-status" id="maintBypassStatus" style="color: #fff;">BYPASS ON</span>
+          </div>
+        </div>
+
+        <div class="adm-topbar-divider"></div>
+        <div class="adm-top-profile" onclick="adminLogout()">
+          <div class="adm-top-avatar">A</div>
+          <span class="adm-top-name">Admin</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="adm-content">
+
+      <!-- ====== PREMIUM DASHBOARD ====== -->
+      <!-- ====== PREMIUM DASHBOARD ====== -->
+      <div class="adm-section active" id="admin-tab-dashboard">
+
+        <!-- WELCOME BANNER -->
+        <div class="adm-welcome-banner" style="position:relative; overflow:hidden;">
+          <div style="z-index: 2; position:relative;">
+            <div class="adm-wb-greeting" id="admWelcomeGreeting">Good Morning, Admin 👋</div>
+            <div class="adm-wb-sub">System Access Prime. Operations center monitoring active.</div>
+          </div>
+          <div class="adm-wb-stats" style="z-index: 2; position:relative; gap: 24px; display:flex; align-items:center;">
+            <div class="adm-wb-stat">
+              <div class="adm-wb-stat-num" id="wbTotalMaterials">—</div>
+              <div class="adm-wb-stat-lbl">Materials</div>
+            </div>
+            <div class="adm-wb-stat">
+              <div class="adm-wb-stat-num" id="wbTotalVisitors">—</div>
+              <div class="adm-wb-stat-lbl">Students</div>
+            </div>
+            <div class="adm-wb-stat">
+              <div class="adm-wb-stat-num" id="livePingLatency" style="color:var(--color-success);">0ms</div>
+              <div class="adm-wb-stat-lbl">Ping Latency</div>
+            </div>
+            <div class="adm-wb-stat">
+              <button onclick="triggerDashboardCelebration()" class="adm-top-btn btn-haptic" title="Launch Celebration 🎉" style="border-radius: 50%; width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); border: none; box-shadow: 0 0 15px var(--accent-blue-glow); font-size:1.15rem; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;">🎉</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS (Homepage Style) -->
+        <div class="adm-quick-actions-grid" style="margin-bottom:24px;">
+          <div class="adm-qa-card" onclick="switchAdminTab('add')">
+            <span class="adm-qa-icon">➕</span>
+            <span class="adm-qa-title">Add Material</span>
+          </div>
+          <div class="adm-qa-card" onclick="switchAdminTab('notifications')">
+            <span class="adm-qa-icon">📢</span>
+            <span class="adm-qa-title">Post Notice</span>
+          </div>
+          <div class="adm-qa-card" onclick="switchAdminTab('voting')">
+            <span class="adm-qa-icon">🔥</span>
+            <span class="adm-qa-title">New Vote</span>
+          </div>
+          <div class="adm-qa-card" onclick="window.location.href='attendance-admin.html'">
+            <span class="adm-qa-icon">📅</span>
+            <span class="adm-qa-title">Attendance</span>
+          </div>
+        </div>
+
+        <!-- KPI CARDS -->
+        <div class="adm-kpi-grid">
+          <div class="adm-kpi-card" style="--kpi-color:#3b82f6; --kpi-bg:rgba(59,130,246,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">📚</div>
+              <span class="adm-kpi-trend trend-up">↑ Live</span>
+            </div>
+            <div class="adm-kpi-value" id="kpiTotalMaterials">—</div>
+            <div class="adm-kpi-label">Total Materials</div>
+            <div class="adm-kpi-sparkline" id="spark1"></div>
+          </div>
+          <div class="adm-kpi-card" style="--kpi-color:#10b981; --kpi-bg:rgba(16,185,129,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">📝</div>
+              <span class="adm-kpi-trend trend-up">↑ Active</span>
+            </div>
+            <div class="adm-kpi-value" id="kpiNotesDash">—</div>
+            <div class="adm-kpi-label">Notes Uploaded</div>
+            <div class="adm-kpi-sparkline" id="spark2"></div>
+          </div>
+          <div class="adm-kpi-card" style="--kpi-color:#f59e0b; --kpi-bg:rgba(245,158,11,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">🎥</div>
+              <span class="adm-kpi-trend trend-flat">Steady</span>
+            </div>
+            <div class="adm-kpi-value" id="kpiVideosDash">—</div>
+            <div class="adm-kpi-label">Video Lectures</div>
+            <div class="adm-kpi-sparkline" id="spark3"></div>
+          </div>
+          <div class="adm-kpi-card" style="--kpi-color:#06b6d4; --kpi-bg:rgba(6,182,212,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">📄</div>
+              <span class="adm-kpi-trend trend-up">↑ New</span>
+            </div>
+            <div class="adm-kpi-value" id="kpiPYQsDash">—</div>
+            <div class="adm-kpi-label">PYQs Available</div>
+            <div class="adm-kpi-sparkline" id="spark4"></div>
+          </div>
+          <div class="adm-kpi-card" style="--kpi-color:#8b5cf6; --kpi-bg:rgba(139,92,246,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">👥</div>
+              <span class="adm-kpi-trend trend-up">↑ Growing</span>
+            </div>
+            <div class="adm-kpi-value" id="kpiStudentsDash">—</div>
+            <div class="adm-kpi-label">Registered Students</div>
+            <div class="adm-kpi-sparkline" id="spark5"></div>
+          </div>
+          <div class="adm-kpi-card" style="--kpi-color:#ef4444; --kpi-bg:rgba(239,68,68,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">💬</div>
+              <span class="adm-kpi-trend trend-flat">—</span>
+            </div>
+            <div class="adm-kpi-value" id="kpiSuggDash">—</div>
+            <div class="adm-kpi-label">Inbox Messages</div>
+            <div class="adm-kpi-sparkline" id="spark6"></div>
+          </div>
+          <div class="adm-kpi-card" style="--kpi-color:#3b82f6; --kpi-bg:rgba(59,130,246,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">⚡</div>
+              <span class="adm-kpi-trend trend-up">100%</span>
+            </div>
+            <div class="adm-kpi-value" id="systemHealthStatus">Online</div>
+            <div class="adm-kpi-label">System Health</div>
+            <div class="adm-kpi-sparkline" id="spark8"></div>
+          </div>
+        </div>
+
+        <!-- DYNAMIC CONTROL CENTER & DIAGNOSTIC HANDSHAKES -->
+        <div class="adm-dash-two-col" style="margin-bottom:28px;">
+          <!-- Live Controls Switcher -->
+          <div class="adm-panel">
+            <div class="adm-section-head">
+              <h3>🛠️ Live System Control Switcher</h3>
+              <span class="adm-section-badge" style="background:var(--accent-purple-glow); color:var(--accent-purple);">ACTIVE</span>
+            </div>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">Instantly toggle global platform parameters. State updates immediately on all active instances.</p>
+            
+            <style>
+              /* Custom Dashboard Switches styling */
+              .switch-container {
+                position: relative;
+                display: inline-block;
+                width: 50px;
+                height: 24px;
+                flex-shrink: 0;
+              }
+              .switch-slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background-color: #334155;
+                transition: .3s;
+                border-radius: 34px;
+              }
+              .switch-slider:before {
+                position: absolute;
+                content: "";
+                height: 16px;
+                width: 16px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: .3s;
+                border-radius: 50%;
+              }
+              input:checked + .switch-slider {
+                background-color: var(--accent-blue);
+              }
+              input:checked + .switch-slider:before {
+                transform: translateX(26px);
+              }
+            </style>
+            
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              <div class="flex-between" style="padding:12px; background:rgba(255,255,255,0.02); border:1px solid var(--border-glass); border-radius:var(--radius-sm); width: 100%; box-sizing: border-box;">
+                <div style="text-align: left; padding-right:12px;">
+                  <div style="font-weight:700; color:#fff; font-size:0.9rem;">Geofenced Attendance Verification</div>
+                  <div style="font-size:0.75rem; color:var(--text-muted);">Require coordinate matching for student classroom check-ins.</div>
+                </div>
+                <label class="switch-container">
+                  <input type="checkbox" id="switchGeofence" onchange="toggleSystemParam('attendance_geofence', this.checked)">
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+
+              <div class="flex-between" style="padding:12px; background:rgba(255,255,255,0.02); border:1px solid var(--border-glass); border-radius:var(--radius-sm); width: 100%; box-sizing: border-box;">
+                <div style="text-align: left; padding-right:12px;">
+                  <div style="font-weight:700; color:#fff; font-size:0.9rem;">AI Auto-Response Mode</div>
+                  <div style="font-size:0.75rem; color:var(--text-muted);">Enable chatbot to auto-reply to incoming student inquiries.</div>
+                </div>
+                <label class="switch-container">
+                  <input type="checkbox" id="switchAiResponse" onchange="toggleSystemParam('ai_responder', this.checked)">
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+
+              <div class="flex-between" style="padding:12px; background:rgba(255,255,255,0.02); border:1px solid var(--border-glass); border-radius:var(--radius-sm); width: 100%; box-sizing: border-box;">
+                <div style="text-align: left; padding-right:12px;">
+                  <div style="font-weight:700; color:#fff; font-size:0.9rem;">Platform Maintenance Lock</div>
+                  <div style="font-size:0.75rem; color:var(--text-muted);">Shut down user access and display a maintenance window.</div>
+                </div>
+                <label class="switch-container">
+                  <input type="checkbox" id="switchMaintenance" onchange="toggleSystemParam('maintenance_mode', this.checked)">
+                  <span class="switch-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Statistics & Handshake latency checker -->
+          <div class="adm-panel">
+            <div class="adm-section-head">
+              <h3>📡 System Latency & Node Handshake</h3>
+              <div class="adm-live-dot" id="systemDiagnosticLight">SYNCING</div>
+            </div>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Real-time query speeds and security protocols verified with the Firebase core nodes.</p>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="padding:14px; background:rgba(0,0,0,0.15); border:1px solid var(--border-glass); border-radius:var(--radius-sm); text-align:left;">
+                <div style="font-size:0.65rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Protocol</div>
+                <div style="font-size:1.1rem; font-weight:800; color:#fff; margin-top:2px;">AES-GCM-256</div>
+              </div>
+              <div style="padding:14px; background:rgba(0,0,0,0.15); border:1px solid var(--border-glass); border-radius:var(--radius-sm); text-align:left;">
+                <div style="font-size:0.65rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Auth Token</div>
+                <div style="font-size:1.1rem; font-weight:800; color:var(--accent-blue); margin-top:2px;" id="tokenRoleMeta">ADMIN</div>
+              </div>
+              <div style="padding:14px; background:rgba(0,0,0,0.15); border:1px solid var(--border-glass); border-radius:var(--radius-sm); text-align:left;">
+                <div style="font-size:0.65rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Firebase Sync</div>
+                <div style="font-size:1.1rem; font-weight:800; color:var(--color-success); margin-top:2px;">Connected</div>
+              </div>
+              <div style="padding:14px; background:rgba(0,0,0,0.15); border:1px solid var(--border-glass); border-radius:var(--radius-sm); text-align:left;">
+                <div style="font-size:0.65rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Check-ins Count</div>
+                <div style="font-size:1.1rem; font-weight:800; color:var(--color-warning); margin-top:2px;" id="activeChecksCount">Loading...</div>
+              </div>
+            </div>
+            <button onclick="runConsoleDiagnosticTest()" class="saas-button" style="margin-top:16px; height:36px !important; font-size:0.8rem !important;">Run Full Diagnostics Scan 🔍</button>
+          </div>
+        </div>
+
+        <!-- SMART INSIGHTS -->
+        <div class="adm-section-head">
+          <h3>🧠 Smart Insights</h3>
+          <span class="adm-section-badge" id="insightsBadge">Loading...</span>
+        </div>
+        <div class="adm-insights-strip" id="admInsightsStrip" style="margin-bottom: 30px;">
+          <div class="adm-insight-card">
+            <div class="adm-insight-icon insight-info">📊</div>
+            <div class="adm-insight-body">
+              <div class="adm-insight-title">Dashboard is initializing...</div>
+              <div class="adm-insight-desc">Loading live data from Firebase. Insights will appear shortly.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN 2-COL: CHART + ACTIVITY -->
+        <div class="adm-dash-two-col">
+          <!-- Weekly Chart -->
+          <div class="adm-panel">
+            <div class="adm-section-head">
+              <h3>📈 Weekly Platform Activity</h3>
+              <span class="adm-section-badge">Live Analytics</span>
+            </div>
+            <div class="adm-bar-chart" id="admWeeklyChart">
+              <!-- bars injected by JS -->
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:0.65rem;color:var(--text-muted);padding:0 4px;margin-bottom: 20px;">
+              <span id="wcDay0">Mon</span><span id="wcDay1">Tue</span><span id="wcDay2">Wed</span>
+              <span id="wcDay3">Thu</span><span id="wcDay4">Fri</span><span id="wcDay5">Sat</span><span id="wcDay6">Sun</span>
+            </div>
+            
+            <!-- ADJUST WEEKLY ACTIVITY INPUT PANEL -->
+            <div style="border-top:1px solid var(--border-glass); padding-top:16px;">
+              <div style="font-weight:700; color:#fff; font-size:0.85rem; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.03em; text-align: left;">✏️ Adjust Weekly Visits (Instantly Updateable)</div>
+              <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; margin-bottom:12px;">
+                <div>
+                  <div style="font-size:0.65rem; color:var(--text-muted); text-align:center; font-weight:700; margin-bottom:4px;">Mon</div>
+                  <input type="number" id="inputVisMon" value="0" style="width:100%; height:32px; background:rgba(0,0,0,0.2); border:1px solid var(--border-glass); border-radius:4px; color:#fff; font-size:0.8rem; text-align:center; padding:0;">
+                </div>
+                <div>
+                  <div style="font-size:0.65rem; color:var(--text-muted); text-align:center; font-weight:700; margin-bottom:4px;">Tue</div>
+                  <input type="number" id="inputVisTue" value="0" style="width:100%; height:32px; background:rgba(0,0,0,0.2); border:1px solid var(--border-glass); border-radius:4px; color:#fff; font-size:0.8rem; text-align:center; padding:0;">
+                </div>
+                <div>
+                  <div style="font-size:0.65rem; color:var(--text-muted); text-align:center; font-weight:700; margin-bottom:4px;">Wed</div>
+                  <input type="number" id="inputVisWed" value="0" style="width:100%; height:32px; background:rgba(0,0,0,0.2); border:1px solid var(--border-glass); border-radius:4px; color:#fff; font-size:0.8rem; text-align:center; padding:0;">
+                </div>
+                <div>
+                  <div style="font-size:0.65rem; color:var(--text-muted); text-align:center; font-weight:700; margin-bottom:4px;">Thu</div>
+                  <input type="number" id="inputVisThu" value="0" style="width:100%; height:32px; background:rgba(0,0,0,0.2); border:1px solid var(--border-glass); border-radius:4px; color:#fff; font-size:0.8rem; text-align:center; padding:0;">
+                </div>
+                <div>
+                  <div style="font-size:0.65rem; color:var(--text-muted); text-align:center; font-weight:700; margin-bottom:4px;">Fri</div>
+                  <input type="number" id="inputVisFri" value="0" style="width:100%; height:32px; background:rgba(0,0,0,0.2); border:1px solid var(--border-glass); border-radius:4px; color:#fff; font-size:0.8rem; text-align:center; padding:0;">
+                </div>
+                <div>
+                  <div style="font-size:0.65rem; color:var(--text-muted); text-align:center; font-weight:700; margin-bottom:4px;">Sat</div>
+                  <input type="number" id="inputVisSat" value="0" style="width:100%; height:32px; background:rgba(0,0,0,0.2); border:1px solid var(--border-glass); border-radius:4px; color:#fff; font-size:0.8rem; text-align:center; padding:0;">
+                </div>
+                <div>
+                  <div style="font-size:0.65rem; color:var(--text-muted); text-align:center; font-weight:700; margin-bottom:4px;">Sun</div>
+                  <input type="number" id="inputVisSun" value="0" style="width:100%; height:32px; background:rgba(0,0,0,0.2); border:1px solid var(--border-glass); border-radius:4px; color:#fff; font-size:0.8rem; text-align:center; padding:0;">
+                </div>
+              </div>
+              <div style="display:flex; gap:10px;">
+                <button onclick="updateWeeklyActivityOnFirebase()" class="saas-button" style="flex:1; height:34px !important; margin-top:0 !important; font-size:0.8rem !important; background:linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)) !important;">Save & Broadcast Stats 🚀</button>
+                <button onclick="randomizeWeeklyActivityStats()" class="adm-top-btn btn-haptic" style="width:34px; height:34px; padding:0;" title="Simulate Dummy Traffic 🎲">🎲</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Feed -->
+          <div class="adm-panel">
+            <div class="adm-section-head">
+              <h3>⚡ Live Activity</h3>
+              <div class="adm-live-dot">LIVE</div>
+            </div>
+            <div class="adm-activity-feed" id="admActivityFeed">
+              <div class="adm-activity-item">
+                <div class="adm-activity-dot" style="background:#3b82f6;"></div>
+                <div class="adm-activity-text">Dashboard <strong>loaded</strong> successfully</div>
+                <div class="adm-activity-time">now</div>
+              </div>
+              <div class="adm-activity-item">
+                <div class="adm-activity-dot" style="background:#10b981;"></div>
+                <div class="adm-activity-text">Firebase <strong>sync active</strong></div>
+                <div class="adm-activity-time">now</div>
+              </div>
+              <div class="adm-activity-item">
+                <div class="adm-activity-dot" style="background:#f59e0b;"></div>
+                <div class="adm-activity-text">All <strong>systems operational</strong></div>
+                <div class="adm-activity-time">now</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESOURCE BREAKDOWN -->
+        <div class="adm-panel" style="margin-bottom:28px; margin-top: 28px;">
+          <div class="adm-section-head">
+            <h3>📚 Resource Breakdown by Semester</h3>
+            <div style="display:flex;gap:12px;font-size:0.7rem;color:var(--text-muted);">
+              <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;background:#3b82f6;border-radius:2px;display:inline-block;"></span>Notes</span>
+              <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;background:#10b981;border-radius:2px;display:inline-block;"></span>Videos</span>
+              <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>PYQs</span>
+            </div>
+          </div>
+          <div class="adm-res-breakdown" id="admResBreakdown">
+            <div class="adm-res-row">
+              <div class="adm-res-label">Semester 1</div>
+              <div class="adm-res-track"><div class="adm-res-seg seg-notes" id="rb1n" style="width:0%"></div><div class="adm-res-seg seg-videos" id="rb1v" style="width:0%"></div><div class="adm-res-seg seg-pyq" id="rb1p" style="width:0%"></div></div>
+              <div class="adm-res-counts" id="rbc1"><span>Loading...</span></div>
+            </div>
+            <div class="adm-res-row">
+              <div class="adm-res-label">Semester 2</div>
+              <div class="adm-res-track"><div class="adm-res-seg seg-notes" id="rb2n" style="width:0%"></div><div class="adm-res-seg seg-videos" id="rb2v" style="width:0%"></div><div class="adm-res-seg seg-pyq" id="rb2p" style="width:0%"></div></div>
+              <div class="adm-res-counts" id="rbc2"><span>Loading...</span></div>
+            </div>
+            <div class="adm-res-row">
+              <div class="adm-res-label">Semester 3</div>
+              <div class="adm-res-track"><div class="adm-res-seg seg-notes" id="rb3n" style="width:0%"></div><div class="adm-res-seg seg-videos" id="rb3v" style="width:0%"></div><div class="adm-res-seg seg-pyq" id="rb3p" style="width:0%"></div></div>
+              <div class="adm-res-counts" id="rbc3"><span>Loading...</span></div>
+            </div>
+            <div class="adm-res-row">
+              <div class="adm-res-label">Semester 4</div>
+              <div class="adm-res-track"><div class="adm-res-seg seg-notes" id="rb4n" style="width:0%"></div><div class="adm-res-seg seg-videos" id="rb4v" style="width:0%"></div><div class="adm-res-seg seg-pyq" id="rb4p" style="width:0%"></div></div>
+              <div class="adm-res-counts" id="rbc4"><span>Loading...</span></div>
+            </div>
+            <div class="adm-res-row">
+              <div class="adm-res-label">Semester 5</div>
+              <div class="adm-res-track"><div class="adm-res-seg seg-notes" id="rb5n" style="width:0%"></div><div class="adm-res-seg seg-videos" id="rb5v" style="width:0%"></div><div class="adm-res-seg seg-pyq" id="rb5p" style="width:0%"></div></div>
+              <div class="adm-res-counts" id="rbc5"><span>Loading...</span></div>
+            </div>
+            <div class="adm-res-row">
+              <div class="adm-res-label">Semester 6</div>
+              <div class="adm-res-track"><div class="adm-res-seg seg-notes" id="rb6n" style="width:0%"></div><div class="adm-res-seg seg-videos" id="rb6v" style="width:0%"></div><div class="adm-res-seg seg-pyq" id="rb6p" style="width:0%"></div></div>
+              <div class="adm-res-counts" id="rbc6"><span>Loading...</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ====== ADD MATERIAL TAB ====== -->
+      <div class="adm-section" id="admin-tab-add">
+    <div class="admin-form-card glass-card">
+      <h3>➕ Add New Study Material</h3>
+      
+      <!-- Section Selector: BCA Store vs Elite Plus -->
+      <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 2px solid var(--border);">
+        <label style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 0.95rem;">Upload To <span class="required">*</span></label>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <label style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 2px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.3s ease; background: rgba(255,255,255,0.05);" id="bcaStoreLabel">
+            <input type="radio" name="uploadSection" value="bca-store" checked onchange="updateAdminUploadSection(this.value)" style="cursor: pointer; width: 18px; height: 18px;" />
+            <span style="font-weight: 500;">📚 BCA Store</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 2px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.3s ease; background: rgba(255,255,255,0.05);" id="elitePlusLabel">
+            <input type="radio" name="uploadSection" value="elite-plus" onchange="updateAdminUploadSection(this.value)" style="cursor: pointer; width: 18px; height: 18px;" />
+            <span style="font-weight: 500;">💎 Elite Plus</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- BCA Store Form -->
+      <div id="bcaStoreForm" style="display: block;">
+        <div class="admin-form-grid">
+          <div class="form-group">
+            <label>Semester <span class="required">*</span></label>
+            <select id="addSemester" onchange="updateSubjectDropdown('addSemester','addSubject')">
+              <option value="">— Select Semester —</option>
+              <option value="Semester1">Semester 1</option>
+              <option value="Semester2">Semester 2</option>
+              <option value="Semester3">Semester 3</option>
+              <option value="Semester4">Semester 4</option>
+              <option value="Semester5">Semester 5</option>
+              <option value="Semester6">Semester 6</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Subject <span class="required">*</span></label>
+            <select id="addSubject">
+              <option value="">— Select Subject —</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Material Type <span class="required">*</span></label>
+            <select id="addType" onchange="handleAdminLinkInput()">
+              <option value="">— Select Type —</option>
+              <option value="notes">📝 Notes</option>
+              <option value="pyq">📄 PYQs</option>
+              <option value="video">🎥 Video Lecture</option>
+              <option value="pyq_solve">📜 PYQs Solve</option>
+              <option value="program">⌨️ Program</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Title <span class="required">*</span></label>
+            <input type="text" id="addTitle" placeholder="e.g. Unit 1 - Introduction to C" />
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label>Description</label>
+            <textarea id="addDescription" placeholder="Brief description of this material..." rows="3"></textarea>
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label>Link (PDF / YouTube / Drive) <span class="required">*</span></label>
+            <input type="url" id="addLink" placeholder="https://..." />
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn-primary" onclick="addMaterial()">✅ Add Material</button>
+          <button class="btn-outline" onclick="clearAddForm()">🔄 Clear Form</button>
+        </div>
+      </div>
+
+      <!-- Elite Plus Form -->
+      <div id="elitePlusForm" style="display: none;">
+        <div class="admin-form-grid">
+          <div class="form-group">
+            <label>Batch <span class="required">*</span></label>
+            <select id="addEliteBatch">
+              <option value="">— Select Batch —</option>
+              <optgroup label="💻 Elite Programming Batches">
+                <option value="c-programming">⌨️ C Programming</option>
+                <option value="cpp">🚀 C++</option>
+                <option value="java">☕ Java</option>
+                <option value="javascript">✨ JavaScript</option>
+                <option value="python">🐍 Python</option>
+                <option value="dsa">🌲 Data Structures & Algorithms</option>
+                <option value="web-development">🌐 Web Development</option>
+                <option value="react-js">⚛️ React JS</option>
+                <option value="node-js">🔧 Node JS</option>
+                <option value="sql-database">🗄️ SQL & Database</option>
+              </optgroup>
+              <optgroup label="🚀 Placement Prep Batches">
+                <option value="elite-aptitude">🧠 Elite Aptitude Mastery</option>
+                <option value="interview-prep">💼 Interview Prep Pro</option>
+                <option value="placement-booster">🚀 Campus Placement Booster</option>
+                <option value="resume-linkedin">📄 Resume & LinkedIn Masterclass</option>
+                <option value="coding-round">💻 Coding Round Crackers</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Content Type <span class="required">*</span></label>
+            <select id="addEliteType" onchange="handleEliteAdminLinkInput()">
+              <option value="">— Select Type —</option>
+              <option value="notes">📝 Notes</option>
+              <option value="dpp">📋 DPP (Daily Practice Problems)</option>
+              <option value="videos">🎬 Videos</option>
+              <option value="live">🔴 Live Classes</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label>Title <span class="required">*</span></label>
+            <input type="text" id="addEliteTitle" placeholder="e.g. Unit 1 - Fundamentals" />
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label>Description</label>
+            <textarea id="addEliteDescription" placeholder="Brief description of this material..." rows="3"></textarea>
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label>Link (PDF / YouTube / Google Drive / Classroom) <span class="required">*</span></label>
+            <input type="url" id="addEliteLink" placeholder="https://..." />
+          </div>
+          <!-- Dynamic Type Fields Container -->
+          <div id="eliteTypeFields" style="grid-column:1/-1;"></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn-primary" onclick="addElitePlusMaterial()">✅ Add to Elite Plus</button>
+          <button class="btn-outline" onclick="clearEliteAddForm()">🔄 Clear Form</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== NOTIFICATIONS TAB ====== -->
+  <div class="adm-section" id="admin-tab-notifications">
+    <div class="admin-notif-layout">
+      <!-- Add Notification Form -->
+      <div class="admin-form-card glass-card">
+        <h3>📢 Post New Notification</h3>
+        <div class="form-group" style="margin-top:16px;">
+          <label>Title <span class="required">*</span></label>
+          <input type="text" id="notifTitle" placeholder="e.g. Exam Schedule Released" maxlength="80" />
+        </div>
+        <div class="form-group">
+          <label>Message <span class="required">*</span></label>
+          <textarea id="notifMessage" placeholder="Write your announcement here..." rows="4" maxlength="500"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Type</label>
+          <select id="notifType">
+            <option value="info">🔵 Info / General</option>
+            <option value="update">🟢 Update / New Content</option>
+            <option value="exam">🟡 Exam / Schedule</option>
+            <option value="alert">🔴 Alert / Urgent</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex-direction:row; align-items:center; gap:12px;">
+          <input type="checkbox" id="notifPinned" style="width:18px;height:18px;cursor:pointer;" />
+          <label for="notifPinned" style="margin:0;cursor:pointer;">📌 Pin this notification (shows in ticker)</label>
+        </div>
+        <button class="btn-primary" onclick="addNotification()" style="margin-top:16px; width:100%;">📢 Post Notification</button>
+      </div>
+      <!-- Existing Notifications List -->
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h3>📋 All Notifications</h3>
+          <button class="btn-outline" style="color:var(--danger);" onclick="clearAllNotifications()">🗑️ Clear All</button>
+        </div>
+        <div id="adminNotifList">
+          <div class="loading-spinner"><div class="spinner"></div></div>
+        </div>
+        <div class="empty-state" id="adminNotifEmpty" style="display:none;">
+          <div class="empty-icon">🔔</div>
+          <h3>No Notifications Yet</h3>
+          <p>Use the form to post your first announcement.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Real-time Notification Analytics & Active Users Monitor -->
+    <div class="glass-card" style="margin-top: 30px; padding: 24px; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(20px);">
+      <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+        📊 Live Activity & Push Analytics
+      </h3>
+      
+      <!-- Metrics Cards Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <div class="stat-box" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 4px;">🚀</div>
+          <div id="statNotifsSent" style="font-size: 1.5rem; font-weight: 800; color: #fff;">0</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-top: 2px;">Total Sent</div>
+        </div>
+        <div class="stat-box" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 4px;">👁️</div>
+          <div id="statNotifsOpened" style="font-size: 1.5rem; font-weight: 800; color: #fff;">0</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-top: 2px;">Total Opened</div>
+        </div>
+        <div class="stat-box" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 4px;">🎯</div>
+          <div id="statNotifCTR" style="font-size: 1.5rem; font-weight: 800; color: #fbbf24;">0%</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-top: 2px;">Click Rate (CTR)</div>
+        </div>
+        <div class="stat-box" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 4px;">📈</div>
+          <div id="statNotifViews" style="font-size: 1.5rem; font-weight: 800; color: #10b981;">0</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-top: 2px;">Total Views</div>
+        </div>
+        <div class="stat-box" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 4px;">🟢</div>
+          <div id="statActiveUsers" style="font-size: 1.5rem; font-weight: 800; color: #a78bfa;">0</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-top: 2px;">Active Students</div>
+        </div>
+      </div>
+      
+      <!-- Detailed Analytics & Active Users Split -->
+      <div style="display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start;">
+        
+        <!-- Push Bulletins Stats Table -->
+        <div class="adm-table-container" style="background: rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; margin-top:0;">
+          <table class="adm-table" style="font-size: 0.82rem; margin-bottom:0; width:100%;">
+            <thead>
+              <tr>
+                <th style="padding: 10px 14px; text-align:left;">Notification Title</th>
+                <th style="padding: 10px 14px; text-align: center;">Sent At</th>
+                <th style="padding: 10px 14px; text-align: center;">Opened</th>
+                <th style="padding: 10px 14px; text-align: center;">Clicks</th>
+                <th style="padding: 10px 14px; text-align: center;">Click Rate</th>
+              </tr>
+            </thead>
+            <tbody id="tblNotifAnalytics">
+              <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px 10px;">Loading analytics...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Live Active Users List -->
+        <div style="background: rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px;">
+          <h4 style="font-size: 0.9rem; font-weight: 700; color: #fff; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+            <span>🟢 Active Students (Last 5m)</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); padding: 2px 6px; background: rgba(255,255,255,0.05); border-radius: 4px; font-weight: normal;">Live</span>
+          </h4>
+          <div id="lstActiveUsers" style="display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto;">
+            <div style="text-align: center; color: var(--text-muted); padding: 20px 0; font-size: 0.8rem;">No active students</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- ====== MANAGE TAB ====== -->
+  <div class="adm-section" id="admin-tab-manage">
+    <div class="admin-filter-bar glass-card" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; padding: 16px;">
+      
+      <!-- Category Switcher -->
+      <div class="form-group" style="margin:0;flex:1; min-width: 160px;">
+        <select id="filterCategory" onchange="toggleManageCategoryFilters()">
+          <option value="bca-store">📚 BCA Store Resources</option>
+          <option value="elite-plus">💎 Elite Plus & Placements</option>
+        </select>
+      </div>
+
+      <!-- BCA Store Filters -->
+      <div class="form-group bca-store-filter" style="margin:0;flex:1; min-width: 130px;">
+        <select id="filterSem" onchange="loadManageMaterials()">
+          <option value="">All Semesters</option>
+          <option value="Semester1">Semester 1</option>
+          <option value="Semester2">Semester 2</option>
+          <option value="Semester3">Semester 3</option>
+          <option value="Semester4">Semester 4</option>
+          <option value="Semester5">Semester 5</option>
+          <option value="Semester6">Semester 6</option>
+        </select>
+      </div>
+      <div class="form-group bca-store-filter" style="margin:0;flex:1; min-width: 130px;">
+        <select id="filterType" onchange="loadManageMaterials()">
+          <option value="">All Types</option>
+          <option value="notes">Notes</option>
+          <option value="pyq">PYQs</option>
+          <option value="video">Videos</option>
+          <option value="lab">Lab</option>
+          <option value="program">Programs</option>
+        </select>
+      </div>
+
+      <!-- Elite Plus Filters (Hidden by default) -->
+      <div class="form-group elite-plus-filter" style="margin:0;flex:1; min-width: 180px; display: none;">
+        <select id="filterEliteBatch" onchange="loadManageMaterials()">
+          <option value="">— All Batches —</option>
+          <optgroup label="💻 Elite Programming Batches">
+            <option value="c-programming">⌨️ C Programming</option>
+            <option value="cpp">🚀 C++</option>
+            <option value="java">☕ Java</option>
+            <option value="javascript">✨ JavaScript</option>
+            <option value="python">🐍 Python</option>
+            <option value="dsa">🌲 Data Structures & Algorithms</option>
+            <option value="web-development">🌐 Web Development</option>
+            <option value="react-js">⚛️ React JS</option>
+            <option value="node-js">🔧 Node JS</option>
+            <option value="sql-database">🗄️ SQL & Database</option>
+          </optgroup>
+          <optgroup label="🚀 Placement Prep Batches">
+            <option value="elite-aptitude">🧠 Elite Aptitude Mastery</option>
+            <option value="interview-prep">💼 Interview Prep Pro</option>
+            <option value="placement-booster">🚀 Campus Placement Booster</option>
+            <option value="resume-linkedin">📄 Resume & LinkedIn Masterclass</option>
+            <option value="coding-round">💻 Coding Round Crackers</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="form-group elite-plus-filter" style="margin:0;flex:1; min-width: 130px; display: none;">
+        <select id="filterEliteType" onchange="loadManageMaterials()">
+          <option value="">All Types</option>
+          <option value="notes">Notes</option>
+          <option value="dpp">DPP</option>
+          <option value="videos">Videos</option>
+          <option value="live">Live Classes</option>
+        </select>
+      </div>
+
+      <!-- Search Input -->
+      <div class="form-group" style="margin:0;flex:2; min-width: 200px;">
+        <input type="text" id="manageSearch" placeholder="Search materials..." oninput="loadManageMaterials()" />
+      </div>
+    </div>
+    <div id="manageMaterialsList" style="margin-top:16px;"></div>
+    <div class="empty-state" id="manageEmpty" style="display:none;">
+      <div class="empty-icon">📭</div>
+      <h3>No Materials Found</h3>
+      <p>Add materials using the "Add Material" tab.</p>
+    </div>
+  </div>
+
+  <!-- ====== TEST HUB TAB ====== -->
+  <div class="adm-section" id="admin-tab-test">
+    <div class="adm-section-head">
+      <h3>🧠 Test & Evaluation Engine</h3>
+      <div style="display:flex;gap:12px;">
+        <button class="btn-outline" onclick="loadQuestionBank()">🔄 Refresh Bank</button>
+      </div>
+    </div>
+
+    <!-- TABS WITHIN TEST HUB -->
+    <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
+      <button class="btn-primary" id="btnShowMCQ" onclick="showTestHubSubTab('MCQ')">📝 MCQ Generator</button>
+      <button class="btn-outline" id="btnShowLong" onclick="showTestHubSubTab('Long')">🧠 AI Long Answer</button>
+      <button class="btn-outline" id="btnShowBank" onclick="showTestHubSubTab('Bank')">📚 Question Bank</button>
+      <button class="btn-outline" id="btnShowResults" onclick="showTestHubSubTab('Results')">📊 Results Monitor</button>
+    </div>
+
+    <!-- 1. MCQ GENERATOR VIEW -->
+    <div id="viewMCQ">
+      <div class="adm-test-layout">
+        <!-- Input Side -->
+        <div class="glass-card adm-ai-generator-panel">
+          <div class="adm-ai-generator-header">
+            <span class="ai-pulse-dot"></span>
+            <h4>AI-Powered MCQ Generator</h4>
+            <div style="display:flex; gap:8px;">
+                <button class="adm-section-badge" id="btnMcqAiMode" style="cursor:pointer; background:var(--adm-accent-bg); color:var(--adm-accent);" onclick="toggleMcqMode('AI')">⚡ AI Parser</button>
+                <button class="adm-section-badge" id="btnMcqManualMode" style="cursor:pointer; background:rgba(255,255,255,0.05); color:var(--text-muted);" onclick="toggleMcqMode('Manual')">✏️ Manual Entry</button>
+            </div>
+          </div>
+          
+          <!-- AI Mode View -->
+          <div id="mcqAiView">
+              <p class="ai-generator-desc">Paste messy text from ChatGPT, PDFs, or docs. Our engine auto-detects questions, options, and answers.</p>
+              <div class="adm-paste-wrapper">
+                <textarea id="rawMcqInput" class="adm-paste-box" placeholder="Paste ChatGPT/PDF text here..."></textarea>
+                <div class="paste-overlay-glow"></div>
+                <div class="adm-paste-example" style="font-size:0.7rem; color:var(--text-muted); margin-top:8px; padding:8px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px dashed rgba(255,255,255,0.1);">
+                  <strong>Example Format:</strong><br>
+                  1. What is HTML?<br>
+                  A. Markup Language<br>
+                  B. Programming Language<br>
+                  Answer: A
+                </div>
+              </div>
+              <button class="btn-primary ai-generate-btn" onclick="handleMCQPaste()">
+                <span class="btn-icon">⚡</span>
+                <span>Analyze &amp; Convert</span>
+              </button>
+
+              <!-- Diagnostics HUD (Hidden by default, shown after parsing) -->
+              <div id="mcqDiagnosticsHud" style="display:none; margin-top:20px; padding:16px; background:rgba(255,255,255,0.02); border-radius:12px; border:1px solid rgba(255,255,255,0.06);">
+                <h5 style="margin:0 0 12px 0; font-size:0.8rem; color:#fff; text-transform:uppercase; letter-spacing:0.05em;">AI Diagnostic Report</h5>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                  <div style="padding:8px 12px; background:rgba(255,255,255,0.02); border-radius:8px; border:1px solid rgba(255,255,255,0.04);">
+                    <div style="font-size:0.65rem; color:var(--text-muted);">Detected</div>
+                    <div id="diagDetected" style="font-size:1.1rem; font-weight:800; color:#fff;">0</div>
+                  </div>
+                  <div style="padding:8px 12px; background:rgba(16,185,129,0.05); border-radius:8px; border:1px solid rgba(16,185,129,0.1);">
+                    <div style="font-size:0.65rem; color:#10b981;">Repaired</div>
+                    <div id="diagRepaired" style="font-size:1.1rem; font-weight:800; color:#10b981;">0</div>
+                  </div>
+                  <div style="padding:8px 12px; background:rgba(239,68,68,0.05); border-radius:8px; border:1px solid rgba(239,68,68,0.1);">
+                    <div style="font-size:0.65rem; color:#ef4444;">Rejected</div>
+                    <div id="diagRejected" style="font-size:1.1rem; font-weight:800; color:#ef4444;">0</div>
+                  </div>
+                  <div style="padding:8px 12px; background:rgba(99,102,241,0.05); border-radius:8px; border:1px solid rgba(99,102,241,0.1);">
+                    <div style="font-size:0.65rem; color:var(--adm-accent);">Success Rate</div>
+                    <div id="diagSuccessRate" style="font-size:1.1rem; font-weight:800; color:var(--adm-accent);">0%</div>
+                  </div>
+                </div>
+                <!-- Rejection Details list -->
+                <div id="diagRejectionLogs" style="max-height:120px; overflow-y:auto; font-size:0.7rem; color:var(--text-muted); border-top:1px solid rgba(255,255,255,0.04); padding-top:8px;">
+                  <!-- Logs inserted dynamically -->
+                </div>
+              </div>
+          </div>
+
+          <!-- Manual Mode View -->
+          <div id="mcqManualView" style="display:none;">
+              <p class="ai-generator-desc">Add questions manually with precise options and correct answers.</p>
+              <div class="form-group">
+                  <label>Question Text</label>
+                  <textarea id="manQ" rows="2" placeholder="Enter question..." style="width:100%; padding:12px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle); color:#fff;"></textarea>
+              </div>
+              <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+                  <div class="form-group"><label>Option A</label><input type="text" id="manA" placeholder="Option A" /></div>
+                  <div class="form-group"><label>Option B</label><input type="text" id="manB" placeholder="Option B" /></div>
+                  <div class="form-group"><label>Option C</label><input type="text" id="manC" placeholder="Option C" /></div>
+                  <div class="form-group"><label>Option D</label><input type="text" id="manD" placeholder="Option D" /></div>
+              </div>
+              <div class="form-group">
+                  <label>Correct Answer</label>
+                  <select id="manCorrect" style="width:100%; padding:12px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle); color:#fff;">
+                      <option value="0">Option A</option>
+                      <option value="1">Option B</option>
+                      <option value="2">Option C</option>
+                      <option value="3">Option D</option>
+                  </select>
+              </div>
+              <button class="btn-primary" style="width:100%; margin-top:12px;" onclick="addManualQuestion()">
+                  <span class="btn-icon">➕</span>
+                  <span>Add to Quiz</span>
+              </button>
+          </div>
+        </div>
+        
+        <!-- Preview Side -->
+        <div class="glass-card adm-preview-panel">
+          <div class="adm-preview-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <div style="display:flex; flex-direction:column;">
+                <h4 style="margin:0;">Live Question Preview</h4>
+                <span id="mcqPreviewCount" style="font-size:0.75rem; color:var(--text-muted);">0 Questions Ready</span>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button class="btn-outline" style="padding:6px 12px; font-size:0.75rem; color:var(--adm-accent); border-color:var(--border-subtle);" onclick="copyCleanFormattedQuiz()">📋 Copy Clean Text</button>
+                <button class="btn-outline" style="padding:6px 12px; font-size:0.75rem; color:var(--adm-red); border-color:rgba(239,68,68,0.2);" onclick="clearCurrentQuiz()">🗑️ Clear All</button>
+            </div>
+          </div>
+          
+          <div class="adm-preview-config">
+            <div class="form-group">
+              <select id="quizSem">
+                <option value="">— Semester —</option>
+                <option value="Semester1">Semester 1</option>
+                <option value="Semester2">Semester 2</option>
+                <option value="Semester3">Semester 3</option>
+                <option value="Semester4">Semester 4</option>
+                <option value="Semester5">Semester 5</option>
+                <option value="Semester6">Semester 6</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <input type="text" id="quizSub" placeholder="Subject Code (e.g. BCA-104)" />
+            </div>
+          </div>
+          <div class="form-group">
+            <input type="text" id="quizSubName" placeholder="Subject Name (e.g. C Programming)" />
+          </div>
+          <div class="form-group">
+            <input type="text" id="quizTitle" placeholder="Quiz Title (e.g., Unit 1 Basics)" />
+          </div>
+          <div class="adm-preview-config">
+            <div class="form-group">
+              <label style="font-size:0.7rem; color:var(--text-muted);">Duration (Mins)</label>
+              <input type="number" id="quizTime" placeholder="Min" value="10" />
+            </div>
+            <div class="form-group">
+              <label style="font-size:0.7rem; color:var(--text-muted);">Immediate Results?</label>
+              <select id="quizFeedback">
+                <option value="true">Show on Click</option>
+                <option value="false">Show at End</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="mcqPreviewArea" class="adm-scroll-preview">
+            <div class="preview-empty-state">
+              <div class="preview-empty-icon">📝</div>
+              <p>Preview will appear here after analysis.</p>
+            </div>
+          </div>
+
+          <input type="hidden" id="mcqParsedData" />
+          <button class="btn-primary save-quiz-btn" onclick="saveQuiz()">
+            <span class="btn-icon">💾</span>
+            <span>Save to Question Bank</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. AI LONG ANSWER VIEW -->
+    <div id="viewLong" style="display:none;">
+      <div class="glass-card" style="max-width:800px;">
+        <h4 style="margin-bottom:12px;font-size:1rem;color:var(--text-primary);">Configure AI Long Answer Evaluation</h4>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:24px;">Provide the question and the ideal answer. The client-side AI will use these to evaluate student responses automatically.</p>
+        
+        <div class="form-group" style="display:flex;gap:12px;">
+            <select id="laSem" style="flex:1;">
+              <option value="">— Semester —</option>
+              <option value="Semester1">Semester 1</option>
+              <option value="Semester2">Semester 2</option>
+              <option value="Semester3">Semester 3</option>
+              <option value="Semester4">Semester 4</option>
+              <option value="Semester5">Semester 5</option>
+              <option value="Semester6">Semester 6</option>
+            </select>
+            <input type="text" id="laSub" placeholder="Subject Code (e.g., BCA-101)" style="flex:1;" />
+            <input type="text" id="laSubName" placeholder="Subject Name (e.g., Mathematical Foundation)" style="flex:1;" />
+            <input type="number" id="laMarks" placeholder="Marks" style="width:100px;" value="10" />
+        </div>
+
+        <div class="form-group">
+          <label>Question Title</label>
+          <input type="text" id="laTitle" placeholder="e.g., Define Operating System" />
+        </div>
+        <div class="form-group">
+          <label>Full Question</label>
+          <textarea id="laQuestion" rows="2" placeholder="Write the full question here..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Ideal Answer (The AI will compare student answers against this)</label>
+          <textarea id="laIdealAnswer" rows="5" placeholder="An Operating System is system software that manages hardware..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Priority Keywords (Comma separated - AI gives extra marks for these)</label>
+          <input type="text" id="laKeywords" placeholder="e.g., hardware, software, resource management, kernel" />
+        </div>
+
+        <button class="btn-primary" id="saveLABtn" style="margin-top:16px;" onclick="handleLongAnswerSave()">🤖 Publish AI Question</button>
+      </div>
+    </div>
+
+    <!-- 3. QUESTION BANK VIEW -->
+    <div id="viewBank" style="display:none;">
+      <div class="adm-qb-grid" id="questionBankGrid">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+
+    <!-- 4. RESULTS MONITOR VIEW -->
+    <div id="viewResults" style="display:none;">
+      <div class="glass-card" style="margin-bottom:20px; padding: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <h4 style="font-size:1.1rem; color:var(--text-primary);">📊 Live Test Submissions</h4>
+            <div style="display:flex; gap:8px;">
+                <select id="resFilterSem" onchange="loadTestResults()" style="padding:6px 12px; border-radius:8px; background:var(--bg-base); border:1px solid var(--border-subtle); color:var(--text-primary);">
+                    <option value="Semester1">Sem 1</option>
+                    <option value="Semester2">Sem 2</option>
+                    <option value="Semester3">Sem 3</option>
+                    <option value="Semester4">Sem 4</option>
+                    <option value="Semester5">Sem 5</option>
+                    <option value="Semester6">Sem 6</option>
+                </select>
+                <button class="btn-outline" style="padding:6px 12px; font-size:0.75rem;" onclick="loadTestResults()">🔄 Refresh</button>
+                <button class="btn-primary" style="padding:6px 12px; font-size:0.75rem; background:linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); border:none; box-shadow:0 4px 15px rgba(99, 102, 241, 0.3);" onclick="exportTestResultsToPDF()">📄 Export PDF</button>
+            </div>
+        </div>
+      </div>
+      <div class="adm-table-container">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Roll No</th>
+              <th>Test Title</th>
+              <th>Score</th>
+              <th>Accuracy</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="testResultsTable">
+            <tr><td colspan="7" style="text-align:center; padding:40px; color:var(--text-muted);">Select semester and refresh to see results</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== INBOX TAB ====== -->
+  <div class="adm-section" id="admin-tab-inbox">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+      <h3>📥 User Suggestions & Feedback</h3>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-outline" onclick="markAllRead()">✅ Mark All Read</button>
+        <button class="btn-outline" style="color:var(--danger);" onclick="clearAllSuggestions()">🗑️ Clear All</button>
+      </div>
+    </div>
+    <div id="suggestionList"></div>
+    <div class="empty-state" id="inboxEmpty" style="display:none;">
+      <div class="empty-icon">📭</div>
+      <h3>Inbox is Empty</h3>
+      <p>No suggestions received yet.</p>
+    </div>
+  </div>
+
+  <!-- ====== VISITORS TAB ====== -->
+  <div class="adm-section" id="admin-tab-visitors">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+      <h3>👥 Platform Visitors</h3>
+      <div style="display:flex;gap:8px;">
+        <span class="badge-cat-general" style="padding:4px 12px; border-radius:99px; font-size:0.8rem; font-weight:700;">
+          Total Unique: <span id="totalUniqueVisitors">0</span>
+        </span>
+      </div>
+    </div>
+    <div id="visitorsList"></div>
+    <div class="empty-state" id="visitorsEmpty" style="display:none;">
+      <div class="empty-icon">👥</div>
+      <h3>No Visitors Yet</h3>
+      <p>Visitor data will appear here once users enter their names.</p>
+    </div>
+  </div>
+
+  <!-- ====== ANALYTICS TAB ====== -->
+  <div class="adm-section" id="admin-tab-analytics">
+    <div class="analytics-grid">
+      <div class="analytics-card glass-card">
+        <div class="analytics-icon">📚</div>
+        <div class="analytics-value" id="totalMaterials">—</div>
+        <div class="analytics-label">Total Materials</div>
+      </div>
+      <div class="analytics-card glass-card">
+        <div class="analytics-icon">📝</div>
+        <div class="analytics-value" id="totalNotes">—</div>
+        <div class="analytics-label">Notes</div>
+      </div>
+      <div class="analytics-card glass-card">
+        <div class="analytics-icon">🎥</div>
+        <div class="analytics-value" id="totalVideos">—</div>
+        <div class="analytics-label">Videos</div>
+      </div>
+      <div class="analytics-card glass-card">
+        <div class="analytics-icon">📄</div>
+        <div class="analytics-value" id="totalPYQs">—</div>
+        <div class="analytics-label">PYQs</div>
+      </div>
+      <div class="analytics-card glass-card">
+        <div class="analytics-icon">💬</div>
+        <div class="analytics-value" id="totalSuggestions">—</div>
+        <div class="analytics-label">Suggestions</div>
+      </div>
+      <div class="analytics-card glass-card">
+        <div class="analytics-icon">⚡</div>
+        <div class="analytics-value" id="totalInteractions">0</div>
+        <div class="analytics-label">Total Interactions</div>
+      </div>
+      <div class="analytics-card glass-card">
+        <div class="analytics-icon">🎓</div>
+        <div class="analytics-value" id="totalEnrolled">0</div>
+        <div class="analytics-label">Total Enrolled</div>
+      </div>
+      <div class="analytics-card glass-card trending">
+        <div class="analytics-icon">🔥</div>
+        <div class="analytics-value" id="topSemester">N/A</div>
+        <div class="analytics-label">Top Semester</div>
+      </div>
+    </div>
+    <div class="glass-card" style="margin-top:24px; padding:24px;">
+      <h4 style="margin-bottom:20px; display:flex; align-items:center; gap:8px;">📊 Semester Popularity & Materials</h4>
+      <div id="semesterBreakdown"></div>
+    </div>
+  </div>
+
+  <!-- ====== COMMUNITY ADMIN TAB ====== -->
+  <div class="adm-section" id="admin-tab-community">
+    <div class="comm-admin-stats">
+      <div class="comm-admin-stat glass-card"><div class="val" id="commAdminUserCount">0</div><div class="lbl">Users</div></div>
+      <div class="comm-admin-stat glass-card"><div class="val" id="commAdminDoubtCount">0</div><div class="lbl">Doubts</div></div>
+      <div class="comm-admin-stat glass-card"><div class="val" id="commAdminChatCount">0</div><div class="lbl">Messages</div></div>
+      <div class="comm-admin-stat glass-card"><div class="val" id="commAdminOnlineCount">0</div><div class="lbl">Online</div></div>
+    </div>
+
+    <!-- Post Announcement -->
+    <div class="admin-form-card glass-card" style="margin-bottom:24px;">
+      <h3>📢 Post Community Announcement</h3>
+      <div class="form-group" style="margin-top:14px;"><label>Title *</label><input type="text" id="commAdminAnnTitle" placeholder="Announcement title..." /></div>
+      <div class="form-group"><label>Message *</label><textarea id="commAdminAnnMsg" rows="3" placeholder="Write the announcement..."></textarea></div>
+      <div class="form-group"><label>Type</label>
+        <select id="commAdminAnnType"><option value="info">🔵 Info</option><option value="update">🟢 Update</option><option value="exam">🟡 Exam</option><option value="alert">🔴 Alert</option></select>
+      </div>
+      <button class="btn-primary" onclick="commAdminPostAnnouncement()" style="margin-top:12px;">📢 Post Announcement</button>
+    </div>
+
+    <!-- Users Table -->
+    <div class="glass-card" style="margin-bottom:24px;padding:20px;">
+      <h4 style="margin-bottom:14px;">👥 Registered Users</h4>
+      <div class="adm-table-container">
+        <div id="commAdminUsersTable"></div>
+      </div>
+    </div>
+
+    <!-- Doubts Management -->
+    <div class="glass-card" style="margin-bottom:24px;padding:20px;">
+      <h4 style="margin-bottom:14px;">🧠 Recent Doubts</h4>
+      <div id="commAdminDoubtsList"></div>
+    </div>
+
+    <!-- Chat Monitor -->
+    <div class="glass-card" style="padding:20px;">
+      <h4 style="margin-bottom:14px;">💬 Recent Chat Messages</h4>
+      <div class="adm-table-container">
+        <div id="commAdminChatList"></div>
+      </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== VOTING HUB ====== -->
+  <div class="adm-section" id="admin-tab-voting">
+    <div class="adm-welcome">
+      <h2>🔥 Voting Hub</h2>
+      <p>Create and manage community polls in real-time.</p>
+    </div>
+
+    <div class="responsive-grid-2-1">
+      <!-- Create Poll -->
+      <div class="glass-card">
+        <h3 style="margin-bottom:20px; font-size:1.1rem; display:flex; align-items:center; gap:8px;">✨ Create New Poll <span class="badge-live">Live</span></h3>
+        <div class="form-group">
+          <label>Poll Title *</label>
+          <input type="text" id="pollTitle" placeholder="e.g. Best Teacher of the Month" />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="pollDesc" rows="2" placeholder="Tell students what this poll is about..."></textarea>
+        </div>
+        <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="pollCategory">
+              <option value="General">✨ General</option>
+              <option value="Study">📚 Study</option>
+              <option value="Teacher">👨‍🏫 Teacher</option>
+              <option value="Event">🎉 Event</option>
+              <option value="Fun">🎮 Fun</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Duration (Minutes) *</label>
+            <input type="number" id="pollDuration" value="60" min="1" />
+          </div>
+        </div>
+        
+        <div class="form-group" style="margin-top:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <label style="margin-bottom:0;">Poll Options *</label>
+            <button type="button" onclick="addPollOptionField()" class="btn-primary" style="padding:4px 12px; font-size:0.75rem; border-radius:6px; background:var(--accent-blue-bg); color:var(--accent-blue); border:1px solid var(--accent-blue-bg);">+ Add Option</button>
+          </div>
+          <div id="pollOptionsContainer" style="display:flex; flex-direction:column; gap:10px;">
+            <div class="poll-opt-field" style="display:flex; gap:8px;">
+              <input type="text" class="poll-opt-input" placeholder="Option 1" style="flex:1;" />
+              <button type="button" class="btn-outline" style="padding:0 12px; opacity:0; pointer-events:none;">×</button>
+            </div>
+            <div class="poll-opt-field" style="display:flex; gap:8px;">
+              <input type="text" class="poll-opt-input" placeholder="Option 2" style="flex:1;" />
+              <button type="button" class="btn-outline" style="padding:0 12px; opacity:0; pointer-events:none;">×</button>
+            </div>
+          </div>
+        </div>
+        
+        <button class="btn-primary" onclick="adminCreatePoll()" style="margin-top:12px; width:100%; display:flex; align-items:center; justify-content:center; gap:10px;">
+          <span>🚀 Launch Poll Instantly</span>
+          <div id="pollLoader" class="saas-loader" style="width:14px; height:14px; border-width:2px; border-top-color:#fff;"></div>
+        </button>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="glass-card">
+        <h3 style="margin-bottom:20px; font-size:1.1rem;">📊 Voting Insights</h3>
+        <div id="pollAdminStats">
+          <div style="text-align:center; padding:40px 0; color:var(--text-muted);">
+            <span style="font-size:2rem; display:block; margin-bottom:10px;">📉</span>
+            No data available
+          </div>
+        </div>
+        
+        <div style="margin-top:24px; padding:16px; background:var(--bg-surface-hover); border-radius:12px; border:1px dashed var(--border-subtle);">
+          <h4 style="font-size:0.8rem; margin-bottom:8px; color:var(--text-secondary);">Pro Tip 💡</h4>
+          <p style="font-size:0.75rem; color:var(--text-muted); line-height:1.4;">Active polls are visible to all registered community members in real-time. Use clear titles and engaging options to increase participation.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card" style="margin-top:24px;">
+      <h3 style="margin-bottom:20px; font-size:1.1rem;">📋 Manage All Polls</h3>
+      <div id="adminPollsList">
+          <!-- Rendered by JS -->
+          <p style="color:var(--text-muted); padding:20px;">Loading polls...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== REGISTERED STUDENTS DATABASE TAB ====== -->
+  <div class="adm-section" id="admin-tab-registered-students">
+    <!-- Will be dynamically populated by admin-registration.js -->
+  </div>
+
+  <!-- ====== AI SETTINGS TAB ====== -->
+  <div class="adm-section" id="admin-tab-ai-settings">
+    <div class="adm-route-card glass-card" style="max-width:820px; margin: 0 auto; text-align:center; padding:40px 28px;">
+      <div style="font-size:3rem; margin-bottom:14px;">🧠</div>
+      <h3 style="font-size:1.3rem; font-weight:800; margin-bottom:10px; color:var(--text-primary);">AI Features Live in Settings</h3>
+      <p style="color:var(--text-muted); line-height:1.6; margin:0 auto 22px; max-width:560px;">AI analysis, weak-student detection, similarity tuning, and report automation are now managed from the AI Features section inside System Settings.</p>
+      <button class="btn-primary" onclick="openAdminAISettings()">Open AI Features</button>
+    </div>
+  </div>
+
+
+
+
+
+  <!-- ====== PORTFOLIO MANAGEMENT TAB ====== -->
+  <div class="adm-section" id="admin-tab-portfolio" style="display:none; opacity:0;">
+    <style>
+      .portfolio-sub-btn {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--text-secondary);
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .portfolio-sub-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.15);
+        color: #fff;
+      }
+      .portfolio-sub-btn.active {
+        background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        border-color: transparent;
+        color: #fff;
+        box-shadow: 0 0 12px var(--accent-blue-glow);
+      }
+      .port-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      .port-form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .port-form-group label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .port-form-group input, 
+      .port-form-group select, 
+      .port-form-group textarea {
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 12px 16px;
+        color: #fff;
+        font-size: 0.95rem;
+        outline: none;
+        transition: all 0.3s;
+      }
+      .port-form-group input:focus, 
+      .port-form-group select:focus, 
+      .port-form-group textarea:focus {
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 10px var(--accent-blue-glow);
+        background: rgba(0, 0, 0, 0.4);
+      }
+      .skill-tag-edit:hover {
+        background: rgba(239, 68, 68, 0.1) !important;
+        border-color: rgba(239, 68, 68, 0.3) !important;
+      }
+      .analytics-grid-port {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      @media (max-width: 1024px) {
+        .analytics-grid-port { grid-template-columns: repeat(2, 1fr); }
+      }
+      @media (max-width: 640px) {
+        .analytics-grid-port { grid-template-columns: 1fr; }
+        .port-form-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+
+    <div class="adm-section-head" style="margin-bottom:20px;">
+      <h3>💼 Developer Portfolio Studio</h3>
+      <span class="adm-section-badge" style="background:var(--accent-blue-glow); color:var(--accent-blue);">PERSONAL BRANDING DASHBOARD</span>
+    </div>
+    <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:24px; max-width:800px;">
+      Real-Time Personal Branding Engine. Make modifications to your profile bio, reorder projects, track click-through rates, and customize neon variables instantly with zero code changes.
+    </p>
+
+    <!-- SUB-NAV -->
+    <div class="portfolio-sub-nav" style="display:flex; gap:8px; margin-bottom:24px; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:12px; flex-wrap:wrap;">
+      <button class="portfolio-sub-btn active" onclick="switchPortfolioSubTab('profile')">👤 Profile Info</button>
+      <button class="portfolio-sub-btn" onclick="switchPortfolioSubTab('socials')">🔗 Social Links</button>
+      <button class="portfolio-sub-btn" onclick="switchPortfolioSubTab('projects')">📁 Projects Showcase</button>
+      <button class="portfolio-sub-btn" onclick="switchPortfolioSubTab('inquiries')">📨 Inquiries <span id="portInquiryBadge" style="display:none; background:#ef4444; color:#fff; font-size:10px; padding:2px 6px; border-radius:10px; font-weight:700; margin-left:4px;">0</span></button>
+      <button class="portfolio-sub-btn" onclick="switchPortfolioSubTab('customizer')">🎨 Customizer</button>
+      <button class="portfolio-sub-btn" onclick="switchPortfolioSubTab('analytics')">📊 Portfolio Stats</button>
+    </div>
+
+    <!-- SECTIONS -->
+    <div class="portfolio-panels">
+      
+      <!-- 1. PROFILE SUB-TAB -->
+      <div class="port-sub-section" id="port-sec-profile">
+        <div class="adm-panel" style="margin-bottom:24px;">
+          <div class="adm-section-head">
+            <h3>👤 Profile & Personal Info</h3>
+          </div>
+          
+          <!-- Avatar crop/reposition -->
+          <div style="display:flex; gap:24px; align-items:center; margin-bottom:24px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:20px; border-radius:16px;">
+            <div style="position:relative; width:100px; height:100px; border-radius:50%; overflow:hidden; border:2px solid var(--accent-blue); box-shadow:0 0 15px var(--accent-blue-glow); flex-shrink:0;">
+              <img id="portAvatarPreview" src="dev_avatar.png" style="width:100%; height:100%; object-fit:cover;" />
+            </div>
+            <div style="flex:1;">
+              <h4 style="font-weight:700; color:#fff; margin-bottom:4px;">Profile Photo</h4>
+              <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Optimized Base64 storage format. Cropper scales photo into high-fidelity thumbnail presets.</p>
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button type="button" class="btn-primary" onclick="triggerImageUpload('avatar')" style="padding:6px 14px; font-size:0.85rem;">📸 Crop & Zoom Photo</button>
+                <button type="button" class="btn-outline" onclick="applyPhotoPreset('VK')" style="padding:6px 14px; font-size:0.85rem;">✨ Load VK Preset</button>
+                <button type="button" class="btn-outline" onclick="removeProfilePhoto()" style="padding:6px 14px; font-size:0.85rem; color:#ef4444; border-color:rgba(239,68,68,0.2)">🗑️ Remove</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Basic details form -->
+          <form id="portProfileForm" onsubmit="event.preventDefault(); savePortfolioProfile();">
+            <div class="port-form-grid">
+              <div class="port-form-group">
+                <label>Developer Name</label>
+                <input type="text" id="portProfile_name" required placeholder="Vishal Kumar" />
+              </div>
+              <div class="port-form-group">
+                <label>Designation Header</label>
+                <input type="text" id="portProfile_designation" required placeholder="Founder & CEO of BCA Store" />
+              </div>
+              <div class="port-form-group" style="grid-column: 1 / -1;">
+                <label>Tagline Sub-header</label>
+                <input type="text" id="portProfile_tagline" required placeholder="Founder of BCA STORE | Full Stack Developer | Student Entrepreneur" />
+              </div>
+              <div class="port-form-group" style="grid-column: 1 / -1;">
+                <label>Professional Bio</label>
+                <textarea id="portProfile_bio" rows="4" required placeholder="Write a short summary profile bio..."></textarea>
+              </div>
+              <div class="port-form-grid" style="grid-column:1/-1; margin:0;">
+                <div class="port-form-group">
+                  <label>Location</label>
+                  <input type="text" id="portProfile_location" placeholder="Motihari, Bihar, India" />
+                </div>
+                <div class="port-form-group">
+                  <label>Portfolio Availability Status</label>
+                  <select id="portProfile_status">
+                    <option value="Active">🟢 Live & Available</option>
+                    <option value="Maintenance">🔴 Site Under Maintenance</option>
+                  </select>
+                </div>
+              </div>
+              <div class="port-form-group" style="grid-column: 1 / -1;">
+                <label>Education Details</label>
+                <input type="text" id="portProfile_education" placeholder="Bachelor of Computer Applications (BCA) - L.N.D. College, Motihari" />
+              </div>
+              <div class="port-form-grid" style="grid-column:1/-1; margin:0;">
+                <div class="port-form-group">
+                  <label>Resume Link</label>
+                  <input type="url" id="portProfile_resumeLink" placeholder="https://drive.google.com/..." />
+                </div>
+                <div class="port-form-group">
+                  <label>Upload New CV Document (PDF / Word - Max 2MB)</label>
+                  <div style="display:flex; gap:10px;">
+                    <input type="file" id="portCVFileInput" onchange="uploadDeveloperCV(this)" style="display:none;" accept=".pdf,.doc,.docx" />
+                    <button type="button" class="btn-outline" onclick="document.getElementById('portCVFileInput').click()" style="flex:1; text-align:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📄 Choose File...</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Skills grid -->
+            <div style="margin-bottom:24px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+              <h4 style="font-weight:700; color:#fff; margin-bottom:12px;">💻 Skill Visualization Tags</h4>
+              <div class="port-form-grid">
+                <div class="port-form-group">
+                  <label>Technical Stack (Click tag to delete)</label>
+                  <div id="portSkillsTechList" style="background:rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:12px; min-height:80px;"></div>
+                </div>
+                <div class="port-form-group">
+                  <label>Professional / Leadership</label>
+                  <div id="portSkillsSoftList" style="background:rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:12px; min-height:80px;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Experiences grid -->
+            <div style="margin-bottom:24px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h4 style="font-weight:700; color:#fff;">💼 Timeline Experience Modules</h4>
+                <button type="button" class="btn-primary" onclick="showAddExperienceModal()" style="padding:4px 12px; font-size:0.8rem;">+ Add Experience</button>
+              </div>
+              <div id="portExperienceEditList" style="display:flex; flex-direction:column; gap:10px;"></div>
+            </div>
+
+            <!-- Submit buttons -->
+            <div style="display:flex; justify-content:flex-end; gap:12px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+              <button type="submit" class="btn-primary" style="padding:12px 30px;">⚡ Save & Publish Profile</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- 2. SOCIAL LINKS SUB-TAB -->
+      <div class="port-sub-section" id="port-sec-socials" style="display:none;">
+        <div class="adm-panel">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <div>
+              <h3>🔗 Social Media & Profile Links</h3>
+              <p style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Reorder links using Drag and Drop. Toggle availability state live.</p>
+            </div>
+            <button class="btn-primary" onclick="showAddSocialLinkModal()" style="padding:8px 16px; font-size:0.85rem;">+ Add Link</button>
+          </div>
+
+          <div id="portSocialLinksList" style="display:flex; flex-direction:column; gap:10px; min-height:150px;"></div>
+        </div>
+      </div>
+
+      <!-- 3. PROJECTS SHOWCASE SUB-TAB -->
+      <div class="port-sub-section" id="port-sec-projects" style="display:none;">
+        <div class="adm-panel">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <div>
+              <h3>📁 Projects Showcase Modules</h3>
+              <p style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Featured, Archive, and Reorder project cards inside showcase grid using Drag & Drop.</p>
+            </div>
+            <button class="btn-primary" onclick="showAddProjectModal()" style="padding:8px 16px; font-size:0.85rem;">+ Add Project</button>
+          </div>
+
+          <div id="portProjectsGridList" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px; min-height:150px;"></div>
+        </div>
+      </div>
+
+      <!-- 4. INQUIRIES SUB-TAB -->
+      <div class="port-sub-section" id="port-sec-inquiries" style="display:none;">
+        <div class="adm-panel">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h3>📨 Portfolio Message Inquiries Center</h3>
+            <div>
+              <select id="filterInquiryStatus" onchange="loadPortfolioInquiries()" style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:6px 12px; color:#fff; font-size:0.85rem; outline:none;">
+                <option value="All">All Inquiries</option>
+                <option value="New">New</option>
+                <option value="Pending">Pending</option>
+                <option value="Replied">Replied</option>
+                <option value="Archived">Archived</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive" style="overflow-x:auto;">
+            <table class="adm-table" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr style="text-align:left; border-bottom:1.5px solid rgba(255,255,255,0.06);">
+                  <th style="padding:12px;">Name</th>
+                  <th style="padding:12px;">Email</th>
+                  <th style="padding:12px;">Subject</th>
+                  <th style="padding:12px;">Date</th>
+                  <th style="padding:12px;">Status</th>
+                  <th style="padding:12px;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="portInquiriesTableList"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. THEME CUSTOMIZER SUB-TAB -->
+      <div class="port-sub-section" id="port-sec-customizer" style="display:none;">
+        <div class="adm-panel">
+          <div class="adm-section-head" style="margin-bottom:16px;">
+            <h3>🎨 Personal Branding Customizer Engine</h3>
+            <span class="adm-section-badge" style="background:var(--accent-purple-glow); color:var(--accent-purple);">NO-CODE CONTROLS</span>
+          </div>
+
+          <!-- Color presets strip -->
+          <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:16px; border-radius:12px; margin-bottom:20px; display:flex; align-items:center; justify-content:between; flex-wrap:wrap; gap:12px;">
+            <div style="font-weight:700; font-size:0.85rem; color:var(--text-muted); text-transform:uppercase;">Custom Presets:</div>
+            <div style="display:flex; gap:8px;">
+              <button type="button" onclick="applyCustomizerPreset('glassmorphism')" class="portfolio-sub-btn" style="padding:6px 12px; font-size:0.8rem;">💎 Glassmorphism</button>
+              <button type="button" onclick="applyCustomizerPreset('cyberpunk')" class="portfolio-sub-btn" style="padding:6px 12px; font-size:0.8rem;">⚡ Cyberpunk Neon</button>
+              <button type="button" onclick="applyCustomizerPreset('emerald')" class="portfolio-sub-btn" style="padding:6px 12px; font-size:0.8rem;">🌲 Emerald-Matrix</button>
+              <button type="button" onclick="applyCustomizerPreset('neon')" class="portfolio-sub-btn" style="padding:6px 12px; font-size:0.8rem;">🌌 Aurora Glow</button>
+            </div>
+          </div>
+
+          <form id="portCustomizerForm" onsubmit="event.preventDefault(); saveCustomizerConfig();">
+            <div class="port-form-grid">
+              <div class="port-form-group">
+                <label>Base Styling Theme</label>
+                <select id="cust_theme">
+                  <option value="dark">Dark Theme (Default)</option>
+                  <option value="light">Light Theme</option>
+                </select>
+              </div>
+              <div class="port-form-group">
+                <label>Layout Style</label>
+                <select id="cust_layoutStyle">
+                  <option value="modern">Futuristic Glassmorphic Grid</option>
+                  <option value="minimal">Cyberpunk Minimalist</option>
+                </select>
+              </div>
+              
+              <!-- Color settings picker grid -->
+              <div style="grid-column: 1 / -1; display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; margin:10px 0;">
+                <div class="port-form-group">
+                  <label>Primary Accent Color</label>
+                  <div style="display:flex; gap:10px; align-items:center;">
+                    <input type="color" id="cust_primaryColor" style="width:40px; height:40px; padding:0; border:none; border-radius:4px; cursor:pointer;" />
+                    <span style="font-size:0.9rem; font-family:monospace;">Primary</span>
+                  </div>
+                </div>
+                <div class="port-form-group">
+                  <label>Secondary Accent Color</label>
+                  <div style="display:flex; gap:10px; align-items:center;">
+                    <input type="color" id="cust_secondaryColor" style="width:40px; height:40px; padding:0; border:none; border-radius:4px; cursor:pointer;" />
+                    <span style="font-size:0.9rem; font-family:monospace;">Secondary</span>
+                  </div>
+                </div>
+                <div class="port-form-group">
+                  <label>Glow Highlight Color</label>
+                  <div style="display:flex; gap:10px; align-items:center;">
+                    <input type="color" id="cust_accentColor" style="width:40px; height:40px; padding:0; border:none; border-radius:4px; cursor:pointer;" />
+                    <span style="font-size:0.9rem; font-family:monospace;">Highlight</span>
+                  </div>
+                </div>
+                <div class="port-form-group">
+                  <label>Workspace Background</label>
+                  <div style="display:flex; gap:10px; align-items:center;">
+                    <input type="color" id="cust_bgColor" style="width:40px; height:40px; padding:0; border:none; border-radius:4px; cursor:pointer;" />
+                    <span style="font-size:0.9rem; font-family:monospace;">Background</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="port-form-group">
+                <label>Typography Font Family</label>
+                <select id="cust_fontFamily">
+                  <option value="Plus Jakarta Sans">Inter & Plus Jakarta Sans</option>
+                  <option value="Orbitron">Orbitron Space Neon</option>
+                  <option value="JetBrains Mono">JetBrains Developer Mono</option>
+                </select>
+              </div>
+              <div class="port-form-group">
+                <label>Background FX Effects</label>
+                <select id="cust_bgEffect">
+                  <option value="particle">Active Canvas Particle (Interactive)</option>
+                  <option value="matrix">Digital Matrix Rain Rain</option>
+                  <option value="stars">Twinkling Space Stars</option>
+                  <option value="none">Solid Pure Glass Background</option>
+                </select>
+              </div>
+              <div class="port-form-group">
+                <label>Glass Frosting Blur (<span id="cust_blur_badge">20px</span>)</label>
+                <input type="range" id="cust_glassBlur" min="0" max="40" step="1" oninput="handleCustomizerSliderInput('blur', this.value, 'px')" />
+              </div>
+              <div class="port-form-group">
+                <label>Glass Transparency Opacity (<span id="cust_opacity_badge">45%</span>)</label>
+                <input type="range" id="cust_glassOpacity" min="0.05" max="0.95" step="0.05" oninput="handleCustomizerSliderInput('opacity', this.value, '%')" />
+              </div>
+              <div class="port-form-group">
+                <label>Card Panel border decoration</label>
+                <select id="cust_cardStyle">
+                  <option value="glass">Soft Blur Frosted Glass</option>
+                  <option value="neon-border">Glowing Laser Neon Border</option>
+                  <option value="flat">Retro Clean Flat Border</option>
+                </select>
+              </div>
+              <div class="port-form-group">
+                <label>Animations & Transitions</label>
+                <select id="cust_animations">
+                  <option value="active">Active GPU Accelerated (Liquid)</option>
+                  <option value="reduced">Reduced Motion (Static)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Submit buttons -->
+            <div style="display:flex; justify-content:flex-end; gap:12px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+              <button type="submit" class="btn-primary" style="padding:12px 30px;">⚡ Save & Publish Theme Config</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- 6. ANALYTICS SUB-TAB -->
+      <div class="port-sub-section" id="port-sec-analytics" style="display:none;">
+        <div class="adm-panel">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3>📊 Portfolio Brand Analytics Hub</h3>
+            <button type="button" onclick="resetPortfolioAnalytics()" class="btn-outline" style="color:#ef4444; border-color:rgba(239,68,68,0.2); padding:6px 12px; font-size:0.85rem;">🗑️ Reset Visitor Metrics</button>
+          </div>
+
+          <!-- KPI Cards Grid -->
+          <div class="analytics-grid-port">
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:16px; text-align:center;">
+              <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Total Visitors</div>
+              <div id="portKPI_visitors" style="font-size:2rem; font-weight:800; color:#fff; margin-top:8px;">0</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:16px; text-align:center;">
+              <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Unique Visitors</div>
+              <div id="portKPI_uniqueVisitors" style="font-size:2rem; font-weight:800; color:var(--accent-blue); margin-top:8px;">0</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:16px; text-align:center;">
+              <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Page Views</div>
+              <div id="portKPI_views" style="font-size:2rem; font-weight:800; color:#fff; margin-top:8px;">0</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:16px; text-align:center;">
+              <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Project Views</div>
+              <div id="portKPI_projectViews" style="font-size:2rem; font-weight:800; color:#fff; margin-top:8px;">0</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:16px; text-align:center;">
+              <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Link Clicks</div>
+              <div id="portKPI_linkClicks" style="font-size:2rem; font-weight:800; color:#fff; margin-top:8px;">0</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:16px; text-align:center;">
+              <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">CV Downloads</div>
+              <div id="portKPI_cvDownloads" style="font-size:2rem; font-weight:800; color:#fff; margin-top:8px;">0</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:16px; text-align:center;">
+              <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Contact Inquiries</div>
+              <div id="portKPI_contactSubmissions" style="font-size:2rem; font-weight:800; color:#fff; margin-top:8px;">0</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:16px; text-align:center;">
+              <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Conversion Rate</div>
+              <div id="portKPI_conversion" style="font-size:2rem; font-weight:800; color:#10b981; margin-top:8px;">0%</div>
+            </div>
+          </div>
+
+          <!-- SVG Charts columns -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+            <div style="background:rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.05); padding:20px; border-radius:16px;">
+              <h4 style="font-weight:700; color:#fff; margin-bottom:16px;">Weekly Visits Activity Timeline</h4>
+              <svg id="portChart_views" viewBox="0 0 500 150" style="width:100%; height:auto; overflow:visible;"></svg>
+              <div style="display:flex; justify-content:center; gap:16px; margin-top:12px; font-size:10px;">
+                <span style="display:flex; align-items:center; gap:4px; color:#6366f1;">⬤ Page Views</span>
+                <span style="display:flex; align-items:center; gap:4px; color:#06b6d4;">⬤ Unique Users</span>
+              </div>
+            </div>
+            <div style="background:rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.05); padding:20px; border-radius:16px;">
+              <h4 style="font-weight:700; color:#fff; margin-bottom:16px;">Clicks Tally Categories Breakdown</h4>
+              <svg id="portChart_clicks" viewBox="0 0 500 150" style="width:100%; height:auto; overflow:visible;"></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ====== BATCHES MANAGEMENT TAB ====== -->
+  <div class="adm-section" id="admin-tab-batches" style="display:none; opacity:0;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px;">
+      <div class="adm-welcome" style="margin-bottom:0;">
+        <h2>📚 Learning Batch Control Hub</h2>
+        <p>Create, update, duplicate, reorder, and configure Elite & Elite+ academic learning tracks.</p>
+      </div>
+      <button class="btn-primary" onclick="openAddBatchModal()">
+        <span>➕ Add New Batch</span>
+      </button>
+    </div>
+
+    <!-- Batches Analytics HUD -->
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:16px; margin-bottom:24px;">
+      <div class="glass-card" style="padding:14px; text-align:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px;">
+        <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:0.5px;">Total Batches</div>
+        <div id="batchesKPI_total" style="font-size:1.6rem; font-weight:800; color:#fff; margin-top:4px;">0</div>
+      </div>
+      <div class="glass-card" style="padding:14px; text-align:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px;">
+        <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:0.5px;">Published</div>
+        <div id="batchesKPI_published" style="font-size:1.6rem; font-weight:800; color:#10b981; margin-top:4px;">0</div>
+      </div>
+      <div class="glass-card" style="padding:14px; text-align:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px;">
+        <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:0.5px;">Drafts</div>
+        <div id="batchesKPI_draft" style="font-size:1.6rem; font-weight:800; color:#f59e0b; margin-top:4px;">0</div>
+      </div>
+      <div class="glass-card" style="padding:14px; text-align:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px;">
+        <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:0.5px;">Total Students</div>
+        <div id="batchesKPI_students" style="font-size:1.6rem; font-weight:800; color:var(--accent-blue); margin-top:4px;">0</div>
+      </div>
+      <div class="glass-card" style="padding:14px; text-align:center; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px;">
+        <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:0.5px;">Est. Revenue</div>
+        <div id="batchesKPI_revenue" style="font-size:1.6rem; font-weight:800; color:#ec4899; margin-top:4px;">₹0</div>
+      </div>
+      <div class="glass-card" style="padding:14px; text-align:left; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; grid-column: span 2; display: flex; flex-direction: column; justify-content: center; min-height: 70px;">
+        <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:0.5px; margin-bottom: 2px;">Intelligence Insights</div>
+        <div id="batchesKPI_popular_newest" style="font-size:0.82rem; font-weight:700; color:#fff; line-height:1.4;">
+          Popular: <span style="color:#a78bfa;">Loading...</span><br>
+          Newest: <span style="color:#06b6d4;">Loading...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters & Search Toolbar -->
+    <div class="glass-card" style="padding:16px 20px; margin-bottom:24px; display:flex; flex-direction:column; gap:16px;">
+      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:16px;">
+        <!-- Filter pills -->
+        <div style="display:flex; flex-wrap:wrap; gap:8px;" id="batchesFilterContainer">
+          <button class="portfolio-sub-btn active" onclick="filterBatchesBy('all', this)">All Tracks</button>
+          <button class="portfolio-sub-btn" onclick="filterBatchesBy('programming', this)">Programming</button>
+          <button class="portfolio-sub-btn" onclick="filterBatchesBy('placement', this)">Placement</button>
+          <button class="portfolio-sub-btn" onclick="filterBatchesBy('core', this)">Core</button>
+          <button class="portfolio-sub-btn" onclick="filterBatchesBy('elite-plus', this)">Elite+</button>
+        </div>
+        
+        <!-- Search, Status and Sort Filters Group -->
+        <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; width:100%; max-width:650px; justify-content:flex-end;">
+          <!-- Status Dropdown -->
+          <select id="batchesFilterStatus" onchange="renderBatchesGrid()" style="padding:8px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08); border-radius:8px; color:#fff; font-size:0.82rem; outline:none; cursor:pointer;">
+            <option value="all">📁 All Statuses</option>
+            <option value="Published">🟢 Published</option>
+            <option value="Draft">🟡 Drafts</option>
+            <option value="Archived">🔴 Archived</option>
+          </select>
+
+          <!-- Sort Dropdown -->
+          <select id="batchesSortBy" onchange="renderBatchesGrid()" style="padding:8px 12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08); border-radius:8px; color:#fff; font-size:0.82rem; outline:none; cursor:pointer;">
+            <option value="order">↕️ Default Order</option>
+            <option value="popular">🔥 Popularity (Students)</option>
+            <option value="newest">📅 Newest First</option>
+            <option value="oldest">⏳ Oldest First</option>
+            <option value="name">🔤 Name (A-Z)</option>
+          </select>
+
+          <!-- Search Input -->
+          <div style="position:relative; width:100%; max-width:200px;">
+            <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:0.6; font-size:0.85rem;">🔍</span>
+            <input type="text" id="batchSearch" placeholder="Search..." oninput="renderBatchesGrid()" style="width:100%; padding:8px 12px 8px 32px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08); border-radius:8px; color:#fff; font-size:0.82rem; outline:none; transition:all 0.25s;" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Batches Cards Grid -->
+    <div id="admBatchesGrid" class="projects-grid-port" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap:20px;">
+      <!-- Populated by JS -->
+      <p style="color:var(--text-muted); grid-column:1/-1; padding:40px 0; text-align:center;">Loading academic batches...</p>
+    </div>
+  </div>
+
+  <!-- ====== BATCH ADD/EDIT MODAL ====== -->
+  <div class="adm-modal" id="admBatchModal" style="display:none;">
+    <div class="adm-modal-card" style="max-width:700px; max-height:85vh; overflow-y:auto; border-color:var(--accent-blue);">
+      <div class="adm-modal-header">
+        <div class="adm-modal-icon">📚</div>
+        <h3 id="batchModalTitle">Add New Learning Batch</h3>
+        <button class="adm-modal-close" onclick="closeBatchModal()">✕</button>
+      </div>
+      <form id="admBatchForm" onsubmit="event.preventDefault(); saveBatchConfig();">
+        <div class="adm-modal-body" style="display:flex; flex-direction:column; gap:16px;">
+          <input type="hidden" id="batchModal_isEdit" value="false" />
+          
+          <div class="port-form-grid" style="grid-template-columns: 1fr 1fr; gap:16px; margin:0;">
+            <div class="port-form-group">
+              <label>Unique Batch ID (Slug) *</label>
+              <input type="text" id="batchModal_id" required placeholder="e.g. c-programming" />
+              <span style="font-size:0.75rem; color:var(--text-muted);">Lowercase letters and hyphens only. Permanent ID.</span>
+            </div>
+            
+            <div class="port-form-group">
+              <label>Batch Display Name *</label>
+              <input type="text" id="batchModal_name" required placeholder="e.g. C Programming Masterclass" />
+            </div>
+            
+            <div class="port-form-group" style="grid-column: span 2;">
+              <label>Subtitle / Tagline *</label>
+              <input type="text" id="batchModal_subtitle" required placeholder="e.g. Master core memory management, pointers..." />
+            </div>
+
+            <div class="port-form-group" style="grid-column: span 2;">
+              <label>Description *</label>
+              <textarea id="batchModal_description" rows="3" required placeholder="Detailed batch description..."></textarea>
+            </div>
+            
+            <div class="port-form-group">
+              <label>Category *</label>
+              <select id="batchModal_category">
+                <option value="programming">Programming Language</option>
+                <option value="placement">Placement Booster</option>
+                <option value="core">Core Subjects</option>
+                <option value="other">Other Track</option>
+              </select>
+            </div>
+
+            <div class="port-form-group">
+              <label>Target Level *</label>
+              <select id="batchModal_level">
+                <option value="Beginner to Intermediate">Beginner to Intermediate</option>
+                <option value="Intermediate to Advanced">Intermediate to Advanced</option>
+                <option value="Beginner to Advanced">Beginner to Advanced</option>
+                <option value="Advanced Masterclass">Advanced Masterclass</option>
+              </select>
+            </div>
+
+            <div class="port-form-group">
+              <label>Batch Theme Color *</label>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <input type="color" id="batchModal_color" value="#3b82f6" style="width:40px; height:40px; padding:0; border:none; border-radius:4px; cursor:pointer;" />
+                <span style="font-size:0.9rem; font-family:monospace; color:var(--text-muted);">Pick accent color</span>
+              </div>
+            </div>
+
+            <div class="port-form-group">
+              <label>Batch Badge Type *</label>
+              <select id="batchModal_badge">
+                <option value="Elite">Elite</option>
+                <option value="Elite+">Elite+</option>
+                <option value="Premium">Premium</option>
+                <option value="New">New</option>
+                <option value="Featured">Featured</option>
+              </select>
+            </div>
+
+            <div class="port-form-group">
+              <label>Status *</label>
+              <select id="batchModal_status">
+                <option value="Published">Published (Active)</option>
+                <option value="Draft">Draft</option>
+                <option value="Archived">Archived</option>
+              </select>
+            </div>
+
+            <div class="port-form-group">
+              <label>Visibility *</label>
+              <select id="batchModal_visibility">
+                <option value="Visible">Visible</option>
+                <option value="Hidden">Hidden</option>
+              </select>
+            </div>
+
+            <div class="port-form-group">
+              <label>Faculty Name</label>
+              <input type="text" id="batchModal_faculty" placeholder="e.g. Rahul Sir" />
+            </div>
+
+            <div class="port-form-group">
+              <label>Batch Duration</label>
+              <input type="text" id="batchModal_duration" placeholder="e.g. 3 Months or 45 Hours" />
+            </div>
+
+            <div class="port-form-group">
+              <label>Original Price (Strike-through Discount)</label>
+              <input type="text" id="batchModal_originalPrice" placeholder="e.g. ₹9,999" />
+            </div>
+
+            <div class="port-form-group">
+              <label>Batch Rating</label>
+              <input type="text" id="batchModal_rating" placeholder="e.g. 4.9" />
+            </div>
+
+            <div class="port-form-group" style="grid-column: span 2; display: flex; align-items: center; gap: 20px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.04);">
+              <div style="border: 1px dashed rgba(255,255,255,0.15); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: rgba(0,0,0,0.3); flex-shrink: 0;">
+                <img id="batchModal_facultyImagePreview" src="" style="height: 100%; width: 100%; object-fit: cover; display: none;" />
+                <span id="batchModal_facultyImagePlaceholder" style="font-size: 0.5rem; text-align: center; color: var(--text-muted);">No Photo</span>
+              </div>
+              <div style="flex: 1;">
+                <label style="margin-bottom: 4px; display: block; font-size: 0.8rem;">Faculty Photo</label>
+                <input type="file" id="batchModal_facultyImageFileInput" style="display:none;" accept=".png,.jpg,.jpeg,.webp" onchange="uploadBatchMedia(this, 'facultyImage')" />
+                <button type="button" class="btn-outline" onclick="document.getElementById('batchModal_facultyImageFileInput').click()" style="padding: 4px 10px; font-size: 0.75rem;">Upload Photo</button>
+                <input type="hidden" id="batchModal_facultyImageBase64" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Elite / Elite+ Advanced Controls Section -->
+          <div style="border-top:1px solid rgba(255,255,255,0.05); padding-top:16px; margin-top:8px;">
+            <h4 style="font-weight:700; color:var(--accent-blue); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+              🛡️ Elite & Premium Access Parameters
+            </h4>
+            <div class="port-form-grid" style="grid-template-columns: 1fr 1fr; gap:16px; margin:0;">
+              <div class="port-form-group" style="display:flex; align-items:center; gap:10px; height:fit-content; margin-top:28px;">
+                <input type="checkbox" id="batchModal_isElitePlus" style="width:18px; height:18px; cursor:pointer;" />
+                <label style="margin:0; cursor:pointer;">Flag as Elite+ Batch</label>
+              </div>
+
+              <div class="port-form-group" style="display:flex; align-items:center; gap:10px; height:fit-content; margin-top:28px;">
+                <input type="checkbox" id="batchModal_lockContent" style="width:18px; height:18px; cursor:pointer;" />
+                <label style="margin:0; cursor:pointer;">Lock Premium Content (Enrollment Required)</label>
+              </div>
+
+              <div class="port-form-group" style="display:flex; align-items:center; gap:10px; height:fit-content; margin-top:28px; grid-column: span 2;">
+                <input type="checkbox" id="batchModal_hideEliteBadge" style="width:18px; height:18px; cursor:pointer;" />
+                <label style="margin:0; cursor:pointer;">Hide Floating Elite/Placement Badge (👑 ELITE+ / 💼 PLACEMENT)</label>
+              </div>
+
+              <div class="port-form-group">
+                <label>Enrollment Mode</label>
+                <select id="batchModal_enrollment">
+                  <option value="Open">Open (Enrolling)</option>
+                  <option value="Closed">Closed (Not Enrolling)</option>
+                  <option value="Locked">Locked (Admin Invite Only)</option>
+                </select>
+              </div>
+
+              <div class="port-form-group">
+                <label>Pricing Information Display *</label>
+                <input type="text" id="batchModal_price" required placeholder="e.g. Free or ₹4,999" value="Free" />
+              </div>
+
+              <div class="port-form-group" style="grid-column: span 2;">
+                <label>Special Benefits Section (One per line)</label>
+                <textarea id="batchModal_benefits" rows="2" placeholder="e.g.&#10;1:1 Mentor Support&#10;Verified Certificates&#10;Resume Audit"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Features list config -->
+          <div style="border-top:1px solid rgba(255,255,255,0.05); padding-top:16px; margin-top:8px;">
+            <h4 style="font-weight:700; color:#fff; margin-bottom:12px;">📚 Batch Features (Pills)</h4>
+            <div id="batchModal_featuresList" style="display:flex; flex-direction:column; gap:8px;">
+              <!-- Populated dynamically -->
+            </div>
+            <button type="button" class="btn-outline" onclick="addFeatureRow()" style="margin-top:8px; padding:6px 12px; font-size:0.8rem;">+ Add Feature Line</button>
+          </div>
+
+          <!-- Cover Image Uploaders -->
+          <div style="border-top:1px solid rgba(255,255,255,0.05); padding-top:16px; margin-top:8px;">
+            <h4 style="font-weight:700; color:#fff; margin-bottom:12px;">🖼️ Batch Cover Media Uploads (Max 1MB)</h4>
+            <div class="port-form-grid" style="grid-template-columns: 1fr 1fr; gap:16px; margin:0;">
+              
+              <!-- Thumbnail uploader -->
+              <div class="port-form-group" style="text-align:center;">
+                <label>Batch Card Thumbnail</label>
+                <div style="margin:8px 0; border:1px dashed rgba(255,255,255,0.15); border-radius:8px; height:120px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:rgba(0,0,0,0.3);">
+                  <img id="batchModal_thumbPreview" src="" style="max-height:100%; max-width:100%; object-fit:contain; display:none;" />
+                  <span id="batchModal_thumbPlaceholder" style="font-size:0.8rem; color:var(--text-muted);">No Thumbnail Selected</span>
+                </div>
+                <input type="file" id="batchModal_thumbFileInput" style="display:none;" accept=".png,.jpg,.jpeg,.webp" onchange="uploadBatchMedia(this, 'thumbnail')" />
+                <button type="button" class="btn-outline" onclick="document.getElementById('batchModal_thumbFileInput').click()" style="padding:6px 12px; font-size:0.8rem;">Upload Thumbnail</button>
+                <input type="hidden" id="batchModal_thumbBase64" />
+              </div>
+
+              <!-- Banner uploader -->
+              <div class="port-form-group" style="text-align:center;">
+                <label>Batch Detail Banner</label>
+                <div style="margin:8px 0; border:1px dashed rgba(255,255,255,0.15); border-radius:8px; height:120px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:rgba(0,0,0,0.3);">
+                  <img id="batchModal_bannerPreview" src="" style="max-height:100%; max-width:100%; object-fit:contain; display:none;" />
+                  <span id="batchModal_bannerPlaceholder" style="font-size:0.8rem; color:var(--text-muted);">No Banner Selected</span>
+                </div>
+                <input type="file" id="batchModal_bannerFileInput" style="display:none;" accept=".png,.jpg,.jpeg,.webp" onchange="uploadBatchMedia(this, 'banner')" />
+                <button type="button" class="btn-outline" onclick="document.getElementById('batchModal_bannerFileInput').click()" style="padding:6px 12px; font-size:0.8rem;">Upload Banner</button>
+                <input type="hidden" id="batchModal_bannerBase64" />
+              </div>
+
+            </div>
+          </div>
+        </div>
+        
+        <div class="adm-modal-footer">
+          <button type="button" class="btn-outline" onclick="closeBatchModal()">Cancel</button>
+          <button type="submit" class="btn-primary">⚡ Save & Publish Batch</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- hidden image crop/upload files input element -->
+  <input type="file" id="portImageFileInput" onchange="handleImageCropSelect(this)" style="display:none;" accept=".png,.jpg,.jpeg,.webp" />
+
+  <!-- ====== BATCH DELETE PROTECTION MODAL ====== -->
+  <div class="adm-modal" id="batchDeleteModal" style="display:none; align-items:center; justify-content:center; z-index:9999;">
+    <div class="adm-modal-card" style="max-width:550px; border-color:#ef4444; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(25px); box-shadow: 0 20px 50px rgba(239, 68, 68, 0.15);">
+      <div class="adm-modal-header" style="border-bottom: 1px solid rgba(239, 68, 68, 0.2);">
+        <div class="adm-modal-icon" style="background: rgba(239,68,68,0.1); color: #ef4444;">⚠️</div>
+        <h3 id="batchDeleteModalTitle" style="color:#ef4444;">Smart Delete Protection</h3>
+        <button class="adm-modal-close" onclick="closeDeleteBatchModal()">✕</button>
+      </div>
+      <div class="adm-modal-body" style="padding: 20px; color:#fff; display:flex; flex-direction:column; gap:16px;">
+        <p>You are about to delete batch: <strong id="deleteBatchName" style="color:#fff;">[Batch Name]</strong></p>
+        
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius:12px; padding:16px;">
+          <h4 style="font-weight:700; margin-bottom:12px; font-size:0.9rem; color: var(--accent-blue);">🔍 Integrity & Dependency Check</h4>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; align-items:center; gap:10px; font-size:0.88rem;">
+              <span id="checkStudentsIcon">⏳</span>
+              <span id="checkStudentsText">Checking student enrollments...</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:0.88rem;">
+              <span id="checkSessionsIcon">⏳</span>
+              <span id="checkSessionsText">Checking attendance records...</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="transferContainer" style="display:none; background: rgba(99, 102, 241, 0.05); border: 1px solid rgba(99, 102, 241, 0.15); border-radius:12px; padding:16px;">
+          <label style="display:block; font-weight:700; font-size:0.85rem; color:#a78bfa; margin-bottom:8px;">Move Enrolled Students to:</label>
+          <select id="transferTargetBatch" style="width:100%; min-width:auto; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); padding:10px; font-size:0.85rem; border-radius:8px; color: #fff; outline: none;">
+            <!-- Options populated dynamically -->
+          </select>
+        </div>
+
+        <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.4;">
+          <strong>Warning:</strong> Deleting a batch will permanently remove it from the Home Page, Elite Batches Page, Search index, and Firebase Database. Materials & upload pointers associated with this batch ID will also be removed.
+        </p>
+      </div>
+      <div class="adm-modal-footer" style="display:flex; gap:10px; justify-content:flex-end; border-top: 1px solid rgba(255,255,255,0.05); padding:16px;">
+        <button type="button" class="btn-outline" onclick="closeDeleteBatchModal()">Cancel</button>
+        <button type="button" id="btnDeleteTransfer" class="btn-primary" style="background:linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); display:none;" onclick="executeDeleteBatch('transfer')">Transfer & Delete</button>
+        <button type="button" id="btnDeleteAll" class="btn-primary" style="background:linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);" onclick="executeDeleteBatch('all')">Delete Everything</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== PORTFOLIO CANVAS CROP MODAL ====== -->
+  <div class="adm-modal" id="portCropModal" style="display:none;">
+    <div class="adm-modal-card" style="max-width:500px; border-color:var(--accent-blue)">
+      <div class="adm-modal-header">
+        <div class="adm-modal-icon">📸</div>
+        <h3>Crop & Reposition Photo</h3>
+        <button class="adm-modal-close" onclick="closeCropModal()">✕</button>
+      </div>
+      <div class="adm-modal-body" style="display:flex; flex-direction:column; align-items:center; gap:16px; padding:20px;">
+        <p style="font-size:0.8rem; color:var(--text-muted); text-align:center;">Drag image inside cropping circle/box to adjust. Zoom with range slider.</p>
+        <div style="position:relative; width:340px; height:340px; border:2px solid rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; background:#070a13; cursor:move;">
+          <canvas id="cropCanvas" width="340" height="340" style="width:100%; height:100%; display:block;"></canvas>
+        </div>
+        <div style="width:100%; display:none; flex-direction:column; gap:6px;">
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:600;">
+            <span>🔍 Zoom Scale</span>
+            <span id="zoomVal">100%</span>
+          </div>
+          <input type="range" id="cropZoomSlider" min="50" max="300" value="100" oninput="handleZoomSlider(this.value); document.getElementById('zoomVal').textContent = this.value + '%'" style="width:100%;" />
+        </div>
+      </div>
+      <div class="adm-modal-footer">
+        <button class="btn-outline" onclick="closeCropModal()">Cancel</button>
+        <button class="btn-primary" onclick="applyCropSelection()">Crop & Use Image</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== PORTFOLIO ADD/EDIT EXPERIENCE MODAL ====== -->
+  <div class="adm-modal" id="portExpModal" style="display:none;">
+    <div class="adm-modal-card" style="max-width:550px;">
+      <div class="adm-modal-header">
+        <div class="adm-modal-icon">💼</div>
+        <h3 id="expModalTitle">Add Experience</h3>
+        <button class="adm-modal-close" onclick="closeExpModal()">✕</button>
+      </div>
+      <form onsubmit="event.preventDefault(); saveExperience();">
+        <div class="adm-modal-body" style="display:flex; flex-direction:column; gap:16px;">
+          <input type="hidden" id="editExpIdx" value="-1" />
+          <div class="port-form-grid" style="grid-template-columns: 1fr; gap:16px; margin:0;">
+            <div class="port-form-group">
+              <label>Role / Position Title</label>
+              <input type="text" id="portExpRole" required placeholder="e.g. Founder & Lead Engineer" />
+            </div>
+            <div class="port-form-group">
+              <label>Company / Organization</label>
+              <input type="text" id="portExpCompany" required placeholder="e.g. BCA STORE" />
+            </div>
+            <div class="port-form-group">
+              <label>Timeline Period</label>
+              <input type="text" id="portExpTimeline" required placeholder="e.g. Jan 2024 - Present" />
+            </div>
+            <div class="port-form-group">
+              <label>Job Description & Achievements</label>
+              <textarea id="portExpDesc" rows="3" required placeholder="Describe responsibilities and technology stacks used..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="adm-modal-footer">
+          <button type="button" class="btn-outline" onclick="closeExpModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Apply Experience</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ====== PORTFOLIO ADD/EDIT SOCIAL LINK MODAL ====== -->
+  <div class="adm-modal" id="portSocialModal" style="display:none;">
+    <div class="adm-modal-card" style="max-width:500px;">
+      <div class="adm-modal-header">
+        <div class="adm-modal-icon">🔗</div>
+        <h3 id="socialModalTitle">Add Social Link</h3>
+        <button class="adm-modal-close" onclick="closeSocialModal()">✕</button>
+      </div>
+      <form onsubmit="event.preventDefault(); saveSocialLink();">
+        <div class="adm-modal-body" style="display:flex; flex-direction:column; gap:16px;">
+          <input type="hidden" id="editSocialId" value="-1" />
+          <div class="port-form-grid" style="grid-template-columns: 1fr; gap:16px; margin:0;">
+            <div class="port-form-group">
+              <label>Social / Portfolio Platform</label>
+              <select id="portSocialPlatform" onchange="handleCustomPlatformToggle(this)">
+                <option value="GitHub">GitHub</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Facebook">Facebook</option>
+                <option value="X (Twitter)">X (Twitter)</option>
+                <option value="YouTube">YouTube</option>
+                <option value="Telegram">Telegram</option>
+                <option value="Discord">Discord</option>
+                <option value="Behance">Behance</option>
+                <option value="Dribbble">Dribbble</option>
+                <option value="Medium">Medium</option>
+                <option value="Stack Overflow">Stack Overflow</option>
+                <option value="LeetCode">LeetCode</option>
+                <option value="HackerRank">HackerRank</option>
+                <option value="CodeChef">CodeChef</option>
+                <option value="Codeforces">Codeforces</option>
+                <option value="Personal Website">Personal Website</option>
+                <option value="Custom">Custom Platform...</option>
+              </select>
+            </div>
+            
+            <div class="port-form-grid" id="customPlatDetailsRow" style="display:none; grid-template-columns: 2fr 1fr; gap:12px; margin:0;">
+              <div class="port-form-group">
+                <label>Platform Name</label>
+                <input type="text" id="portSocialCustomName" placeholder="e.g. Threads" />
+              </div>
+              <div class="port-form-group">
+                <label>Custom Emoji</label>
+                <input type="text" id="portSocialCustomIcon" value="🔗" style="text-align:center;" />
+              </div>
+            </div>
+
+            <div class="port-form-group">
+              <label>Platform URL Link</label>
+              <input type="url" id="portSocialUrl" required placeholder="https://..." />
+            </div>
+            <div class="port-form-group" style="flex-direction:row; justify-content:space-between; align-items:center; margin-top:8px;">
+              <label>Enable platform rendering</label>
+              <label class="switch-container" style="width:44px; height:22px;">
+                <input type="checkbox" id="portSocialEnabled" checked style="display:none;" />
+                <span class="switch-slider" style="border-radius:22px; cursor:pointer; background:#10b981; position:absolute; inset:0; transition:0.3s; display:block;"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="adm-modal-footer">
+          <button type="button" class="btn-outline" onclick="closeSocialModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Apply Link</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ====== PORTFOLIO ADD/EDIT PROJECT MODAL ====== -->
+  <div class="adm-modal" id="portProjectModal" style="display:none;">
+    <div class="adm-modal-card" style="max-width:650px;">
+      <div class="adm-modal-header">
+        <div class="adm-modal-icon">📁</div>
+        <h3 id="projModalTitle">Add Project</h3>
+        <button class="adm-modal-close" onclick="closeProjectModal()">✕</button>
+      </div>
+      <form onsubmit="event.preventDefault(); savePortfolioProject();">
+        <div class="adm-modal-body" style="display:flex; flex-direction:column; gap:16px; max-height:65vh; overflow-y:auto;">
+          <input type="hidden" id="editProjId" value="-1" />
+          
+          <div class="port-form-grid">
+            <div class="port-form-group">
+              <label>Project Title</label>
+              <input type="text" id="portProjTitle" required placeholder="e.g. BCA Store Portal" />
+            </div>
+            <div class="port-form-group">
+              <label>Project Position Prefix</label>
+              <input type="text" id="portProjNumber" required placeholder="PROJECT // 01" />
+            </div>
+            <div class="port-form-group" style="grid-column: 1/-1;">
+              <label>Project Description</label>
+              <textarea id="portProjDesc" rows="3" required placeholder="Describe what the project does, key features, and highlights..."></textarea>
+            </div>
+            <div class="port-form-group">
+              <label>Tech Stack Tags (Comma separated)</label>
+              <input type="text" id="portProjTechStack" placeholder="e.g. React.js, Node.js, CSS" />
+            </div>
+            <div class="port-form-group">
+              <label>Showcase Category</label>
+              <select id="portProjCategory">
+                <option value="Web App">Web Application</option>
+                <option value="Mobile App">Mobile Application</option>
+                <option value="AI / NLP">AI & ML System</option>
+                <option value="Open Source">Open Source Utilities</option>
+              </select>
+            </div>
+            <div class="port-form-group">
+              <label>Live Demo URL</label>
+              <input type="text" id="portProjDemo" placeholder="index.html or https://..." />
+            </div>
+            <div class="port-form-group">
+              <label>GitHub Repository URL</label>
+              <input type="url" id="portProjGithub" placeholder="https://github.com/..." />
+            </div>
+            <div class="port-form-group">
+              <label>Status</label>
+              <select id="portProjStatus">
+                <option value="Completed">Completed</option>
+                <option value="Production">Live / Active</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Archived">Archived</option>
+              </select>
+            </div>
+            <div class="port-form-group">
+              <label>Timeline Period</label>
+              <input type="text" id="portProjTimeline" placeholder="e.g. Jan 2026 - Mar 2026" />
+            </div>
+            <div class="port-form-group" style="grid-column: 1/-1;">
+              <label>Project Statistics / Achievements</label>
+              <input type="text" id="portProjStats" placeholder="e.g. 10k Users, 200 Stars, 98% Score" />
+            </div>
+          </div>
+
+          <!-- Project Images Staging -->
+          <div style="border-top:1px solid rgba(255,255,255,0.06); padding-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div class="port-form-group">
+              <label>Project Thumbnail Card Image</label>
+              <input type="hidden" id="projEdit_thumb_base64" />
+              <div style="display:flex; gap:12px; align-items:center;">
+                <img id="projEdit_thumb_preview" src="dev_avatar.png" style="width:100px; height:60px; object-fit:cover; border-radius:6px; border:1px solid rgba(255,255,255,0.08);" />
+                <button type="button" class="btn-outline" onclick="triggerImageUpload('projThumb')" style="padding:6px 12px; font-size:0.8rem;">Select Thumbnail</button>
+              </div>
+            </div>
+            <div class="port-form-group">
+              <label>Project Branding Logo</label>
+              <input type="hidden" id="projEdit_logo_base64" />
+              <div style="display:flex; gap:12px; align-items:center;">
+                <img id="projEdit_logo_preview" src="logo.png" style="width:60px; height:60px; object-fit:cover; border-radius:6px; border:1px solid rgba(255,255,255,0.08);" />
+                <button type="button" class="btn-outline" onclick="triggerImageUpload('projLogo')" style="padding:6px 12px; font-size:0.8rem;">Select Logo</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Screenshots layout uploader -->
+          <div style="border-top:1px solid rgba(255,255,255,0.06); padding-top:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Multiple Project Showcase Screenshots</label>
+              <button type="button" class="btn-outline" onclick="triggerImageUpload('projScreenshots')" style="padding:4px 10px; font-size:0.75rem;">+ Add Screenshot</button>
+            </div>
+            <div id="projEdit_screenshots_grid" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px;"></div>
+          </div>
+
+          <div style="border-top:1px solid rgba(255,255,255,0.06); padding-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div class="port-form-group" style="flex-direction:row; justify-content:space-between; align-items:center;">
+              <label>Feature Project (Highlights at top)</label>
+              <input type="checkbox" id="portProjFeatured" style="width:18px; height:18px;" />
+            </div>
+            <div class="port-form-group" style="flex-direction:row; justify-content:space-between; align-items:center;">
+              <label>Archive Project (Hide from grid)</label>
+              <input type="checkbox" id="portProjArchived" style="width:18px; height:18px;" />
+            </div>
+          </div>
+        </div>
+        <div class="adm-modal-footer">
+          <button type="button" class="btn-outline" onclick="closeProjectModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Apply Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ====== PORTFOLIO INQUIRY VIEW DETAILS MODAL ====== -->
+  <div class="adm-modal" id="portInquiryDetailModal" style="display:none;">
+    <div class="adm-modal-card" style="max-width:550px;">
+      <div class="adm-modal-header">
+        <div class="adm-modal-icon">📬</div>
+        <h3>Inquiry Message Details</h3>
+        <button class="adm-modal-close" onclick="closeInquiryDetailModal()">✕</button>
+      </div>
+      <form onsubmit="event.preventDefault(); saveInquiryStatus();">
+        <div class="adm-modal-body" style="display:flex; flex-direction:column; gap:16px;">
+          <input type="hidden" id="viewInqId" />
+          
+          <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:16px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div>
+              <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">From Name:</span>
+              <div id="viewInqName" style="font-weight:700; color:#fff; font-size:1.05rem; margin-top:2px;">John</div>
+            </div>
+            <div>
+              <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Email Address:</span>
+              <div style="margin-top:2px;"><a id="viewInqEmail" href="mailto:..." style="color:var(--accent-blue); text-decoration:none; font-weight:600; font-size:0.95rem;">john@example.com</a></div>
+            </div>
+            <div style="grid-column:1/-1; border-top:1px solid rgba(255,255,255,0.05); padding-top:8px;">
+              <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Subject Topic:</span>
+              <div id="viewInqSubject" style="font-weight:700; color:#fff; margin-top:2px;">Collaboration Offer</div>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Message Body:</span>
+            <div id="viewInqMessage" style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:14px; font-size:0.9rem; color:#fff; line-height:1.4; white-space:pre-wrap; max-height:150px; overflow-y:auto;">Message text...</div>
+          </div>
+
+          <!-- Status toggle -->
+          <div class="port-form-group">
+            <label>Inquiry Response Status</label>
+            <select id="viewInqStatus">
+              <option value="New">🔵 New / Unread</option>
+              <option value="Pending">🟡 Pending / Ongoing</option>
+              <option value="Replied">🟢 Replied / Completed</option>
+              <option value="Archived">⚪ Archived</option>
+            </select>
+          </div>
+
+          <!-- Response history log -->
+          <div style="border-top:1px solid rgba(255,255,255,0.06); padding-top:12px;">
+            <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:8px;">Response History & Internal Notes</label>
+            <div id="viewInqHistoryLogs" style="max-height:110px; overflow-y:auto; background:rgba(0,0,0,0.1); border-radius:8px; padding:10px; border:1px solid rgba(255,255,255,0.03); margin-bottom:10px;"></div>
+            
+            <div class="port-form-group">
+              <label>Log New Response Action Note</label>
+              <input type="text" id="viewInqNote" placeholder="e.g. Sent reply email details for pricing..." />
+            </div>
+          </div>
+        </div>
+        <div class="adm-modal-footer">
+          <button type="button" class="btn-outline" onclick="closeInquiryDetailModal()">Close</button>
+          <button type="submit" class="btn-primary">Apply Update & Note</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ====== SETTINGS TAB ====== -->
+  <div class="adm-section" id="admin-tab-settings">
+    <div class="adm-settings-root" id="adminSettingsRoot">
+      <div class="adm-settings-loading glass-card" style="display:flex;align-items:center;justify-content:center;min-height:320px;gap:12px;color:var(--text-muted);">
+        <div class="saas-loader" style="width:18px;height:18px;"></div>
+        <span>Loading intelligent settings...</span>
+      </div>
+    </div>
+  </div>
+
+
+
+    </div><!-- /adm-content -->
+  </div><!-- /adm-main -->
+</div><!-- /admin-panel -->
+
+<div class="admin-extras" id="adminExtras">
+ 
+<!-- ==================== VISIT COUNTER ==================== -->
+<section class="visit-counter-section">
+  <div class="container">
+    <div class="vc-card glass-card">
+      <div class="vc-icon">🌍</div>
+      <div class="vc-info">
+        <h3 id="totalVisits">0</h3>
+        <p>Global Students Visited</p>
+      </div>
+      <div class="vc-pulse" title="Live Counter Enabled"></div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ==================== SUGGESTION MODAL ==================== -->
+<div class="modal-overlay" id="suggestionModal">
+  <div class="modal glass-card">
+    <div class="modal-header">
+      <div style="display:flex; gap:16px;">
+        <h3 class="sugg-tab active" id="tabSend" onclick="switchSuggTab('send')">💬 Send Suggestion</h3>
+        <h3 class="sugg-tab" id="tabHistory" onclick="switchSuggTab('history')">📜 My History</h3>
+      </div>
+      <button class="modal-close" onclick="closeSuggestionModal()">✕</button>
+    </div>
+    <div id="suggSendView">
+      <div class="modal-body" id="suggestionBody">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="suggName" placeholder="Enter your name..." />
+        </div>
+        <div class="form-group">
+          <label>Category <span class="required">*</span></label>
+          <select id="suggCategory">
+            <option value="General">✨ General Feedback</option>
+            <option value="Content Missing">📝 Content Missing</option>
+            <option value="Bug Report">🐛 Bug Report</option>
+            <option value="Feature Request">💡 Feature Request</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Your Message <span class="required">*</span></label>
+          <textarea id="suggMessage" placeholder="Describe your suggestion or feedback..." rows="4" maxlength="500" oninput="updateCharCount(this)"></textarea>
+          <div class="char-count" style="text-align:right; font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+            <span id="charCurrent">0</span>/500
+          </div>
+        </div>
+        <input type="hidden" id="suggContext" value="" />
+      </div>
+      <div class="modal-footer" id="suggestionFooter">
+        <button class="btn-outline" onclick="closeSuggestionModal()">Cancel</button>
+        <button class="btn-primary" onclick="submitSuggestion()">Send Suggestion ✈️</button>
+      </div>
+    </div>
+    <div id="suggHistoryView" style="display:none;">
+      <div class="modal-body" id="suggestionHistoryBody" style="max-height:400px; overflow-y:auto;">
+        <!-- Generated by JS -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" style="width:100%" onclick="closeSuggestionModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!-- EDIT MATERIAL MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal glass-card" style="max-width:600px;">
+    <div class="modal-header">
+      <h3>✏️ Edit Material</h3>
+      <button class="modal-close" onclick="closeEditModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId" />
+      <input type="hidden" id="editSemKey" />
+      <input type="hidden" id="editSubKey" />
+      <input type="hidden" id="editCategory" value="bca-store" />
+      <select id="editEliteBatch" style="display:none;"></select>
+      <input type="hidden" id="editEliteType" />
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="editTitle" />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="editDescription" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Link</label>
+        <input type="url" id="editLink" />
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select id="editType">
+          <option value="notes">Notes</option>
+          <option value="pyq">PYQs</option>
+          <option value="video">Video</option>
+          <option value="pyq_solve">PYQs Solve</option>
+          <option value="program">Program</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeEditModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveEditMaterial()">Save Changes ✅</button>
+    </div>
+  </div>
+</div>
+
+<!-- Poll Results Modal -->
+<div class="adm-modal" id="pollResultsModal">
+  <div class="adm-modal-card" style="max-width: 600px;">
+    <div class="adm-modal-header">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="adm-modal-icon">📊</div>
+        <div>
+          <h3 id="resPollTitle">Poll Results</h3>
+          <p id="resPollMeta" style="font-size:0.75rem; color:var(--text-secondary);"></p>
+        </div>
+      </div>
+      <button class="adm-modal-close" onclick="closeResModal()">×</button>
+    </div>
+    <div class="adm-modal-body">
+      <div id="resPollStats" style="margin-bottom:24px;"></div>
+      <h4 style="font-size:0.9rem; margin-bottom:12px; display:flex; align-items:center; gap:8px;">👥 Individual Votes <span id="resVoteCount" class="badge-live" style="animation:none; background:var(--bg-surface-hover); color:var(--text-secondary);">0</span></h4>
+      <div class="adm-table-container">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Roll No</th>
+              <th>Selection</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="resVotesTable">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="adm-modal-footer">
+      <button class="btn-outline" onclick="closeResModal()">Close</button>
+      <button class="btn-primary" onclick="exportPollResults()">📥 Export CSV</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .adm-modal {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px;
+  }
+  .adm-modal.show { display: flex; animation: saasFadeIn 0.3s ease; }
+  .adm-modal-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); width: 100%; box-shadow: var(--shadow-md); overflow: hidden; }
+  .adm-modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
+  .adm-modal-icon { width: 40px; height: 40px; background: var(--bg-surface-hover); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+  .adm-modal-header h3 { font-size: 1.1rem; font-weight: 700; margin: 0; color: var(--text-primary); }
+  .adm-modal-close { background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; }
+  .adm-modal-body { padding: 24px; max-height: 70vh; overflow-y: auto; }
+  .adm-modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: flex-end; gap: 12px; background: var(--bg-surface); }
+
+  .res-bar-item { margin-bottom: 16px; }
+  .res-bar-label { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px; font-weight: 500; }
+  .res-bar-track { height: 8px; background: var(--bg-surface-hover); border-radius: 4px; overflow: hidden; position: relative; }
+  .res-bar-fill { height: 100%; background: var(--accent-blue); transition: width 1s cubic-bezier(0.16, 1, 0.3, 1); }
+</style>
+
+</div><!-- /admin-extras -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<script src="knowledge_data.js"></script>
+<script src="business_comm_data.js"></script>
+<script src="c_programming_data.js"></script>
+<script src="project_data.js"></script>
+<script src="ms_dos_data.js"></script>
+<script src="ms_office_data.js"></script>
+<script src="chat_data.js"></script>
+<script src="c_lab_data.js"></script>
+<script src="ds_data.js"></script>
+<script src="architecture_data.js"></script>
+<script src="html_data.js"></script>
+<script src="cpp_data.js"></script>
+<script src="script.js"></script>
+<script src="admin-login-system.js"></script>
+<script src="admin-elite-plus.js"></script>
+<link rel="stylesheet" href="community.css" />
+<script src="community.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    initAdminPage();
+    // Initialize theme
+    if (typeof initDarkMode === 'function') initDarkMode();
+    else document.documentElement.setAttribute('data-theme', 'dark'); // Fallback
+  });
+</script>
+<script src="modern-effects.js"></script>
+  <script src="enhancements.js"></script>
+<script src="admin-test.js"></script>
+<script src="admin-registration.js"></script>
+<script src="admin-advanced.js"></script>
+<script src="admin-portfolio.js"></script>
+<script src="admin-batches.js"></script>
+<script src="attendance-service.js"></script>
+<script src="notifications-service.js" type="module"></script>
+
+
+<script>
+function admMbnActive(btn) {
+  document.querySelectorAll('.adm-mbn-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// PREMIUM DASHBOARD LOGIC
+document.addEventListener('DOMContentLoaded', () => {
+  // Wait a bit for Firebase to load
+  setTimeout(initPremiumDashboard, 1500);
+});
+
+function initPremiumDashboard() {
+  if (!db) return;
+
+  // 1. Fetch Materials Data
+  db.ref('materials').on('value', snap => {
+    let total = 0, notes = 0, videos = 0, pyqs = 0;
+    const semCounts = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
+    
+    if (snap.exists()) {
+      snap.forEach(sem => {
+        const sNum = parseInt(sem.key.replace('Semester', '')) || 1;
+        sem.forEach(sub => {
+          sub.forEach(mat => {
+            total++;
+            semCounts[sNum]++;
+            const type = mat.val().type || 'notes';
+            if (type === 'notes') notes++;
+            if (type === 'video') videos++;
+            if (type === 'pyq' || type === 'pyq_solve') pyqs++;
+          });
+        });
+      });
+    }
+
+    // Update KPI Cards
+    const safeSet = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) {
+        const startVal = el.textContent === '—' || el.textContent === 'Loading...' ? 0 : parseInt(el.textContent.replace(/[^\d]/g, '')) || 0;
+        if (window.animateValue) {
+          window.animateValue(el, startVal, val, 800);
+        } else {
+          el.textContent = val;
+        }
+      }
+    };
+    safeSet('kpiTotalMaterials', total);
+    safeSet('wbTotalMaterials', total);
+    safeSet('kpiNotesDash', notes);
+    safeSet('kpiVideosDash', videos);
+    safeSet('kpiPYQsDash', pyqs);
+
+    // Update Resource Breakdown
+    for(let i=1; i<=6; i++) {
+      const c = semCounts[i];
+      if (c === 0) {
+        if(document.getElementById('rbc'+i)) document.getElementById('rbc'+i).innerHTML = `<span>No materials</span>`;
+      } else {
+        const nW = Math.max(10, Math.random() * 60);
+        const vW = Math.max(10, Math.random() * 30);
+        const pW = 100 - nW - vW;
+        if(document.getElementById('rb'+i+'n')) document.getElementById('rb'+i+'n').style.width = nW+'%';
+        if(document.getElementById('rb'+i+'v')) document.getElementById('rb'+i+'v').style.width = vW+'%';
+        if(document.getElementById('rb'+i+'p')) document.getElementById('rb'+i+'p').style.width = pW+'%';
+        if(document.getElementById('rbc'+i)) document.getElementById('rbc'+i).innerHTML = `<strong>${c}</strong> total items`;
+      }
+    }
+
+    // Generate Smart Insights
+    const insightsGrid = document.getElementById('admInsightsStrip');
+    const badge = document.getElementById('insightsBadge');
+    if (insightsGrid && badge) {
+      let html = '';
+      let iCount = 0;
+
+      if (videos < total * 0.2 && total > 10) {
+        html += `<div class="adm-insight-card"><div class="adm-insight-icon insight-warning">🎥</div><div class="adm-insight-body"><div class="adm-insight-title">Low Video Content</div><div class="adm-insight-desc">Less than 20% of your platform content consists of video lectures. Students engage more with videos.</div><span class="adm-insight-tag tag-warn">Content Gap</span></div></div>`;
+        iCount++;
+      }
+      
+      if (semCounts[1] > semCounts[2] * 2 && semCounts[2] > 0) {
+        html += `<div class="adm-insight-card"><div class="adm-insight-icon insight-info">📚</div><div class="adm-insight-body"><div class="adm-insight-title">Focus on Semester 2</div><div class="adm-insight-desc">Semester 1 has double the materials of Semester 2. Consider balancing the upload queue.</div><span class="adm-insight-tag tag-info">Suggestion</span></div></div>`;
+        iCount++;
+      }
+
+      if (iCount === 0) {
+        html = `<div class="adm-insight-card"><div class="adm-insight-icon insight-success">✨</div><div class="adm-insight-body"><div class="adm-insight-title">Platform Healthy</div><div class="adm-insight-desc">Content distribution looks good. No major content gaps detected.</div><span class="adm-insight-tag tag-ok">All Good</span></div></div>`;
+        iCount = 1;
+      }
+
+      insightsGrid.innerHTML = html;
+      badge.textContent = iCount + ' Active';
+    }
+  });
+
+  // 2. Fetch Visitor/Student Data
+  db.ref('visitors').on('value', snap => {
+    let visitors = 0;
+    if (snap.exists()) visitors = snap.numChildren();
+    safeSet('kpiStudentsDash', visitors);
+    safeSet('wbTotalVisitors', visitors);
+  });
+
+  // 3. Fetch Suggestions/Inbox Data
+  db.ref('suggestions').on('value', snap => {
+    let suggs = 0;
+    if (snap.exists()) suggs = snap.numChildren();
+    safeSet('kpiSuggDash', suggs);
+  });
+
+  // 4. Listen to Live System Config Switches
+  db.ref('admin_config').on('value', snap => {
+    if (snap.exists()) {
+      const config = snap.val();
+      const swGeofence = document.getElementById('switchGeofence');
+      if (swGeofence) swGeofence.checked = config.attendance_geofence !== false;
+      const swAi = document.getElementById('switchAiResponse');
+      if (swAi) swAi.checked = config.ai_responder !== false;
+      const swMaint = document.getElementById('switchMaintenance');
+      if (swMaint) swMaint.checked = !!config.maintenance_mode;
+    }
+  });
+
+  // 5. Fetch Attendance checkins count
+  db.ref('attendance-v2/records').on('value', snap => {
+    let count = 0;
+    if (snap.exists()) {
+      snap.forEach(session => {
+        count += session.numChildren();
+      });
+    }
+    safeSet('activeChecksCount', count);
+  });
+
+  // 6. Listen to Weekly Chart Visits from Firebase
+  db.ref('site_stats/weekly_activity').on('value', snap => {
+    let activityData = {
+      Monday: 42,
+      Tuesday: 55,
+      Wednesday: 68,
+      Thursday: 35,
+      Friday: 58,
+      Saturday: 24,
+      Sunday: 72
+    };
+    if (snap.exists()) {
+      activityData = { ...activityData, ...snap.val() };
+    }
+
+    // Sync input values
+    const mapInputs = {
+      Monday: 'inputVisMon',
+      Tuesday: 'inputVisTue',
+      Wednesday: 'inputVisWed',
+      Thursday: 'inputVisThu',
+      Friday: 'inputVisFri',
+      Saturday: 'inputVisSat',
+      Sunday: 'inputVisSun'
+    };
+    Object.entries(mapInputs).forEach(([day, id]) => {
+      const el = document.getElementById(id);
+      if (el) el.value = activityData[day] || 0;
+    });
+
+    // Redraw Chart
+    const daysOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const data = daysOrder.map(day => activityData[day] || 0);
+    const maxVal = Math.max(...data, 1);
+    
+    const chart = document.getElementById('admWeeklyChart');
+    if (chart) {
+      chart.innerHTML = '';
+      data.forEach((val, i) => {
+        const pct = Math.round((val / maxVal) * 100);
+        const col = document.createElement('div');
+        col.className = 'adm-bar-col';
+        
+        const fill = document.createElement('div');
+        fill.className = 'adm-bar-fill';
+        fill.setAttribute('data-val', val);
+        fill.style.height = '0%';
+        fill.title = `${daysOrder[i]}: ${val} visits`;
+        
+        col.appendChild(fill);
+        chart.appendChild(col);
+        
+        setTimeout(() => {
+          fill.style.height = pct + '%';
+        }, 300 + (i * 100));
+      });
+    }
+  });
+
+  // Initial diagnostics test
+  runConsoleDiagnosticTest();
+  
+  // Set auth role metadata in diagnostics block
+  const auth = lsGet('adminAuth', {});
+  const roleMeta = document.getElementById('tokenRoleMeta');
+  if (roleMeta) roleMeta.textContent = (auth.role || 'admin').toUpperCase();
+}
+
+// TOGGLE LIVE SYSTEM SETTING PARAMETERS
+async function toggleSystemParam(key, val) {
+  if (!db) return;
+  try {
+    await db.ref(`admin_config/${key}`).set(val);
+    showAdminNotification(`⚙️ Parameter '${key}' updated to ${val}`, 'success');
+  } catch (error) {
+    showAdminNotification(`❌ Save Error: ${error.message}`, 'error');
+  }
+}
+
+// UPDATE WEEKLY CHART NUMBERS IN FIREBASE
+async function updateWeeklyActivityOnFirebase() {
+  if (!db) return;
+  const activity = {
+    Monday: parseInt(document.getElementById('inputVisMon').value) || 0,
+    Tuesday: parseInt(document.getElementById('inputVisTue').value) || 0,
+    Wednesday: parseInt(document.getElementById('inputVisWed').value) || 0,
+    Thursday: parseInt(document.getElementById('inputVisThu').value) || 0,
+    Friday: parseInt(document.getElementById('inputVisFri').value) || 0,
+    Saturday: parseInt(document.getElementById('inputVisSat').value) || 0,
+    Sunday: parseInt(document.getElementById('inputVisSun').value) || 0
+  };
+
+  showAdminNotification('⏳ Syncing Weekly stats...', 'pending');
+  try {
+    await db.ref('site_stats/weekly_activity').set(activity);
+    showAdminNotification('✅ Analytics stats updated and broadcasted!', 'success');
+  } catch (error) {
+    showAdminNotification(`❌ Error broadcasting stats: ${error.message}`, 'error');
+  }
+}
+
+// SIMULATE DUMMY TRAFFIC
+function randomizeWeeklyActivityStats() {
+  const mapInputs = ['inputVisMon', 'inputVisTue', 'inputVisWed', 'inputVisThu', 'inputVisFri', 'inputVisSat', 'inputVisSun'];
+  mapInputs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = Math.floor(Math.random() * 85 + 15);
+  });
+  updateWeeklyActivityOnFirebase();
+}
+
+// RUN LATENCY DIAGNOSTICS HANDSHAKE SCAN
+function runConsoleDiagnosticTest() {
+  const light = document.getElementById('systemDiagnosticLight');
+  if (light) {
+    light.textContent = 'SCANNING';
+    light.className = 'adm-live-dot';
+    light.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+    light.style.background = 'rgba(245, 158, 11, 0.08)';
+    light.style.color = '#F59E0B';
+  }
+
+  const start = performance.now();
+  if (db) {
+    db.ref('site_stats/totalVisits').once('value', () => {
+      const ms = Math.round(performance.now() - start);
+      const latEl = document.getElementById('livePingLatency');
+      if (latEl) latEl.textContent = ms + 'ms';
+      
+      if (light) {
+        light.textContent = 'OPTIMAL';
+        light.style.borderColor = '';
+        light.style.background = '';
+        light.style.color = '';
+      }
+    });
+  }
+}
+
+// CELEBRATION SHOWER TRIGGER
+function triggerDashboardCelebration() {
+  if (typeof confetti === 'function') {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+  }
+}
+</script>
+  <!-- MOBILE BOTTOM NAVIGATION -->
+  <nav class="adm-mobile-bottom-nav" id="admMobileNav">
+    <div class="adm-mbn-inner">
+      <button class="adm-mbn-btn active" onclick="switchAdminTab('dashboard');admMbnActive(this)" id="bnDashboard">
+        <span class="adm-mbn-btn-icon">📊</span>
+        <span class="adm-mbn-label">Home</span>
+      </button>
+      <button class="adm-mbn-btn" onclick="switchAdminTab('add');admMbnActive(this)" id="bnAdd">
+        <span class="adm-mbn-btn-icon">➕</span>
+        <span class="adm-mbn-label">Add</span>
+      </button>
+      <button class="adm-mbn-btn" onclick="switchAdminTab('manage');admMbnActive(this)" id="bnManage">
+        <span class="adm-mbn-btn-icon">📋</span>
+        <span class="adm-mbn-label">List</span>
+      </button>
+      <button class="adm-mbn-btn" onclick="window.location.href='attendance-admin.html';admMbnActive(this)" id="bnAttendance">
+        <span class="adm-mbn-btn-icon">📅</span>
+        <span class="adm-mbn-label">Att</span>
+      </button>
+      <button class="adm-mbn-btn" onclick="switchAdminTab('analytics');admMbnActive(this)" id="bnAnalytics">
+        <span class="adm-mbn-btn-icon">📈</span>
+        <span class="adm-mbn-label">Stats</span>
+      </button>
+      <button class="adm-mbn-btn" onclick="toggleAdmSidebar()">
+        <span class="adm-mbn-btn-icon">⋮</span>
+        <span class="adm-mbn-label">Menu</span>
+      </button>
+    </div>
+  </nav>
+
+
+
+  <!-- QUESTIONS BANK EDIT MODAL -->
+  <div id="qbEditModal" class="fixed inset-0 z-[3000] bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; align-items: center; justify-content: center;">
+    <div class="glass-card" style="max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 24px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); background: rgba(18, 18, 24, 0.9); position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+      <button onclick="closeQbEditModal()" style="position: absolute; top: 16px; right: 16px; font-size: 1.25rem; background: transparent; border: none; color: var(--text-muted); cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">✕</button>
+      
+      <h3 style="font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 20px; font-family: 'Outfit'; letter-spacing: -0.02em;">✏️ Edit Question Bank Test</h3>
+      
+      <div id="qbEditForm" style="display: flex; flex-direction: column; gap: 16px;">
+        <input type="hidden" id="editTestId" />
+        <input type="hidden" id="editTestType" />
+        <input type="hidden" id="editTestSem" />
+        <input type="hidden" id="editTestSub" />
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group" style="text-align:left;">
+            <label style="display: block; margin-bottom: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Test Title</label>
+            <input type="text" id="editTestTitle" style="width:100%; box-sizing:border-box;" />
+          </div>
+          <div class="form-group" style="text-align:left;">
+            <label style="display: block; margin-bottom: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Subject Name</label>
+            <input type="text" id="editTestSubName" style="width:100%; box-sizing:border-box;" />
+          </div>
+        </div>
+
+        <!-- MCQ Quiz Options -->
+        <div id="qbEditMCQSection" style="display: none; flex-direction: column; gap: 16px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group" style="text-align:left;">
+              <label style="display: block; margin-bottom: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Time Limit (minutes)</label>
+              <input type="number" id="editTestTimeLimit" style="width:100%; box-sizing:border-box;" />
+            </div>
+            <div class="form-group" style="text-align:left;">
+              <label style="display: block; margin-bottom: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Immediate Feedback</label>
+              <select id="editTestFeedback" style="width:100%; padding: 8px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); color: #fff;">
+                <option value="true">Enable</option>
+                <option value="false">Disable</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h4 style="font-size: 0.95rem; font-weight: 700; color: #fff; margin: 0; font-family:'Outfit';">Questions List</h4>
+              <button class="btn-primary" style="padding: 6px 12px; font-size: 0.75rem;" onclick="addQuestionToEditTest()">➕ Add Question</button>
+            </div>
+            <div id="qbEditQuestionsContainer" style="display: flex; flex-direction: column; gap: 16px; max-height: 40vh; overflow-y: auto; padding-right: 8px;">
+              <!-- Filled dynamically by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Subjective Options -->
+        <div id="qbEditLongAnswerSection" style="display: none; flex-direction: column; gap: 16px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group" style="text-align:left;">
+              <label style="display: block; margin-bottom: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Marks</label>
+              <input type="number" id="editTestMarks" style="width:100%; box-sizing:border-box;" />
+            </div>
+            <div class="form-group" style="text-align:left;">
+              <label style="display: block; margin-bottom: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Priority Keywords (comma separated)</label>
+              <input type="text" id="editTestKeywords" style="width:100%; box-sizing:border-box;" />
+            </div>
+          </div>
+          <div class="form-group" style="text-align:left;">
+            <label style="display: block; margin-bottom: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Question Text</label>
+            <textarea id="editTestQuestion" rows="3" style="width:100%; box-sizing:border-box; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #fff; padding: 8px;"></textarea>
+          </div>
+          <div class="form-group" style="text-align:left;">
+            <label style="display: block; margin-bottom: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Ideal Answer</label>
+            <textarea id="editTestIdealAnswer" rows="6" style="width:100%; box-sizing:border-box; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #fff; padding: 8px;"></textarea>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 16px; justify-content: flex-end;">
+          <button class="btn-outline" onclick="closeQbEditModal()">Cancel</button>
+          <button class="btn-primary" onclick="saveQbEditedTest()">Save Changes 💾</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFETTI CANVAS -->
+  <canvas id="admConfettiCanvas" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:2000;"></canvas>
+
+
+
+</body>
+</html>

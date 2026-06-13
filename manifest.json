@@ -1,0 +1,21 @@
+{
+  "name": "BCA STORE",
+  "short_name": "BCA Store",
+  "description": "BCA Study Hub for BRABU Students",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#4F46E5",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

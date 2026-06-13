@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy | BCA STORE</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="modern-theme.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --legal-primary: #10b981;
+      --legal-glass: rgba(255, 255, 255, 0.7);
+      --legal-border: rgba(16, 185, 129, 0.1);
+    }
+    [data-theme="dark"] {
+      --legal-glass: rgba(15, 23, 42, 0.8);
+      --legal-border: rgba(16, 185, 129, 0.2);
+    }
+
+    body {
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    /* Premium Mesh Background */
+    .mesh-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      filter: blur(100px);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .orb {
+      position: absolute;
+      width: 50vw;
+      height: 50vw;
+      border-radius: 50%;
+      animation: float 20s infinite alternate;
+    }
+    .orb-1 { background: #10b981; top: -10%; left: -10%; animation-delay: 0s; }
+    .orb-2 { background: #34d399; bottom: -10%; right: -10%; animation-delay: -5s; }
+    .orb-3 { background: #0ea5e9; top: 40%; left: 30%; animation-delay: -10s; }
+
+    @keyframes float {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(10%, 10%) scale(1.1); }
+    }
+
+    .legal-header {
+      padding: 160px 0 80px;
+      text-align: center;
+      position: relative;
+    }
+    .legal-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, var(--legal-primary), #0ea5e9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+    .legal-subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .legal-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      padding-bottom: 120px;
+    }
+
+    .legal-sidebar {
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+    }
+    .nav-card {
+      background: var(--legal-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--legal-border);
+      border-radius: 24px;
+      padding: 24px;
+    }
+    .nav-card h4 { margin-bottom: 16px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+    .nav-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .nav-item a {
+      display: block;
+      padding: 10px 16px;
+      border-radius: 12px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+    .nav-item a:hover { background: rgba(16, 185, 129, 0.1); color: var(--legal-primary); }
+    .nav-item.active a { background: var(--legal-primary); color: #fff; }
+
+    .legal-main {
+      background: var(--legal-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--legal-border);
+      border-radius: 32px;
+      padding: 60px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    }
+
+    .legal-section { margin-bottom: 60px; scroll-margin-top: 120px; }
+    .legal-section h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .legal-section h2::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: var(--legal-primary);
+      border-radius: 4px;
+    }
+    .legal-section p { font-size: 1.05rem; line-height: 1.8; color: var(--text-secondary); margin-bottom: 20px; }
+    .legal-section ul { list-style: none; padding: 0; }
+    .legal-section li {
+      position: relative;
+      padding-left: 28px;
+      margin-bottom: 16px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    .legal-section li::before {
+      content: '✔';
+      position: absolute;
+      left: 0;
+      color: var(--legal-primary);
+      font-weight: 700;
+    }
+
+    .contact-card {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(14, 165, 233, 0.1));
+      border: 1px solid var(--legal-border);
+      border-radius: 24px;
+      padding: 32px;
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .contact-card h3 { margin: 0; color: var(--text); }
+    .contact-card p { margin: 0; font-size: 0.95rem; color: var(--text-muted); }
+
+    @media (max-width: 1024px) {
+      .legal-container { grid-template-columns: 1fr; }
+      .legal-sidebar { display: none; }
+      .legal-main { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mesh-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">🏠 Home</a>
+        <a href="attendance.html" class="nav-link">📋 Attendance</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="legal-header">
+    <div class="container">
+      <h1 class="legal-title">Privacy Policy</h1>
+      <p class="legal-subtitle">How we protect and manage your data at BCA STORE.</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="legal-container">
+      <aside class="legal-sidebar">
+        <div class="nav-card">
+          <h4>Privacy Navigation</h4>
+          <ul class="nav-list">
+            <li class="nav-item"><a href="#collect">1. Data Collection</a></li>
+            <li class="nav-item"><a href="#usage">2. Data Usage</a></li>
+            <li class="nav-item"><a href="#protect">3. Protection</a></li>
+            <li class="nav-item"><a href="#third">4. Third Parties</a></li>
+            <li class="nav-item"><a href="#responsibility">5. Responsibility</a></li>
+            <li class="nav-item"><a href="#updates">6. Policy Updates</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="legal-main">
+        <section class="legal-section" id="collect">
+          <h2>Information We Collect</h2>
+          <p>At BCA STORE, we believe in minimal data collection to ensure a safe and private environment for our students.</p>
+          <ul>
+            <li>Basic account information provided during login.</li>
+            <li>User feedback, suggestions, and support messages.</li>
+            <li>Platform usage data (anonymous) for improving performance and stability.</li>
+          </ul>
+        </section>
+
+        <section class="legal-section" id="usage">
+          <h2>How Information Is Used</h2>
+          <p>The information we collect is used solely to enhance your academic experience:</p>
+          <ul>
+            <li>To improve platform features and user experience.</li>
+            <li>To maintain website stability and technical security.</li>
+            <li>To respond to feedback, bug reports, and support requests.</li>
+            <li>To prevent misuse, spam activity, or unauthorized access.</li>
+          </ul>
+        </section>
+
+        <section class="legal-section" id="protect">
+          <h2>Data Protection</h2>
+          <p>We take security seriously and implement standard measures to protect your digital footprint:</p>
+          <ul>
+            <li>We do not intentionally sell or share personal user information with unauthorized third parties.</li>
+            <li>Reasonable security measures are used to protect user data from unauthorized access.</li>
+          </ul>
+        </section>
+
+        <section class="legal-section" id="third">
+          <h2>Third-Party Services</h2>
+          <p>Some features of our platform rely on trusted external partners:</p>
+          <ul>
+            <li>Some features may use third-party services such as YouTube or external APIs for study materials.</li>
+            <li>These services may have their own privacy policies and terms which we encourage you to review.</li>
+          </ul>
+        </section>
+
+        <section class="legal-section" id="responsibility">
+          <h2>User Responsibility</h2>
+          <ul>
+            <li>Users should keep their login credentials and account information secure.</li>
+            <li>BCA Store is not responsible for issues caused by unauthorized account access due to weak password security.</li>
+          </ul>
+        </section>
+
+        <section class="legal-section" id="updates">
+          <h2>Policy Updates</h2>
+          <ul>
+            <li>This Privacy Policy may be updated in the future as platform features or services evolve. We will notify users of significant changes.</li>
+          </ul>
+        </section>
+
+        <div class="contact-card">
+          <h3>Contact Us</h3>
+          <p>If you experience any issue, bug, playback problem, or want to contact the developer, you can reach out through the platform support section or via email.</p>
+          <p><strong>Developer:</strong> VISHAL</p>
+          <p><strong>Email:</strong> <a href="mailto:10717vishal@gmail.com" style="color:var(--legal-primary); text-decoration:none; font-weight:700;">10717vishal@gmail.com</a></p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container" style="text-align:center; padding: 60px 0;">
+      <div class="dev-credit-box" style="margin-bottom: 12px;">
+        Designed & Developed with 🖤 by 
+        <a href="developer.html" class="dev-link">VISHAL 🖤</a>
+      </div>
+      <p style="opacity:0.7;">&copy; 2026 BCA STORE. Babasaheb Bhim Rao Ambedkar Bihar University.</p>
+    </div>
+  </footer>
+
+  <script>
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    if (isDark) document.documentElement.setAttribute('data-theme', 'dark');
+
+    // Simple scroll active nav
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.legal-section');
+      const navItems = document.querySelectorAll('.nav-item');
+      let current = '';
+      sections.forEach(s => {
+        const top = s.offsetTop;
+        if (pageYOffset >= top - 150) current = s.getAttribute('id');
+      });
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.querySelector('a').getAttribute('href') === `#${current}`) {
+          item.classList.add('active');
+        }
+      });
+    });
+  </script>
+  <!-- Firebase SDK (compat version for simpler syntax) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="knowledge_data.js"></script>
+  <script src="script.js"></script>
+  <script src="modern-effects.js"></script>
+  <script src="enhancements.js"></script>
+</body>
+</html>

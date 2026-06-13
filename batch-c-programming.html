@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C Programming | BCA Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="batch-premium.css">
+    <meta name="description"
+        content="Access premium free C Programming study notes, handwritten PDFs, solved previous year question papers (PYQs), practical files, and video lectures on BCA Store. Designed for BCA students of BRABU Muzaffarpur, DCS BRABU, and LND College Motihari." />
+    <meta name="keywords"
+        content="C Programming Notes, C Programming Study Material, C Programming PDF Download, Free C Programming notes, C Programming PYQ, BRABU BCA C Programming, DCS BRABU C Programming, LND College C Programming, Muzaffarpur BCA notes, Bihar Student BCA notes, BCA Store" />
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": "C Programming Course for BCA Students",
+    "description": "Comprehensive study resources, handwritten notes, practical manuals, and exam preparation guides for C Programming.",
+    "provider": {
+      "@type": "EducationalOrganization",
+      "name": "BCA Store",
+      "url": "https://bca-store.netlify.app/"
+    }
+  }
+  </script>
+</head>
+
+<body data-batch-id="c-programming">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <a href="index.html">
+                    <span class="logo-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+                    <span class="logo-text">BCA STORE</span>
+                </a>
+            </div>
+            <div class="menu-toggle" id="mobileMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">🏠 Home</a></li>
+                <li class="nav-item"><a href="my-batches.html" class="nav-link">🎓 My Batch</a></li>
+                <li class="nav-item"><a href="elite-plus.html" class="nav-link">💎 Elite Plus</a></li>
+                <li class="nav-item"><a href="exam.html" class="nav-link">📝 Exam</a></li>
+                <li class="nav-item"><a href="community.html" class="nav-link">👥 Community</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-container"
+        style="background: var(--bg-primary); padding: 12px 24px; border-bottom: 1px solid var(--bg-tertiary);">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <a href="index.html" style="color: var(--color-purple); text-decoration: none; font-weight: 600;">Home</a>
+            <span style="color: var(--text-tertiary); margin: 0 8px;">/</span>
+            <span style="color: var(--text-primary); font-weight: 600;">C Programming</span>
+        </div>
+    </div>
+
+    <!-- Batch Hero Header -->
+    <header class="batch-hero-header">
+        <div style="max-width: 1400px; margin: 0 auto; width: 100%;">
+            <div class="batch-hero-content">
+                <!-- Content will be injected by JavaScript -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Tabs Navigation -->
+    <div class="batch-tabs-nav">
+        <!-- Tabs will be injected by JavaScript -->
+    </div>
+
+    <!-- Main Content Container -->
+    <div style="max-width: 1400px; margin: 0 auto;">
+        <div class="batch-sections-container">
+            <!-- Videos Section -->
+            <div id="videos-section" class="section-container active">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="section-icon">▶️</span>
+                        <span>Video Lectures</span>
+                        <span class="section-count" id="videos-count">0 videos</span>
+                    </div>
+                    <div class="section-controls">
+                        <button class="sort-btn">⬇️ Sort</button>
+                        <button class="filter-btn">🔍 Filter</button>
+                        <button class="grid-toggle-btn">⊞ View</button>
+                    </div>
+                </div>
+                <div id="videos-grid" class="content-grid">
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                        <div style="font-size: 3rem; opacity: 0.5; margin-bottom: 16px;">⏳</div>
+                        <p style="color: var(--text-secondary);">Loading videos...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Section -->
+            <div id="notes-section" class="section-container">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="section-icon">📄</span>
+                        <span>Study Notes</span>
+                        <span class="section-count" id="notes-count">0 notes</span>
+                    </div>
+                    <div class="section-controls">
+                        <button class="sort-btn">⬇️ Sort</button>
+                        <button class="filter-btn">🔍 Filter</button>
+                        <button class="grid-toggle-btn">⊞ View</button>
+                    </div>
+                </div>
+                <div id="notes-grid" class="content-grid">
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                        <div style="font-size: 3rem; opacity: 0.5; margin-bottom: 16px;">⏳</div>
+                        <p style="color: var(--text-secondary);">Loading notes...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DPP Section -->
+            <div id="dpp-section" class="section-container">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="section-icon">📋</span>
+                        <span>Daily Practice Problems</span>
+                        <span class="section-count" id="dpp-count">0 DPP</span>
+                    </div>
+                    <div class="section-controls">
+                        <button class="sort-btn">⬇️ Sort</button>
+                        <button class="filter-btn">🔍 Filter</button>
+                        <button class="grid-toggle-btn">⊞ View</button>
+                    </div>
+                </div>
+                <div id="dpp-grid" class="content-grid">
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                        <div style="font-size: 3rem; opacity: 0.5; margin-bottom: 16px;">⏳</div>
+                        <p style="color: var(--text-secondary);">Loading DPP...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Classes Section -->
+            <div id="live-section" class="section-container">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="section-icon">🔴</span>
+                        <span>Live Classes</span>
+                        <span class="section-count" id="live-count">0 classes</span>
+                    </div>
+                    <div class="section-controls">
+                        <button class="sort-btn">⬇️ Sort</button>
+                        <button class="filter-btn">🔍 Filter</button>
+                        <button class="grid-toggle-btn">⊞ View</button>
+                    </div>
+                </div>
+                <div id="live-grid" class="content-grid">
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                        <div style="font-size: 3rem; opacity: 0.5; margin-bottom: 16px;">⏳</div>
+                        <p style="color: var(--text-secondary);">Loading live classes...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PDFs Section -->
+            <div id="pdfs-section" class="section-container">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="section-icon">📚</span>
+                        <span>Reference Materials</span>
+                        <span class="section-count" id="pdfs-count">0 PDFs</span>
+                    </div>
+                    <div class="section-controls">
+                        <button class="sort-btn">⬇️ Sort</button>
+                        <button class="filter-btn">🔍 Filter</button>
+                        <button class="grid-toggle-btn">⊞ View</button>
+                    </div>
+                </div>
+                <div id="pdfs-grid" class="content-grid">
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                        <div style="font-size: 3rem; opacity: 0.5; margin-bottom: 16px;">⏳</div>
+                        <p style="color: var(--text-secondary);">Loading PDFs...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer
+        style="background: var(--bg-primary); border-top: 1px solid var(--bg-tertiary); padding: 40px 20px; margin-top: 80px;">
+        <div style="max-width: 1400px; margin: 0 auto; text-align: center; color: var(--text-secondary);">
+            <p>&copy; 2024 BCA Store. All rights reserved. | <a href="privacy.html"
+                    style="color: var(--color-purple); text-decoration: none;">Privacy Policy</a> | <a
+                    href="contact.html" style="color: var(--color-purple); text-decoration: none;">Contact Us</a></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script type="module" src="batch-page-manager.js"></script>
+</body>
+
+</html>

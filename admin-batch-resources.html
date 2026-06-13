@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Resources Admin Panel | BCA Store</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.15);
+            --color-purple: #667eea;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg-secondary); color: var(--text-primary); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; }
+
+        .admin-container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .admin-header { background: var(--primary-gradient); color: white; padding: 40px 20px; border-radius: 12px; margin-bottom: 30px; }
+        .admin-header h1 { font-size: 2rem; margin-bottom: 10px; }
+        .admin-header p { font-size: 1.1rem; opacity: 0.95; }
+
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .admin-panel { background: var(--bg-primary); border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08); }
+
+        .batch-selector { margin-bottom: 24px; }
+        .batch-selector label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-primary); }
+        .batch-selector select { width: 100%; padding: 10px 12px; border: 1px solid var(--bg-tertiary); border-radius: 8px; font-size: 1rem; }
+
+        .section-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--bg-tertiary); }
+        .section-tabs button { background: none; border: none; padding: 12px 16px; font-weight: 600; color: var(--text-secondary); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s; }
+        .section-tabs button:hover { color: var(--color-purple); }
+        .section-tabs button.active { color: var(--color-purple); border-bottom-color: var(--color-purple); }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px 12px; border: 1px solid var(--bg-tertiary); border-radius: 8px; font-size: 0.95rem; font-family: inherit; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--color-purple); box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+
+        .button-group { display: flex; gap: 8px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-primary { background: var(--primary-gradient); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        .btn-secondary { background: var(--bg-tertiary); color: var(--text-primary); }
+        .btn-secondary:hover { background: var(--text-secondary); color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-danger:hover { background: #dc2626; }
+
+        .resources-list { max-height: 600px; overflow-y: auto; }
+        .resource-item { background: var(--bg-secondary); padding: 12px; border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .resource-info h4 { margin-bottom: 4px; font-size: 0.95rem; }
+        .resource-info p { font-size: 0.85rem; color: var(--text-secondary); }
+        .resource-actions { display: flex; gap: 8px; }
+        .btn-small { padding: 6px 12px; font-size: 0.85rem; }
+
+        .success-message { background: #d1fae5; color: #065f46; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; }
+        .error-message { background: #fee2e2; color: #991b1b; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; }
+
+        @media (max-width: 1024px) {
+            .admin-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <a href="index.html">
+                    <span class="logo-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+                    <span class="logo-text">BCA STORE</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">🏠 Home</a></li>
+                <li class="nav-item"><a href="admin.html" class="nav-link" style="color: #667eea;">⚙️ Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>🎓 Batch Resources Admin Panel</h1>
+            <p>Manage videos, notes, DPP, live classes, and PDFs for all batches</p>
+        </div>
+
+        <div class="admin-grid">
+            <!-- Left Panel: Add Resource -->
+            <div class="admin-panel">
+                <h2 style="margin-bottom: 20px; font-size: 1.3rem;">📤 Add New Resource</h2>
+                
+                <div id="messageContainer"></div>
+
+                <div class="batch-selector">
+                    <label>Select Batch</label>
+                    <select id="batchSelect">
+                        <option value="c-programming">C Programming</option>
+                        <option value="cpp">C++</option>
+                        <option value="dsa">Data Structures & Algorithms</option>
+                        <option value="java">Java</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="node-js">Node.js</option>
+                        <option value="python">Python</option>
+                        <option value="react-js">React.js</option>
+                        <option value="sql-database">SQL & Database</option>
+                        <option value="web-development">Web Development</option>
+                    </select>
+                </div>
+
+                <div class="section-tabs">
+                    <button class="tab-btn active" data-section="videos">▶️ Videos</button>
+                    <button class="tab-btn" data-section="notes">📄 Notes</button>
+                    <button class="tab-btn" data-section="dpp">📋 DPP</button>
+                    <button class="tab-btn" data-section="live">🔴 Live</button>
+                    <button class="tab-btn" data-section="pdfs">📚 PDFs</button>
+                </div>
+
+                <!-- Video Form -->
+                <div id="videos-form" class="resource-form">
+                    <div class="form-group">
+                        <label>Video Title</label>
+                        <input type="text" class="video-title" placeholder="Enter video title">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="video-description" placeholder="Enter video description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Video URL</label>
+                        <input type="url" class="video-url" placeholder="https://youtube.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label>Duration (mm:ss)</label>
+                        <input type="text" class="video-duration" placeholder="45:30">
+                    </div>
+                    <div class="form-group">
+                        <label>Instructor</label>
+                        <input type="text" class="video-instructor" placeholder="Instructor name">
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="addResource('videos')">Add Video</button>
+                    </div>
+                </div>
+
+                <!-- Notes Form -->
+                <div id="notes-form" class="resource-form" style="display: none;">
+                    <div class="form-group">
+                        <label>Note Title</label>
+                        <input type="text" class="notes-title" placeholder="Enter note title">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="notes-description" placeholder="Enter note description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>PDF URL</label>
+                        <input type="url" class="notes-url" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Pages</label>
+                        <input type="number" class="notes-pages" placeholder="50">
+                    </div>
+                    <div class="form-group">
+                        <label>Difficulty</label>
+                        <select class="notes-difficulty">
+                            <option>easy</option>
+                            <option>medium</option>
+                            <option>hard</option>
+                        </select>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="addResource('notes')">Add Note</button>
+                    </div>
+                </div>
+
+                <!-- DPP Form -->
+                <div id="dpp-form" class="resource-form" style="display: none;">
+                    <div class="form-group">
+                        <label>DPP Title</label>
+                        <input type="text" class="dpp-title" placeholder="Enter DPP title">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="dpp-description" placeholder="Enter DPP description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>PDF URL</label>
+                        <input type="url" class="dpp-url" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Questions</label>
+                        <input type="number" class="dpp-questions" placeholder="50">
+                    </div>
+                    <div class="form-group">
+                        <label>Difficulty</label>
+                        <select class="dpp-difficulty">
+                            <option>easy</option>
+                            <option>medium</option>
+                            <option selected>hard</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Solutions URL</label>
+                        <input type="url" class="dpp-solutions" placeholder="https://...">
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="addResource('dpp')">Add DPP</button>
+                    </div>
+                </div>
+
+                <!-- Live Classes Form -->
+                <div id="live-form" class="resource-form" style="display: none;">
+                    <div class="form-group">
+                        <label>Class Title</label>
+                        <input type="text" class="live-title" placeholder="Enter class title">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="live-description" placeholder="Enter class description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Instructor</label>
+                        <input type="text" class="live-instructor" placeholder="Instructor name">
+                    </div>
+                    <div class="form-group">
+                        <label>Zoom Link</label>
+                        <input type="url" class="live-link" placeholder="https://zoom.us/...">
+                    </div>
+                    <div class="form-group">
+                        <label>Scheduled Date & Time</label>
+                        <input type="datetime-local" class="live-date">
+                    </div>
+                    <div class="form-group">
+                        <label>Duration</label>
+                        <input type="text" class="live-duration" placeholder="90 mins" value="90 mins">
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="addResource('live')">Add Live Class</button>
+                    </div>
+                </div>
+
+                <!-- PDFs Form -->
+                <div id="pdfs-form" class="resource-form" style="display: none;">
+                    <div class="form-group">
+                        <label>PDF Title</label>
+                        <input type="text" class="pdfs-title" placeholder="Enter PDF title">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="pdfs-description" placeholder="Enter PDF description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>PDF URL</label>
+                        <input type="url" class="pdfs-url" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Pages</label>
+                        <input type="number" class="pdfs-pages" placeholder="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select class="pdfs-type">
+                            <option>study-material</option>
+                            <option>reference</option>
+                            <option>guide</option>
+                        </select>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="addResource('pdfs')">Add PDF</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Resources List -->
+            <div class="admin-panel">
+                <h2 style="margin-bottom: 20px; font-size: 1.3rem;">📋 Resources List</h2>
+                <div id="resourcesList" class="resources-list">
+                    <p style="text-align: center; color: var(--text-secondary); padding: 20px;">Select a batch to view resources</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { BatchDataManager, AdminBatchManager, BATCH_LIST } from './firebase-batch-config.js';
+
+        let currentBatch = 'c-programming';
+        let currentSection = 'videos';
+        let currentResources = [];
+
+        // Setup tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                document.querySelectorAll('.resource-form').forEach(f => f.style.display = 'none');
+                const formId = this.dataset.section + '-form';
+                document.getElementById(formId).style.display = 'block';
+                
+                currentSection = this.dataset.section;
+                loadResources();
+            });
+        });
+
+        // Setup batch selector
+        document.getElementById('batchSelect').addEventListener('change', function(e) {
+            currentBatch = e.target.value;
+            loadResources();
+        });
+
+        function loadResources() {
+            const listContainer = document.getElementById('resourcesList');
+            listContainer.innerHTML = '<p style="text-align: center; padding: 20px;">Loading...</p>';
+
+            let unsubscribe;
+            if (currentSection === 'videos') {
+                unsubscribe = BatchDataManager.listenToVideos(currentBatch, displayResources);
+            } else if (currentSection === 'notes') {
+                unsubscribe = BatchDataManager.listenToNotes(currentBatch, displayResources);
+            } else if (currentSection === 'dpp') {
+                unsubscribe = BatchDataManager.listenToDPP(currentBatch, displayResources);
+            } else if (currentSection === 'live') {
+                unsubscribe = BatchDataManager.listenToLiveClasses(currentBatch, displayResources);
+            } else if (currentSection === 'pdfs') {
+                unsubscribe = BatchDataManager.listenToPDFs(currentBatch, displayResources);
+            }
+        }
+
+        function displayResources(resources) {
+            currentResources = resources;
+            const listContainer = document.getElementById('resourcesList');
+            
+            if (resources.length === 0) {
+                listContainer.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 20px;">No resources yet</p>';
+                return;
+            }
+
+            listContainer.innerHTML = resources.map(resource => `
+                <div class="resource-item">
+                    <div class="resource-info">
+                        <h4>${escapeHtml(resource.title)}</h4>
+                        <p>${escapeHtml((resource.description || '').substring(0, 50))}</p>
+                    </div>
+                    <div class="resource-actions">
+                        <button class="btn btn-secondary btn-small" onclick="editResource('${resource.id}')">✏️</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteResource('${resource.id}')">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.addResource = function(section) {
+            const data = {};
+            
+            if (section === 'videos') {
+                data = {
+                    title: document.querySelector('.video-title').value,
+                    description: document.querySelector('.video-description').value,
+                    url: document.querySelector('.video-url').value,
+                    duration: document.querySelector('.video-duration').value,
+                    instructor: document.querySelector('.video-instructor').value,
+                    position: currentResources.length + 1
+                };
+            } else if (section === 'notes') {
+                data = {
+                    title: document.querySelector('.notes-title').value,
+                    description: document.querySelector('.notes-description').value,
+                    url: document.querySelector('.notes-url').value,
+                    pages: parseInt(document.querySelector('.notes-pages').value) || 0,
+                    difficulty: document.querySelector('.notes-difficulty').value,
+                    position: currentResources.length + 1
+                };
+            } else if (section === 'dpp') {
+                data = {
+                    title: document.querySelector('.dpp-title').value,
+                    description: document.querySelector('.dpp-description').value,
+                    url: document.querySelector('.dpp-url').value,
+                    questions: parseInt(document.querySelector('.dpp-questions').value) || 0,
+                    difficulty: document.querySelector('.dpp-difficulty').value,
+                    solutions: document.querySelector('.dpp-solutions').value,
+                    position: currentResources.length + 1
+                };
+            } else if (section === 'live') {
+                data = {
+                    title: document.querySelector('.live-title').value,
+                    description: document.querySelector('.live-description').value,
+                    instructor: document.querySelector('.live-instructor').value,
+                    zoomLink: document.querySelector('.live-link').value,
+                    scheduledDate: new Date(document.querySelector('.live-date').value).getTime(),
+                    duration: document.querySelector('.live-duration').value,
+                    position: currentResources.length + 1
+                };
+            } else if (section === 'pdfs') {
+                data = {
+                    title: document.querySelector('.pdfs-title').value,
+                    description: document.querySelector('.pdfs-description').value,
+                    url: document.querySelector('.pdfs-url').value,
+                    pages: parseInt(document.querySelector('.pdfs-pages').value) || 0,
+                    type: document.querySelector('.pdfs-type').value,
+                    position: currentResources.length + 1
+                };
+            }
+
+            if (!data.title || !data.url) {
+                showMessage('Please fill in all required fields', 'error');
+                return;
+            }
+
+            const addFunctions = {
+                videos: AdminBatchManager.addVideo,
+                notes: AdminBatchManager.addNote,
+                dpp: AdminBatchManager.addDPP,
+                live: AdminBatchManager.addLiveClass,
+                pdfs: AdminBatchManager.addPDF
+            };
+
+            addFunctions[section](currentBatch, data)
+                .then(() => {
+                    showMessage(`${section.charAt(0).toUpperCase() + section.slice(1)} added successfully!`, 'success');
+                    // Clear form
+                    document.querySelectorAll('.resource-form input, .resource-form textarea').forEach(el => el.value = '');
+                })
+                .catch(err => {
+                    showMessage(`Error adding ${section}: ${err.message}`, 'error');
+                });
+        };
+
+        window.deleteResource = function(id) {
+            if (!confirm('Are you sure you want to delete this resource?')) return;
+            
+            const deleteFunctions = {
+                videos: AdminBatchManager.deleteVideo,
+                notes: AdminBatchManager.deleteNote,
+                dpp: AdminBatchManager.deleteDPP,
+                live: AdminBatchManager.deleteLiveClass,
+                pdfs: AdminBatchManager.deletePDF
+            };
+
+            deleteFunctions[currentSection](currentBatch, id)
+                .then(() => {
+                    showMessage(`Resource deleted successfully!`, 'success');
+                    loadResources();
+                })
+                .catch(err => {
+                    showMessage(`Error deleting resource: ${err.message}`, 'error');
+                });
+        };
+
+        function showMessage(text, type) {
+            const container = document.getElementById('messageContainer');
+            const div = document.createElement('div');
+            div.className = `${type}-message`;
+            div.textContent = text;
+            container.innerHTML = '';
+            container.appendChild(div);
+            setTimeout(() => div.remove(), 5000);
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return String(text).replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Load initial resources
+        loadResources();
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>

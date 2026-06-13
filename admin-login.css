@@ -1,0 +1,668 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --saas-bg: #f8fafc;
+  --saas-card: rgba(255, 255, 255, 0.65);
+  --saas-card-border: rgba(99, 102, 241, 0.15);
+  --saas-text: #0f172a;
+  --saas-muted: #64748b;
+  --saas-primary: #6366f1;
+  --saas-primary-invert: #ffffff;
+  --saas-input-bg: rgba(255, 255, 255, 0.8);
+  --saas-input-border: rgba(15, 23, 42, 0.08);
+  --saas-input-focus: #6366f1;
+  --saas-error-bg: rgba(239, 68, 68, 0.05);
+  --saas-error-border: rgba(239, 68, 68, 0.15);
+  --saas-error-text: #ef4444;
+  --saas-btn-glow: rgba(99, 102, 241, 0.2);
+  --saas-glow-color: rgba(99, 102, 241, 0.1);
+  --grid-color: rgba(99, 102, 241, 0.03);
+  --accent-cyan: #00f2fe;
+  --accent-magenta: #ff007f;
+  --accent-purple: #7f00ff;
+}
+
+[data-theme="dark"] {
+  --saas-bg: #020208;
+  --saas-card: rgba(6, 6, 16, 0.45);
+  --saas-card-border: rgba(255, 255, 255, 0.08);
+  --saas-text: #f8fafc;
+  --saas-muted: #94a3b8;
+  --saas-primary: #00f2fe;
+  --saas-primary-invert: #020208;
+  --saas-input-bg: rgba(2, 2, 6, 0.7);
+  --saas-input-border: rgba(255, 255, 255, 0.08);
+  --saas-input-focus: #00f2fe;
+  --saas-error-bg: rgba(239, 68, 68, 0.1);
+  --saas-error-border: rgba(239, 68, 68, 0.25);
+  --saas-error-text: #f87171;
+  --saas-btn-glow: rgba(0, 242, 254, 0.25);
+  --saas-glow-color: rgba(127, 0, 255, 0.2);
+  --grid-color: rgba(0, 242, 254, 0.02);
+}
+
+/* Base Body State during login active */
+body.login-active {
+  margin: 0;
+  padding: 0;
+  background-color: var(--saas-bg);
+  font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif;
+  color: var(--saas-text);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Cosmic Ambient Moving Grid */
+body.login-active::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+  animation: saasGridPan 30s linear infinite;
+}
+
+@keyframes saasGridPan {
+  0% { background-position: 0 0; }
+  100% { background-position: 60px 60px; }
+}
+
+[data-theme="dark"] body.login-active {
+  background-image:
+    radial-gradient(circle at 30% 20%, rgba(127, 0, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(0, 242, 254, 0.1) 0%, transparent 55%),
+    radial-gradient(circle at 50% 50%, rgba(255, 0, 127, 0.05) 0%, transparent 60%);
+}
+
+/* Ambient Floating Blur Orbs */
+.saas-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 1;
+  animation: saasOrbMove 20s infinite alternate ease-in-out;
+}
+
+.saas-orb1 {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(127, 0, 255, 0.4) 0%, transparent 70%);
+  top: -150px;
+  left: -150px;
+}
+
+.saas-orb2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(0, 242, 254, 0.3) 0%, transparent 70%);
+  bottom: -120px;
+  right: -120px;
+  animation-delay: -5s;
+}
+
+.admin-login-gate::before,
+.admin-login-gate::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.admin-login-gate::before {
+  width: 350px;
+  height: 350px;
+  background: rgba(255, 0, 127, 0.12);
+  top: 20%;
+  right: 15%;
+  animation: saasOrbMove 15s infinite alternate-reverse ease-in-out;
+}
+
+.admin-login-gate::after {
+  width: 300px;
+  height: 300px;
+  background: rgba(0, 242, 254, 0.15);
+  bottom: 20%;
+  left: 10%;
+  animation: saasOrbMove 18s infinite alternate ease-in-out -4s;
+}
+
+@keyframes saasOrbMove {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, 60px) scale(1.1); }
+  100% { transform: translate(-40px, 40px) scale(0.9); }
+}
+
+.admin-login-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: transparent;
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+}
+
+.saas-login-container {
+  width: 100%;
+  max-width: 440px;
+  z-index: 10;
+  animation: saasFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  position: relative;
+}
+
+@keyframes saasFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Premium Glassmorphic Card Panel */
+.saas-login-card {
+  background: var(--saas-card);
+  border: 1px solid var(--saas-card-border);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.1),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: saasFloating 6s ease-in-out infinite alternate;
+}
+
+/* Premium Dual-Accent Neon Rotating Border */
+.saas-login-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  padding: 1.5px;
+  background: linear-gradient(135deg, var(--accent-magenta), var(--accent-purple), var(--accent-cyan), var(--accent-magenta));
+  background-size: 300% 300%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+  animation: borderGradientMove 6s infinite alternate ease-in-out;
+}
+
+@keyframes borderGradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+[data-theme="dark"] .saas-login-card {
+  border-color: transparent !important;
+  box-shadow:
+    0 35px 80px rgba(0, 0, 0, 0.6),
+    0 0 40px var(--saas-glow-color),
+    inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+.saas-login-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow:
+    0 35px 80px rgba(0, 0, 0, 0.15),
+    inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .saas-login-card:hover {
+  border-color: rgba(0, 242, 254, 0.3);
+  box-shadow:
+    0 40px 90px rgba(0, 0, 0, 0.75),
+    0 0 60px rgba(0, 242, 254, 0.15),
+    inset 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+/* Vertical HUD scanline */
+.saas-login-card::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--saas-primary), transparent);
+  box-shadow: 0 0 10px var(--saas-primary);
+  opacity: 0.5;
+  animation: cyberScan 7s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+@keyframes cyberScan {
+  0% { top: -10%; }
+  50% { top: 110%; }
+  100% { top: -10%; }
+}
+
+@keyframes saasFloating {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-8px); }
+}
+
+.saas-header {
+  text-align: center;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.saas-logo {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+  border: 1px solid var(--saas-card-border);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 8px 20px var(--saas-btn-glow);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.saas-logo:hover {
+  transform: rotate(10deg) scale(1.05);
+}
+
+.saas-logo svg {
+  width: 24px;
+  height: 24px;
+}
+
+.saas-title {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+  color: var(--saas-text);
+  margin: 0 0 8px 0;
+  background: linear-gradient(135deg, var(--saas-text) 30%, var(--saas-muted) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.saas-subtitle {
+  font-size: 13px;
+  color: var(--saas-muted);
+  line-height: 1.4;
+  margin: 0 0 14px 0;
+  font-weight: 500;
+}
+
+.adm-security-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--saas-primary);
+  background: rgba(0, 242, 254, 0.06);
+  padding: 5px 12px;
+  border-radius: 100px;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(0, 242, 254, 0.2);
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.03);
+  margin-top: 2px;
+}
+
+[data-theme="dark"] .adm-security-badge {
+  background: rgba(0, 242, 254, 0.1);
+  border-color: rgba(0, 242, 254, 0.3);
+}
+
+.pulse-icon {
+  width: 6px;
+  height: 6px;
+  background: #00f2fe;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #00f2fe;
+  animation: securePulse 2s infinite;
+}
+
+@keyframes securePulse {
+  0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.6); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(0, 242, 254, 0); }
+  100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(0, 242, 254, 0); }
+}
+
+.saas-form-group {
+  margin-bottom: 20px;
+  position: relative;
+  text-align: left;
+}
+
+.saas-label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--saas-muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* Console Input Brackets */
+.saas-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.saas-input-wrapper::before,
+.saas-input-wrapper::after {
+  content: '';
+  position: absolute;
+  width: 5px;
+  height: 10px;
+  border: 1.5px solid transparent;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.saas-input-wrapper::before {
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-right: none;
+}
+
+.saas-input-wrapper::after {
+  right: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left: none;
+}
+
+.saas-input-wrapper:focus-within::before {
+  border-color: var(--saas-input-focus);
+  height: 28px;
+  border-left-width: 2px;
+}
+
+.saas-input-wrapper:focus-within::after {
+  border-color: var(--saas-input-focus);
+  height: 28px;
+  border-right-width: 2px;
+}
+
+.saas-input {
+  width: 100%;
+  height: 46px;
+  background: var(--saas-input-bg);
+  border: 1px solid var(--saas-input-border);
+  border-radius: 12px;
+  padding: 0 16px;
+  color: var(--saas-text);
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.01);
+}
+
+.saas-input::placeholder {
+  color: rgba(148, 163, 184, 0.4);
+}
+
+.saas-input:hover {
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
+.saas-input:focus {
+  border-color: var(--saas-input-focus);
+  background: var(--saas-input-bg);
+  box-shadow: 
+    0 0 15px rgba(99, 102, 241, 0.1), 
+    0 0 0 1px var(--saas-input-focus);
+  transform: translateY(-1.5px);
+}
+
+[data-theme="dark"] .saas-input:focus {
+  box-shadow: 
+    0 0 20px rgba(0, 242, 254, 0.25), 
+    0 0 0 1px var(--saas-input-focus);
+}
+
+.saas-pass-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--saas-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  z-index: 5;
+  outline: none;
+}
+
+.saas-pass-toggle:hover {
+  color: var(--saas-text);
+}
+
+.saas-pass-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.saas-error {
+  display: flex;
+  background: var(--saas-error-bg);
+  border: 1.5px solid var(--saas-error-border);
+  color: var(--saas-error-text);
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  align-items: center;
+  gap: 8px;
+  animation: saasShake 0.4s ease;
+}
+
+@keyframes saasShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+/* Premium Gradient Button */
+.saas-button {
+  width: 100%;
+  height: 46px;
+  background: linear-gradient(135deg, var(--accent-purple) 0%, var(--saas-primary) 50%, var(--accent-cyan) 100%) !important;
+  background-size: 200% auto;
+  color: var(--saas-primary-invert) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-size: 14.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+  box-shadow: 0 8px 20px var(--saas-btn-glow) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .saas-button {
+  background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-cyan) 50%, var(--accent-magenta) 100%) !important;
+  background-size: 200% auto;
+}
+
+.saas-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transform: skewX(-20deg);
+  transition: 0.6s;
+}
+
+.saas-button:hover::after {
+  left: 150%;
+}
+
+.saas-button:hover {
+  background-position: right center;
+  transform: translateY(-2px) scale(1.015);
+  box-shadow: 
+    0 12px 25px var(--saas-btn-glow), 
+    0 0 15px rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .saas-button:hover {
+  box-shadow: 
+    0 12px 25px var(--saas-btn-glow), 
+    0 0 15px rgba(0, 242, 254, 0.2) !important;
+}
+
+.saas-button:active {
+  transform: translateY(-0.5px) scale(0.995);
+}
+
+.saas-loader {
+  display: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--saas-primary-invert);
+  border-radius: 50%;
+  animation: saasSpin 0.6s linear infinite;
+}
+
+@keyframes saasSpin {
+  to { transform: rotate(360deg); }
+}
+
+.saas-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+.saas-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--saas-muted);
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  transition: color 0.25s ease;
+}
+
+.saas-checkbox-label:hover {
+  color: var(--saas-text);
+}
+
+.saas-checkbox {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--saas-input-border);
+  border-radius: 5px;
+  background: var(--saas-input-bg);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.saas-checkbox:checked {
+  background: var(--saas-primary);
+  border-color: var(--saas-primary);
+}
+
+.saas-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 4.5px;
+  top: 1.5px;
+  width: 3.5px;
+  height: 7px;
+  border: solid var(--saas-primary-invert);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+
+.saas-footer {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--saas-muted);
+  border-top: 1px solid var(--saas-card-border);
+  padding-top: 18px;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+body.login-active #navbar,
+body.login-active .admin-extras {
+  display: none !important;
+}
+
+@media (max-width: 480px) {
+  .saas-login-container {
+    max-width: 100%;
+    padding: 0 12px;
+  }
+  .saas-login-card {
+    padding: 30px 20px;
+    border-radius: 20px;
+  }
+  .saas-login-card::before {
+    border-radius: 20px;
+  }
+  .saas-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  .saas-title {
+    font-size: 20px !important;
+  }
+}

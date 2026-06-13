@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Access campus placement preparation batches, quantitative and logical aptitude training, ATS resume templates, and coding interview preps for BCA students." />
+  <meta name="keywords"
+    content="BCA Career Guidance, BCA Placement Preparation, BCA Interview Questions, BCA Internship, Aptitude Preparation, Interview Preparation, Resume Building, Career Development, Campus Placement, Technical Interview, Coding Interview, Placement Training, Job Preparation" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Placement Session Batches | Elite Plus | BCA STORE" />
+  <meta property="og:description"
+    content="Access premium campus placement batches, aptitude mastery, resume guides, and interview preps." />
+  <meta property="og:type" content="website" />
+
+  <title>Placement Prep Batches | BCA Career Guidance & Job Prep</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Orbitron:wght@400;700;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="elite-plus.css" />
+  <style>
+    .search-filter-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .search-wrapper {
+      position: relative;
+      flex-grow: 1;
+      max-width: 400px;
+      min-width: 280px;
+    }
+
+    .search-wrapper input {
+      width: 100%;
+      padding: 12px 20px 12px 48px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(15, 23, 42, 0.03);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] .search-wrapper input {
+      border-color: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .search-wrapper input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.25);
+    }
+
+    .search-wrapper::before {
+      content: '🔍';
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .filters-wrapper {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 8px 18px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(15, 23, 42, 0.03);
+      color: var(--text-secondary);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] .filter-btn {
+      border-color: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .filter-btn:hover {
+      background: rgba(59, 130, 246, 0.08);
+      color: var(--text-primary);
+    }
+
+    .filter-btn.active {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35);
+    }
+
+    .elite-header-glow {
+      background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 60%);
+    }
+  </style>
+</head>
+
+<body class="placement-page">
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-link">🏠 Home</a>
+        <a href="my-batches.html" class="nav-link">🎓 My Batch</a>
+        <a href="attendance.html" class="nav-link">📋 Attendance</a>
+        <a href="elite-plus.html" class="nav-link active">💎 Elite Plus</a>
+        <a href="exam.html" class="nav-link">📝 Exam</a>
+        <a href="test-hub.html" class="nav-link">🧠 Tests</a>
+        <a href="community.html" class="nav-link">🧑‍🤝‍🧑 Community</a>
+        <a href="analytics.html" class="nav-link">📊 Stats</a>
+        <a href="javascript:void(0)" class="nav-link" onclick="openSuggestionModal()">💬 Suggestion</a>
+        <button class="nav-bookmark-btn" id="navBkBtn" onclick="openBkPanel()" title="My Bookmarks">🔖<span
+            class="bk-count-badge" id="bkBadgeDesktop"></span></button>
+        <button class="dark-toggle" id="darkToggle" title="Toggle Dark Mode">🌙</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==================== PAGE HEADER ==================== -->
+  <header class="page-header elite-header">
+    <div class="hero-bg-orb orb1"
+      style="background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 60%);"></div>
+    <div class="hero-bg-orb orb2"></div>
+    <div class="elite-header-glow"></div>
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a> <span>/</span> <a href="elite-plus.html">Elite Plus</a> <span>/</span>
+        <span>Placement Sessions</span>
+      </div>
+      <div class="elite-header-content">
+        <div class="elite-badge" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">🚀 PLACEMENT PREP</div>
+        <h1 class="page-title">Placement <span class="gradient-text elite-gradient"
+            style="background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Session
+            Batches</span></h1>
+        <p class="page-subtitle">Aptitude logic, technical and HR interview rounds, ATS resumes & LinkedIn branding</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== ELITE CONTENT ==================== -->
+  <section class="section elite-content" id="elitePlusSection">
+    <div class="container">
+      <div class="search-filter-container">
+        <!-- Search Input -->
+        <div class="search-wrapper">
+          <input type="text" id="batchSearchInput" placeholder="Search placement batches..." autocomplete="off">
+        </div>
+        <!-- Difficulty Filter -->
+        <div class="filters-wrapper">
+          <button class="filter-btn active" data-level="all">All Levels</button>
+          <button class="filter-btn" data-level="Beginner">Beginner</button>
+          <button class="filter-btn" data-level="Intermediate">Intermediate</button>
+          <button class="filter-btn" data-level="Advanced">Advanced</button>
+        </div>
+      </div>
+
+      <div class="section-header"
+        style="text-align:left; display:flex; align-items:center; justify-content:space-between; margin-bottom: 30px;">
+        <div>
+          <h2>🚀 Available Batches</h2>
+          <p>5 premium interactive placement prep batches</p>
+        </div>
+        <div class="batch-count-pill" id="eliteBatchCount"
+          style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2);">5 Batches
+        </div>
+      </div>
+
+      <div class="elite-batches-grid" id="eliteBatchesGrid">
+        <!-- Loaded dynamically by elite-plus-realtime.js -->
+        <div class="skeleton-loader-grid"
+          style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; width: 100%;">
+          <div class="glass-card skeleton-card"
+            style="height: 350px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; position: relative; overflow: hidden; padding: 24px;">
+            <div
+              style="width: 60px; height: 60px; border-radius: 12px; background: rgba(255,255,255,0.05); margin-bottom: 20px;">
+            </div>
+            <div
+              style="height: 24px; width: 70%; background: rgba(255,255,255,0.05); border-radius: 4px; margin-bottom: 12px;">
+            </div>
+            <div
+              style="height: 16px; width: 90%; background: rgba(255,255,255,0.05); border-radius: 4px; margin-bottom: 24px;">
+            </div>
+            <div
+              style="height: 48px; width: 100%; background: rgba(255,255,255,0.05); border-radius: 8px; margin-top: auto;">
+            </div>
+          </div>
+          <div class="glass-card skeleton-card"
+            style="height: 350px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; position: relative; overflow: hidden; padding: 24px;">
+            <div
+              style="width: 60px; height: 60px; border-radius: 12px; background: rgba(255,255,255,0.05); margin-bottom: 20px;">
+            </div>
+            <div
+              style="height: 24px; width: 75%; background: rgba(255,255,255,0.05); border-radius: 4px; margin-bottom: 12px;">
+            </div>
+            <div
+              style="height: 16px; width: 85%; background: rgba(255,255,255,0.05); border-radius: 4px; margin-bottom: 24px;">
+            </div>
+            <div
+              style="height: 48px; width: 100%; background: rgba(255,255,255,0.05); border-radius: 8px; margin-top: auto;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MASTER FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3 class="footer-brand"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"
+              style="width: 32px; height: 32px; margin-right: 8px; border-radius: 8px;"> <span
+              class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></h3>
+          <p>Your one-stop destination for BRABU BCA study materials. Notes, PYQs, and Video Lectures at your
+            fingertips.</p>
+          <div class="footer-socials">
+            <a href="#" title="Facebook">📘</a>
+            <a href="#" title="Instagram">📸</a>
+            <a href="#" title="YouTube">📺</a>
+            <a href="#" title="Telegram">✈️</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="my-batches.html">🎓 My Batch</a></li>
+            <li><a href="exam.html">📝 Exam Pattern</a></li>
+            <li><a href="developer.html">👨‍💻 Founder & Developer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul class="footer-links">
+            <li><a href="#" onclick="openSuggestionModal()">💬 Suggestion</a></li>
+            <li><a href="contact.html">📧 Contact Us</a></li>
+            <li><a href="privacy.html">🛡️ Privacy Policy</a></li>
+            <li><a href="terms.html">📜 Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="dev-credit-box">
+          Designed & Developed with 🖤 by
+          <a href="developer.html" class="dev-link">VISHAL 🖤</a>
+        </div>
+        <p>&copy; 2026 BCA STORE. Babasaheb Bhim Rao Ambedkar Bihar University.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== BACK TO TOP ==================== -->
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <span>↑</span>
+  </button>
+
+  <!-- ==================== SUGGESTION MODAL ==================== -->
+  <div class="modal-overlay" id="suggestionModal">
+    <div class="modal glass-card">
+      <div class="modal-header">
+        <div style="display:flex; gap:16px;">
+          <h3 class="sugg-tab active">💬 Send Suggestion</h3>
+        </div>
+        <button class="modal-close" onclick="closeSuggestionModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="suggName" placeholder="Enter your name..." />
+        </div>
+        <div class="form-group">
+          <label>Category <span class="required">*</span></label>
+          <select id="suggCategory">
+            <option value="General">✨ General Feedback</option>
+            <option value="Content Missing">📝 Content Missing</option>
+            <option value="Bug Report">🐛 Bug Report</option>
+            <option value="Feature Request">💡 Feature Request</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Your Message <span class="required">*</span></label>
+          <textarea id="suggMessage" placeholder="Describe your suggestion or feedback..." rows="4"
+            maxlength="500"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" onclick="closeSuggestionModal()">Cancel</button>
+        <button class="btn-primary" onclick="submitSuggestion()">Send Suggestion ✈️</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <!-- Firebase Compat SDK for Registration -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="student-registration.js"></script>
+  <script src="script.js"></script>
+  <script src="modern-effects.js"></script>
+  <script type="module" src="elite-plus-realtime.js"></script>
+</body>
+
+</html>

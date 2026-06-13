@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Access specific BCA subject study materials, unit notes, solved previous year question papers (PYQs), and laboratory practical program manuals at BCA Store." />
+  <meta name="keywords" content="BCA Study Material, BCA Study Hub, BCA Notes, BCA Notes PDF, BCA Previous Year Questions, BCA PYQ, BCA Assignments, BCA Projects, BCA Practical Files, BCA Lab Programs, BCA Lab Manual" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Subject Materials | BCA STORE" />
+  <meta property="og:description" content="Everything you need to master your subject." />
+  <meta property="og:type" content="website" />
+
+  <title>BCA Subject Materials | Notes, PYQs & Lab Programs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="modern-theme.css" />
+  <link rel="stylesheet" href="analytics.css" />
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-link">🏠 Home</a>
+        <a href="my-batches.html" class="nav-link">🎓 My Batch</a>
+        <a href="attendance.html" class="nav-link">📋 Attendance</a>
+        <a href="exam.html" class="nav-link">📝 Exam</a>
+        <a href="semester.html?sem=1" class="nav-link active">📖 Subjects</a>
+        <a href="test-hub.html" class="nav-link">🧠 Tests</a>
+        <a href="community.html" class="nav-link">🧑‍🤝‍🧑 Community</a>
+        <a href="analytics.html" class="nav-link">📊 Stats</a>
+
+        <a href="#" class="nav-link" onclick="openSuggestionModal()">💬 Suggestion</a>
+        <button class="nav-bookmark-btn" id="navBkBtn" onclick="openBkPanel()" title="My Bookmarks">🔖<span
+            class="bk-count-badge" id="bkBadgeDesktop"></span></button>
+        <button class="dark-toggle" id="darkToggle" title="Toggle Dark Mode">🌙</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- EXAM MODE TOGGLE -->
+  <div class="exam-mode-bar" id="examModeBar" style="display:none;">
+    🎯 Exam Mode Active — <button onclick="toggleExamMode()">Exit Exam Mode</button>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header" id="subjectHeader">
+    <div class="hero-bg-orb orb1"></div>
+    <div class="hero-bg-orb orb2"></div>
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a> <span>›</span>
+        <a href="#" id="semLink">Semester</a> <span>›</span>
+        <span id="subjectBreadcrumb">Subject</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div>
+          <h1 class="page-title" id="subjectTitle">Subject Name</h1>
+          <p class="page-subtitle" id="subjectCode">BCA-XXX</p>
+        </div>
+        <div class="subject-actions" style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn-outline" onclick="toggleBookmark()" id="bookmarkBtn" title="Bookmark">🔖 Bookmark</button>
+          <button class="btn-outline" onclick="toggleExamMode()" title="Exam Mode">🎯 Exam Mode</button>
+          <button class="btn-outline" onclick="printNotes()" title="Print">🖨️ Print</button>
+          <button class="btn-primary" onclick="markSubjectComplete()" id="completeBtn">✅ Mark Complete</button>
+        </div>
+      </div>
+      <!-- TTS Controls -->
+      <div class="tts-bar" id="ttsBar">
+        <button onclick="ttsPlay()" id="ttsPlayBtn">🔊 Listen</button>
+        <button onclick="ttsPause()" id="ttsPauseBtn" style="display:none;">⏸ Pause</button>
+        <button onclick="ttsStop()" id="ttsStopBtn" style="display:none;">⏹ Stop</button>
+        <span id="ttsStatus" class="tts-status"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MULTI-TAB STUDY MODE -->
+  <div class="container" style="margin-top:16px;" id="multiTabBar">
+    <div class="multi-tabs-bar">
+      <span class="multi-tab-label">📑 Open Tabs:</span>
+      <div id="openTabsList" class="open-tabs-list"></div>
+      <button class="btn-sm" onclick="addStudyTab()" title="Open new subject tab">＋ Add</button>
+    </div>
+  </div>
+
+  <!-- CONTENT TABS -->
+  <div class="container" style="margin-top:24px;">
+    <div class="content-tabs" id="contentTabs">
+      <button class="content-tab active" data-tab="notes" onclick="switchTab('notes')">📝 Notes</button>
+      <button class="content-tab" data-tab="video" onclick="switchTab('video')">🎥 Videos</button>
+      <button class="content-tab" data-tab="pyq" onclick="switchTab('pyq')">📄 PYQs</button>
+
+      <button class="content-tab" data-tab="pyq_solve" onclick="switchTab('pyq_solve')">📜 PYQs Solve</button>
+      <button class="content-tab" data-tab="program" onclick="switchTab('program')">⌨️ Programs</button>
+    </div>
+  </div>
+
+  <!-- SEARCH + KEYWORD HIGHLIGHT -->
+  <div class="container" style="margin-top:12px;">
+    <div class="search-bar-inline" style="display:flex;gap:8px;">
+      <input type="text" id="materialSearch" placeholder="🔍 Filter materials / highlight keywords..."
+        oninput="filterMaterials()" style="flex:1;" />
+      <button class="btn-outline" onclick="clearMaterialSearch()">✕</button>
+      <button class="btn-outline" onclick="showRandomQuestion()" title="Random Question">🎲</button>
+      <button class="btn-outline" onclick="openAnnotation()" title="Add Annotation">✏️ Annotate</button>
+    </div>
+  </div>
+
+  <!-- MATERIAL CONTENT SECTIONS -->
+  <section class="section">
+    <div class="container">
+      <div id="loadingSpinner" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading materials...</p>
+      </div>
+
+      <!-- Notes Tab -->
+      <div class="tab-content active" id="tab-notes">
+        <div class="cards-grid" id="notesMaterials"></div>
+        <div class="empty-state" id="notesEmpty" style="display:none;">
+          <div class="empty-icon">📭</div>
+          <h3>No Notes Available</h3>
+          <p>Notes for this subject haven't been added yet. Check back soon!</p>
+        </div>
+      </div>
+
+      <!-- Videos Tab -->
+      <div class="tab-content" id="tab-video">
+        <!-- INLINE VIDEO PLAYER -->
+        <div id="inlineVideoPlayer"
+          style="display: none; margin-bottom: 30px; background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition);">
+          <div
+            style="padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.02);">
+            <h3 id="inlineVideoTitle"
+              style="font-size: 1.15rem; font-weight: 700; color: var(--text); margin: 0; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">
+              Loading Video...</h3>
+            <button class="btn-outline btn-sm" onclick="closeInlinePlayer()"
+              style="flex-shrink: 0; margin-left: 12px;">✕ Close</button>
+          </div>
+          <div id="inlineVideoContent" class="video-container"
+            style="position: relative; width: 100%; aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center;">
+            <!-- Native Video Player (Hidden by default) -->
+            <video id="nativeVideoPlayer" preload="metadata" playsinline
+              style="width:100%; height:100%; object-fit:contain; display:none;"></video>
+
+            <!-- YouTube/Iframe Player (Hidden by default) -->
+            <iframe id="iframeVideoPlayer" style="width:100%; height:100%; border:none; display:none;" allowfullscreen
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+
+            <!-- Loading Overlay -->
+            <div class="overlay" id="playerLoadingOverlay"
+              style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); opacity: 0; pointer-events: none; transition: opacity 0.3s;">
+              <div class="spinner"></div>
+            </div>
+
+            <!-- Error Overlay -->
+            <div class="overlay" id="playerErrorOverlay"
+              style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.8); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 20;">
+              <div class="error-icon" style="font-size: 3rem; margin-bottom: 12px;">⚠️</div>
+              <div class="error-msg" style="color: #ff4d4d; margin-bottom: 16px; font-weight: 600;">Playback
+                interrupted. Format may not be supported.</div>
+              <div style="display:flex; gap:12px;">
+                <button class="btn-outline" style="color: white; border-color: rgba(255,255,255,0.3);"
+                  onclick="retryVideoPlayback()">🔄 Retry</button>
+                <a id="playerExternalLink" href="#" target="_blank" class="btn-primary">↗️ Open in New Tab</a>
+              </div>
+            </div>
+
+            <!-- Custom Controls (injected via JS for native videos) -->
+            <div id="nativeVideoControls" class="controls" style="display:none;">
+              <!-- Controls injected here -->
+            </div>
+          </div>
+        </div>
+
+        <div class="video-grid" id="videoMaterials"></div>
+        <div class="empty-state" id="videoEmpty" style="display:none;">
+          <div class="empty-icon">🎬</div>
+          <h3>No Videos Available</h3>
+          <p>Video lectures haven't been added yet.</p>
+        </div>
+      </div>
+
+      <!-- PYQs Tab -->
+      <div class="tab-content" id="tab-pyq">
+        <div class="cards-grid" id="pyqMaterials"></div>
+        <div class="empty-state" id="pyqEmpty" style="display:none;">
+          <div class="empty-icon">📭</div>
+          <h3>No PYQs Available</h3>
+          <p>Previous year questions haven't been added yet.</p>
+        </div>
+      </div>
+
+
+
+      <!-- Lab Tab -->
+      <div class="tab-content" id="tab-lab">
+        <div class="cards-grid" id="labMaterials"></div>
+        <div class="empty-state" id="labEmpty" style="display:none;">
+          <div class="empty-icon">💻</div>
+          <h3>No Lab Materials Available</h3>
+          <p>Lab content hasn't been added yet.</p>
+        </div>
+      </div>
+
+      <!-- Programs Tab -->
+      <div class="tab-content" id="tab-program">
+        <div class="cards-grid" id="programMaterials"></div>
+        <div class="empty-state" id="programEmpty" style="display:none;">
+          <div class="empty-icon">⌨️</div>
+          <h3>No Programs Available</h3>
+          <p>Program files haven't been added yet.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANNOTATION PANEL -->
+  <div class="annotation-panel" id="annotationPanel" style="display:none;">
+    <div class="annotation-header">
+      <h4>✏️ My Annotations</h4>
+      <button onclick="closeAnnotation()">✕</button>
+    </div>
+    <div class="annotation-body">
+      <textarea id="annotationText" placeholder="Write your notes and annotations here..."></textarea>
+      <button class="btn-primary" onclick="saveAnnotation()" style="margin-top:8px;">Save Note</button>
+    </div>
+    <div id="savedAnnotations"></div>
+  </div>
+
+  <!-- RANDOM QUESTION MODAL -->
+  <div class="modal-overlay" id="randomQModal">
+    <div class="modal glass-card">
+      <div class="modal-header">
+        <h3>🎲 Random Practice Question</h3>
+        <button class="modal-close"
+          onclick="document.getElementById('randomQModal').classList.remove('active')">✕</button>
+      </div>
+      <div class="modal-body" id="randomQBody">
+        <p>No questions available. Add PYQs first.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" onclick="showRandomQuestion()">🎲 Another Question</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMAGE VIEWER MODAL -->
+  <div class="modal-overlay" id="imageViewerModal">
+    <div class="modal glass-card" style="max-width:90vw;max-height:90vh;">
+      <div class="modal-header">
+        <h3 id="imageViewerTitle">Image Viewer</h3>
+        <div style="display:flex;gap:8px;">
+          <button onclick="zoomImage(-0.2)">🔍-</button>
+          <button onclick="zoomImage(0.2)">🔍+</button>
+          <button class="modal-close" onclick="closeImageViewer()">✕</button>
+        </div>
+      </div>
+      <div class="modal-body" style="overflow:auto;text-align:center;">
+        <img id="viewerImg" src="" alt="Note image" style="transform-origin:top center;transition:transform 0.3s;" />
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK DEFINITION POPUP -->
+  <div class="definition-popup" id="definitionPopup" style="display:none;"></div>
+
+  <!-- FLOATING ACTION BUTTONS -->
+
+  <!-- SUGGESTION MODAL -->
+  <div class="modal-overlay" id="suggestionModal">
+    <div class="modal glass-card">
+      <div class="modal-header">
+        <div style="display:flex; gap:16px;">
+          <h3 class="sugg-tab active" id="tabSend" onclick="switchSuggTab('send')">💬 Send Suggestion</h3>
+          <h3 class="sugg-tab" id="tabHistory" onclick="switchSuggTab('history')">📜 My History</h3>
+        </div>
+        <button class="modal-close" onclick="closeSuggestionModal()">✕</button>
+      </div>
+      <div id="suggSendView">
+        <div class="modal-body" id="suggestionBody">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" id="suggName" placeholder="Enter your name..." />
+          </div>
+          <div class="form-group">
+            <label>Category <span class="required">*</span></label>
+            <select id="suggCategory">
+              <option value="General">✨ General Feedback</option>
+              <option value="Content Missing">📝 Content Missing</option>
+              <option value="Bug Report">🐛 Bug Report</option>
+              <option value="Feature Request">💡 Feature Request</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Your Message <span class="required">*</span></label>
+            <textarea id="suggMessage" placeholder="Describe your suggestion or feedback..." rows="4" maxlength="500"
+              oninput="updateCharCount(this)"></textarea>
+            <div class="char-count"
+              style="text-align:right; font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+              <span id="charCurrent">0</span>/500
+            </div>
+          </div>
+          <input type="hidden" id="suggContext" value="" />
+        </div>
+        <div class="modal-footer" id="suggestionFooter">
+          <button class="btn-outline" onclick="closeSuggestionModal()">Cancel</button>
+          <button class="btn-primary" onclick="submitSuggestion()">Send Suggestion ✈️</button>
+        </div>
+      </div>
+      <div id="suggHistoryView" style="display:none;">
+        <div class="modal-body" id="suggestionHistoryBody" style="max-height:400px; overflow-y:auto;">
+          <!-- Generated by JS -->
+        </div>
+        <div class="modal-footer">
+          <button class="btn-outline" style="width:100%" onclick="closeSuggestionModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ==================== VISIT COUNTER ==================== -->
+  <section class="visit-counter-section">
+    <div class="container">
+      <div class="vc-card glass-card">
+        <div class="vc-icon">🌍</div>
+        <div class="vc-info">
+          <h3 id="totalVisits">0</h3>
+          <p>Global Students Visited</p>
+        </div>
+        <div class="vc-pulse" title="Live Counter Enabled"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MASTER FOOTER ==================== -->
+  <footer class="footer" id="mainFooter">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3 class="footer-brand"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo" style="width: 32px; height: 32px; margin-right: 8px; border-radius: 8px;"> <span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></h3>
+          <p>Your one-stop destination for BRABU BCA study materials. Notes, PYQs, and Video Lectures at your
+            fingertips.</p>
+          <div class="footer-socials">
+            <a href="#" title="Facebook">📘</a>
+            <a href="#" title="Instagram">📸</a>
+            <a href="#" title="YouTube">📺</a>
+            <a href="#" title="Telegram">✈️</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="my-batches.html">🎓 My Batch</a></li>
+            <li><a href="exam.html">📝 Exam Pattern</a></li>
+            <li><a href="developer.html">👨‍💻 Founder & Developer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul class="footer-links">
+            <li><a href="#" onclick="openSuggestionModal()">💬 Suggestion</a></li>
+            <li><a href="mailto:vishal@example.com">📧 Contact Us</a></li>
+            <li><a href="#">🛡️ Privacy Policy</a></li>
+            <li><a href="#">📜 Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="dev-credit-box">
+          Designed & Developed with 🖤 by
+          <a href="developer.html" class="dev-link">VISHAL 🖤</a>
+        </div>
+        <p>&copy; 2026 BCA STORE. Babasaheb Bhim Rao Ambedkar Bihar University.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="analytics.js"></script>
+  <script src="student-registration.js"></script>
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initSubjectPage();
+    });
+  </script>
+
+  <script src="modern-effects.js"></script>
+  <script src="enhancements.js"></script>
+</body>
+
+</html>

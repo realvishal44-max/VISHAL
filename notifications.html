@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="View historical notices, announcements, and live batch activity at BCA Store Notification Center." />
+  <title>Notification Center | BCA Store</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="modern-theme.css" />
+  <link rel="stylesheet" href="elite-plus.css" />
+  
+  <style>
+    .notif-center-wrapper {
+      padding: 110px 20px 60px;
+      min-height: 100vh;
+      background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.03) 0%, transparent 40%),
+                  radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 40%);
+    }
+
+    .notif-center-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .glass-search-panel {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 20px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .search-input-wrap {
+      flex: 1;
+      min-width: 280px;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input-wrap span {
+      position: absolute;
+      left: 16px;
+      font-size: 1.1rem;
+      pointer-events: none;
+      color: var(--text-muted);
+    }
+
+    .search-input-wrap input {
+      width: 100%;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 12px 16px 12px 46px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .search-input-wrap input:focus {
+      border-color: var(--primary);
+      background: rgba(0,0,0,0.35);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    .filter-select {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      min-width: 160px;
+    }
+
+    .filter-select:focus {
+      border-color: var(--primary);
+    }
+
+    .notif-list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 0 8px;
+    }
+
+    .notif-list-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .notif-badge-count {
+      font-size: 0.8rem;
+      background: rgba(99, 102, 241, 0.15);
+      color: #a78bfa;
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-weight: 800;
+    }
+
+    .notif-header-actions {
+      display: flex;
+      gap: 16px;
+    }
+
+    .notif-action-btn {
+      font-size: 0.82rem;
+      font-weight: 800;
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.2s;
+    }
+
+    .notif-action-btn:hover {
+      text-decoration: underline;
+    }
+
+    .notif-grid-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .center-notif-card {
+      background: rgba(30, 41, 59, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 18px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      display: flex;
+      gap: 16px;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: fadeInUp 0.4s ease backwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .center-notif-card:hover {
+      transform: translateY(-2px);
+      background: rgba(30, 41, 59, 0.6);
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .center-notif-card.unread {
+      background: rgba(99, 102, 241, 0.04);
+      border-color: rgba(99, 102, 241, 0.15);
+    }
+    .center-notif-card.unread::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: var(--card-accent, #6366f1);
+      border-top-left-radius: 18px;
+      border-bottom-left-radius: 18px;
+    }
+
+    .center-notif-card.smart-highlight {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.03) 0%, rgba(139, 92, 246, 0.03) 100%);
+      border-color: rgba(139, 92, 246, 0.25);
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.08);
+    }
+    .center-notif-card.smart-highlight .smart-highlight-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .center-notif-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+      background: rgba(0,0,0,0.25);
+    }
+
+    .center-notif-icon-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .center-notif-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .center-notif-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .center-notif-cat {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--card-accent, #6366f1);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .center-notif-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .center-notif-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+      line-height: 1.35;
+    }
+
+    .center-notif-message {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+
+    .center-notif-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .center-notif-btn {
+      padding: 8px 18px;
+      background: var(--card-accent, #6366f1);
+      border: none;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.82rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    }
+
+    .center-notif-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+    }
+
+    .center-notif-secondary-btn {
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.6);
+      padding: 7px 16px;
+      font-size: 0.82rem;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .center-notif-secondary-btn:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .center-notif-delete {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.3);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .center-notif-delete:hover {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .center-notif-empty {
+      text-align: center;
+      padding: 80px 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+    }
+
+    .center-notif-empty-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 600px) {
+      .center-notif-card {
+        flex-direction: column;
+        padding: 16px;
+      }
+      .center-notif-thumb, .center-notif-icon-wrap {
+        width: 44px;
+        height: 44px;
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-link">🏠 Home</a>
+        <a href="my-batches.html" class="nav-link">🎓 My Batch</a>
+        <a href="attendance.html" class="nav-link">📋 Attendance</a>
+        <a href="elite-plus.html" class="nav-link">💎 Elite Plus</a>
+        <a href="exam.html" class="nav-link">📝 Exam</a>
+        <a href="test-hub.html" class="nav-link">🧠 Tests</a>
+        <a href="community.html" class="nav-link">🧑‍🤝‍🧑 Community</a>
+        <a href="analytics.html" class="nav-link">📊 Stats</a>
+        <a href="javascript:void(0)" class="nav-link" onclick="openSuggestionModal()">💬 Suggestion</a>
+        <button class="nav-bookmark-btn" onclick="openSearchModal()" title="Search" style="margin-right:10px; font-size:1.2rem;">🔍</button>
+        <button class="nav-bookmark-btn" id="navBkBtn" onclick="openBkPanel()" title="My Bookmarks">🔖<span class="bk-count-badge" id="bkBadgeDesktop"></span></button>
+        <button class="dark-toggle" id="darkToggle" title="Toggle Dark Mode">🌙</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==================== MAIN PANEL ==================== -->
+  <div class="notif-center-wrapper">
+    <div class="notif-center-container">
+      
+      <!-- Page Header Title -->
+      <div class="section-header" style="text-align: left; margin-bottom: 24px;">
+        <div class="breadcrumb">
+          <a href="index.html">Home</a> <span>/</span> <span>Notifications</span>
+        </div>
+        <h1 class="page-title">🔔 Notification <span class="gradient-text">Center</span></h1>
+        <p class="page-subtitle">Real-time learning updates and batch announcements</p>
+      </div>
+
+      <!-- Glass Search & Filter Control Panel -->
+      <div class="glass-search-panel">
+        <div class="search-input-wrap">
+          <span>🔍</span>
+          <input type="text" id="notifSearch" placeholder="Search notices, video topics, tests..." oninput="filterNotifications()" />
+        </div>
+        
+        <!-- Filter Category -->
+        <select class="filter-select" id="notifFilterCat" onchange="filterNotifications()">
+          <option value="all">📁 All Categories</option>
+          <option value="unread">📬 Unread Updates</option>
+          <option value="video_upload">🎥 Video Uploads</option>
+          <option value="notes_upload">📖 Notes & PDFs</option>
+          <option value="test_added">📝 Test Announcements</option>
+          <option value="live_class">🔴 Live Classes</option>
+          <option value="announcement">📢 Admin Notices</option>
+        </select>
+
+        <!-- Filter Batch -->
+        <select class="filter-select" id="notifFilterBatch" onchange="filterNotifications()">
+          <option value="all">🎓 All Batches</option>
+          <!-- Dynamic Batch List populated by JS -->
+        </select>
+      </div>
+
+      <!-- Action Panel -->
+      <div class="notif-list-header">
+        <div class="notif-list-title">
+          <span>All Bulletins</span>
+          <span class="notif-badge-count" id="notifTotalCount">0</span>
+        </div>
+        <div class="notif-header-actions">
+          <button class="notif-action-btn" onclick="readAllCenterNotifs()">Read All</button>
+          <span style="color: rgba(255,255,255,0.15);">|</span>
+          <button class="notif-action-btn" onclick="clearAllCenterNotifs()" style="color:#ef4444">Clear All</button>
+        </div>
+      </div>
+
+      <!-- Dynamic Cards Grid -->
+      <div class="notif-grid-layout" id="notifCenterGrid">
+        <!-- Rendered dynamically -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Master Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div class="dev-credit-box">
+          Designed & Developed with 🖤 by
+          <a href="developer.html" class="dev-link">VISHAL 🖤</a>
+        </div>
+        <p>&copy; 2026 BCA STORE. Babasaheb Bhim Rao Ambedkar Bihar University.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Suggestion Modal -->
+  <!-- TOAST Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  
+  <script src="student-registration.js"></script>
+  <script src="script.js"></script>
+  
+  <script>
+    let rawNotifications = [];
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Wait for Firebase database instances to load
+      const checkDb = setInterval(() => {
+        if (typeof db !== 'undefined' && db) {
+          clearInterval(checkDb);
+          initNotificationCenter();
+        }
+      }, 300);
+    });
+
+    async function initNotificationCenter() {
+      // 1. Load Batches list dropdown filter
+      db.ref('batches').once('value', snap => {
+        const batchFilter = document.getElementById('notifFilterBatch');
+        if (batchFilter && snap.exists()) {
+          snap.forEach(child => {
+            const opt = document.createElement('option');
+            opt.value = child.key;
+            opt.textContent = `📚 ${child.val().name}`;
+            batchFilter.appendChild(opt);
+          });
+        }
+      });
+
+      // 2. Setup Firebase live sync reader
+      db.ref('notifications_live').orderByChild('timestamp').on('value', snap => {
+        rawNotifications = [];
+        const deletedList = lsGet('deleted_notifications', []);
+        
+        if (snap.exists()) {
+          snap.forEach(child => {
+            const item = child.val();
+            if (!deletedList.includes(item.id)) {
+              rawNotifications.push(item);
+            }
+          });
+        }
+        
+        // Sort: newest first
+        rawNotifications.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        
+        // Render
+        filterNotifications();
+      });
+    }
+
+    function filterNotifications() {
+      const grid = document.getElementById('notifCenterGrid');
+      const totalCountLabel = document.getElementById('notifTotalCount');
+      if (!grid) return;
+
+      const q = document.getElementById('notifSearch').value.toLowerCase().trim();
+      const cat = document.getElementById('notifFilterCat').value;
+      const batch = document.getElementById('notifFilterBatch').value;
+      
+      const readList = lsGet('read_notifications', []);
+
+      const filtered = rawNotifications.filter(n => {
+        // 1. Search Query
+        if (q) {
+          const t = (n.title || '').toLowerCase();
+          const m = (n.message || '').toLowerCase();
+          const b = (n.batchName || '').toLowerCase();
+          if (!t.includes(q) && !m.includes(q) && !b.includes(q)) return false;
+        }
+
+        // 2. Category
+        if (cat === 'unread') {
+          if (readList.includes(n.id)) return false;
+        } else if (cat !== 'all') {
+          if (n.type !== cat) return false;
+        }
+
+        // 3. Batch
+        if (batch !== 'all') {
+          if (n.batchId !== batch) return false;
+        }
+
+        return true;
+      });
+
+      // Update count pill
+      if (totalCountLabel) {
+        totalCountLabel.textContent = filtered.length;
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="center-notif-empty">
+            <div class="center-notif-empty-icon">🔔</div>
+            <h3>No notifications found</h3>
+            <p style="color:var(--text-muted); margin-top:6px;">Try adjusting your filters or search keywords.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const CATEGORY_MAP_CENTER = {
+        'video_upload': { icon: '🎥', color: '#3b82f6' },
+        'notes_upload': { icon: '📖', color: '#10b981' },
+        'test_added': { icon: '📝', color: '#f59e0b' },
+        'assignment': { icon: '📋', color: '#ec4899' },
+        'live_class': { icon: '🎥', color: '#8b5cf6' },
+        'announcement': { icon: '📢', color: '#ef4444' },
+        'batch_update': { icon: '🔄', color: '#06b6d4' },
+        'achievement': { icon: '🏆', color: '#fbbf24' }
+      };
+
+      grid.innerHTML = filtered.map(n => {
+        const isRead = readList.includes(n.id);
+        const isPersonal = window.NotificationsService ? window.NotificationsService.isPersonalized(n.batchId) : false;
+        const conf = CATEGORY_MAP_CENTER[n.type] || { icon: '📢', color: '#ef4444' };
+        
+        const readClass = isRead ? '' : ' unread';
+        const highlightClass = isPersonal ? ' smart-highlight' : '';
+        
+        const dateStr = new Date(n.timestamp).toLocaleDateString('en-US', {
+          year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+
+        const highlightTag = isPersonal 
+          ? `<div class="smart-highlight-tag">✨ Personalized Highlight</div>` 
+          : '';
+
+        const thumbHtml = n.batchThumbnail
+          ? `<img class="center-notif-thumb" src="${n.batchThumbnail}" alt="" />`
+          : `<div class="center-notif-icon-wrap">${n.icon || conf.icon}</div>`;
+
+        return `
+          <div class="center-notif-card${readClass}${highlightClass}" style="--card-accent:${conf.color};" onclick="readSingleNotif('${n.id}')">
+            <button class="center-notif-delete" onclick="event.stopPropagation(); deleteCenterNotif('${n.id}')" title="Delete Announcement">✕</button>
+            ${thumbHtml}
+            <div class="center-notif-body">
+              ${highlightTag}
+              <div class="center-notif-meta">
+                <span class="center-notif-cat" style="color:${conf.color}">${n.category || 'Announcement'}</span>
+                <span class="center-notif-time">${dateStr}</span>
+              </div>
+              <div class="center-notif-title">${n.title}</div>
+              <div class="center-notif-message" style="white-space:pre-line;">${n.message}</div>
+              <div class="center-notif-actions">
+                <button class="center-notif-btn" onclick="event.stopPropagation(); handleCenterAction('${n.id}', '${n.targetUrl || '#'}')">${n.actionText || 'Open Link'}</button>
+                ${!isRead ? `<button class="center-notif-secondary-btn" onclick="event.stopPropagation(); markAsReadSingle('${n.id}')">Mark as Read</button>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function readSingleNotif(id) {
+      if (window.NotificationsService) {
+        window.NotificationsService.handleNotificationClick(id, '#');
+      }
+      filterNotifications();
+    }
+
+    function markAsReadSingle(id) {
+      if (window.NotificationsService) {
+        window.NotificationsService.handleNotificationClick(id, '#');
+      }
+      filterNotifications();
+    }
+
+    function handleCenterAction(id, targetUrl) {
+      if (window.NotificationsService) {
+        window.NotificationsService.handleNotificationClick(id, targetUrl);
+      } else if (targetUrl && targetUrl !== '#') {
+        window.location.href = targetUrl;
+      }
+    }
+
+    function deleteCenterNotif(id) {
+      if (window.NotificationsService) {
+        window.NotificationsService.deleteNotification(id);
+      }
+      filterNotifications();
+      showToast('🗑️ Notification deleted locally', 'info');
+    }
+
+    function readAllCenterNotifs() {
+      if (window.NotificationsService) {
+        window.NotificationsService.readAll();
+        showToast('📬 All notifications marked as read', 'success');
+      }
+      filterNotifications();
+    }
+
+    function clearAllCenterNotifs() {
+      if (!confirm('Are you sure you want to clear all notifications from your view?')) return;
+      if (window.NotificationsService) {
+        window.NotificationsService.clearAll();
+        showToast('🗑️ Notification center cleared', 'info');
+      }
+      filterNotifications();
+    }
+  </script>
+</body>
+</html>

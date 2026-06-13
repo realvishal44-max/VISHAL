@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Install BCA Store as a native app on Android, iPhone, Windows, Mac & Desktop with a single click." />
+  <meta name="theme-color" content="#3b82f6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="BCA Store" />
+
+  <title>Install BCA Store | Premium App Hub</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    /* Premium Design System Reset & CSS Custom Properties */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #3b82f6;
+      --primary-rgb: 59, 130, 246;
+      --primary-glow: rgba(59, 130, 246, 0.35);
+      --secondary: #6366f1;
+      --secondary-rgb: 99, 102, 241;
+      --secondary-glow: rgba(99, 102, 241, 0.3);
+      --accent: #06b6d4;
+      --accent-glow: rgba(6, 182, 212, 0.25);
+      --success: #10b981;
+      --success-rgb: 16, 185, 129;
+      --success-glow: rgba(16, 185, 129, 0.2);
+      --error: #ef4444;
+      --error-glow: rgba(239, 68, 68, 0.2);
+      --warning: #f59e0b;
+      
+      --bg: #030712;
+      --bg-gradient: radial-gradient(circle at 50% 50%, #080f1e 0%, #030712 100%);
+      --card-bg: rgba(15, 23, 42, 0.45);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-glow: rgba(99, 102, 241, 0.03);
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+      --shadow-premium: 0 30px 60px -15px rgba(0, 0, 0, 0.8),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      
+      --grid-opacity: 0.05;
+      --phone-bg: #0b0f19;
+      --phone-border: rgba(255, 255, 255, 0.12);
+    }
+
+    [data-theme="light"] {
+      --primary: #2563eb;
+      --primary-rgb: 37, 99, 235;
+      --primary-glow: rgba(37, 99, 235, 0.2);
+      --secondary: #4f46e5;
+      --secondary-rgb: 79, 70, 229;
+      --secondary-glow: rgba(79, 70, 229, 0.15);
+      --bg: #f3f4f6;
+      --bg-gradient: radial-gradient(circle at 50% 50%, #f9fafb 0%, #f3f4f6 100%);
+      --card-bg: rgba(255, 255, 255, 0.7);
+      --card-border: rgba(15, 23, 42, 0.08);
+      --card-glow: rgba(37, 99, 235, 0.02);
+      --text: #111827;
+      --text-muted: #4b5563;
+      --shadow-premium: 0 30px 60px -15px rgba(31, 41, 55, 0.12),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      
+      --grid-opacity: 0.3;
+      --phone-bg: #ffffff;
+      --phone-border: rgba(15, 23, 42, 0.1);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 24px;
+      position: relative;
+      overflow-x: hidden;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    /* Fine grid-mesh overlay background */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background-image: 
+        linear-gradient(rgba(99, 102, 241, var(--grid-opacity)) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, var(--grid-opacity)) 1px, transparent 1px);
+      background-size: 30px 30px;
+      pointer-events: none;
+      transition: background-image 0.4s ease;
+    }
+
+    /* Floating moving color aura blobs */
+    .bg-glows {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(140px);
+      opacity: 0.3;
+      animation: floatOrbit 25s ease-in-out infinite;
+    }
+
+    [data-theme="light"] .glow-orb {
+      opacity: 0.12;
+      filter: blur(110px);
+    }
+
+    .glow-1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--primary) 0%, rgba(var(--primary-rgb), 0) 70%);
+      top: -150px;
+      left: -100px;
+    }
+
+    .glow-2 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--secondary) 0%, rgba(var(--secondary-rgb), 0) 70%);
+      bottom: -200px;
+      right: -100px;
+      animation-delay: -8s;
+    }
+
+    .glow-3 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, var(--accent) 0%, rgba(6, 182, 212, 0) 70%);
+      top: 40%;
+      right: 15%;
+      animation-delay: -15s;
+    }
+
+    @keyframes floatOrbit {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      33% {
+        transform: translate(80px, -60px) scale(1.15);
+      }
+      66% {
+        transform: translate(-50px, 80px) scale(0.9);
+      }
+    }
+
+    /* Glassmorphic Shell Grid */
+    .install-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1080px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-premium);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      overflow: hidden;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease-out;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .install-container:hover {
+      border-color: rgba(99, 102, 241, 0.25);
+      box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.85),
+                  0 0 30px rgba(99, 102, 241, 0.05);
+    }
+
+    /* Left Showcase Panel */
+    .showcase-panel {
+      padding: 48px;
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 36px;
+      position: relative;
+    }
+
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .btn-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-circle:hover {
+      background: rgba(var(--primary-rgb), 0.15);
+      border-color: var(--primary);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+
+    .btn-circle svg {
+      transition: transform 0.3s ease;
+    }
+
+    .btn-circle:hover svg {
+      transform: scale(1.1);
+    }
+
+    .app-branding {
+      text-align: left;
+    }
+
+    .app-icon-badge {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 30px var(--primary-glow);
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app-icon-badge::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
+    }
+
+    .app-icon-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+    }
+
+    .app-branding h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .app-title-glow {
+      background: linear-gradient(135deg, #60a5fa, #818cf8, #22d3ee);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+    }
+
+    .app-branding p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 480px;
+    }
+
+    /* Split layout: mockup + features side-by-side */
+    .branding-media-group {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: center;
+    }
+
+    /* Beautiful Pure-CSS Mobile Phone Mockup */
+    .phone-mockup-wrapper {
+      perspective: 1000px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .phone-mockup {
+      width: 220px;
+      height: 420px;
+      background: var(--phone-bg);
+      border: 8px solid var(--phone-border);
+      border-radius: 36px;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7),
+                  inset 0 0 12px rgba(255,255,255,0.05);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: phoneFloat 6s ease-in-out infinite;
+      transition: all 0.4s ease;
+    }
+
+    @keyframes phoneFloat {
+      0%, 100% { transform: translateY(0) rotateY(-5deg) rotateX(5deg); }
+      50% { transform: translateY(-10px) rotateY(-2deg) rotateX(2deg); }
+    }
+
+    .phone-mockup:hover {
+      box-shadow: 0 35px 70px -10px rgba(0, 0, 0, 0.9),
+                  0 0 24px rgba(99, 102, 241, 0.15);
+    }
+
+    /* Notch */
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 16px;
+      background: #000;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      z-index: 10;
+    }
+
+    /* Internal phone elements */
+    .phone-screen {
+      flex: 1;
+      padding: 24px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      font-size: 0.65rem;
+      gap: 8px;
+      user-select: none;
+    }
+
+    .phone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    [data-theme="light"] .phone-header {
+      border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+    }
+
+    .phone-header-logo {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 0.75rem;
+    }
+
+    .phone-header-profile {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #4b5563;
+    }
+
+    .phone-search-mock {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      padding: 4px 8px;
+      color: var(--text-muted);
+      font-size: 0.55rem;
+    }
+
+    [data-theme="light"] .phone-search-mock {
+      background: rgba(15, 23, 42, 0.03);
+      border: 1px solid rgba(15, 23, 42, 0.05);
+    }
+
+    .phone-grid-mock {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .phone-card-mock {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    [data-theme="light"] .phone-card-mock {
+      background: rgba(15, 23, 42, 0.02);
+      border: 1px solid rgba(15, 23, 42, 0.05);
+    }
+
+    .phone-card-title {
+      font-weight: 700;
+      font-size: 0.55rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .phone-card-bar {
+      height: 4px;
+      width: 80%;
+      background: var(--primary);
+      border-radius: 2px;
+      opacity: 0.7;
+    }
+
+    .phone-card-bar.sec {
+      background: var(--secondary);
+      width: 60%;
+    }
+
+    .phone-bottom-panel-mock {
+      margin-top: auto;
+      background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.15), rgba(var(--secondary-rgb), 0.15));
+      border: 1px solid rgba(var(--primary-rgb), 0.2);
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+    }
+
+    .phone-btn-mock {
+      background: var(--primary);
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-weight: 800;
+      font-size: 0.5rem;
+      box-shadow: 0 4px 8px var(--primary-glow);
+      animation: pulseBtn 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseBtn {
+      0%, 100% { transform: scale(1); box-shadow: 0 4px 8px var(--primary-glow); }
+      50% { transform: scale(1.05); box-shadow: 0 4px 14px var(--primary-glow); }
+    }
+
+    /* Features Highlight List */
+    .features-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 460px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      text-align: left;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .feature-item:hover {
+      background: rgba(255, 255, 255, 0.02);
+      border-color: var(--card-border);
+      transform: translateX(6px);
+    }
+
+    [data-theme="light"] .feature-item:hover {
+      background: rgba(0, 0, 0, 0.01);
+    }
+
+    .feature-icon-wrapper {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(var(--primary-rgb), 0.08);
+      border: 1px solid rgba(var(--primary-rgb), 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .feature-item:hover .feature-icon-wrapper {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 8px 16px var(--primary-glow);
+      transform: scale(1.05);
+    }
+
+    .feature-text h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .feature-text p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* PWA Diagnostics Console style */
+    .diagnostics-panel {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      font-size: 0.8rem;
+    }
+
+    .diagnostic-badge {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+    }
+
+    .diagnostic-badge-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .diagnostic-badge-info svg {
+      color: var(--primary);
+      opacity: 0.8;
+    }
+
+    .diagnostic-badge.success {
+      border-color: rgba(var(--success-rgb), 0.2);
+      background: rgba(var(--success-rgb), 0.02);
+      color: var(--text);
+    }
+
+    .diagnostic-badge.failed {
+      border-color: rgba(var(--error-rgb), 0.2);
+      background: rgba(var(--error-rgb), 0.02);
+      color: var(--text);
+    }
+
+    .diagnostic-status-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+    }
+
+    .diagnostic-status-indicator svg.check-icon {
+      color: var(--success);
+      filter: drop-shadow(0 0 4px var(--success-glow));
+    }
+
+    .diagnostic-status-indicator svg.cross-icon {
+      color: var(--error);
+      filter: drop-shadow(0 0 4px var(--error-glow));
+    }
+
+    /* Animated CSS Spinner */
+    .diagnostic-status-indicator svg.spinner {
+      animation: rotateSpinner 1.2s linear infinite;
+      stroke: var(--primary);
+    }
+
+    .diagnostic-status-indicator svg.spinner .path {
+      stroke: var(--primary);
+      stroke-linecap: round;
+      animation: dashSpinner 1.5s ease-in-out infinite;
+    }
+
+    @keyframes rotateSpinner {
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes dashSpinner {
+      0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; }
+      50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
+      100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
+    }
+
+    /* Right Installation Dashboard Panel */
+    .control-panel {
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 36px;
+      background: rgba(255, 255, 255, 0.01);
+      position: relative;
+    }
+
+    .install-action-box {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .btn-install-premium {
+      width: 100%;
+      padding: 20px 24px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 12px 30px var(--primary-glow);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-install-premium::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -150%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transform: skewX(-20deg);
+      animation: buttonSweep 4.5s infinite ease-in-out;
+    }
+
+    @keyframes buttonSweep {
+      0% { left: -150%; }
+      30% { left: 150%; }
+      100% { left: 150%; }
+    }
+
+    .btn-install-premium:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px var(--secondary-glow);
+    }
+
+    .btn-install-premium:active {
+      transform: translateY(-1px);
+    }
+
+    .btn-install-premium.installed {
+      background: linear-gradient(135deg, var(--success), #059669);
+      box-shadow: 0 10px 25px var(--success-glow);
+      cursor: default;
+    }
+
+    .btn-install-premium.installed::after {
+      display: none;
+    }
+
+    /* Detection Recommendation Tag */
+    .device-recom-tag {
+      font-size: 0.8rem;
+      color: var(--primary);
+      background: rgba(var(--primary-rgb), 0.1);
+      border: 1px solid rgba(var(--primary-rgb), 0.2);
+      border-radius: 50px;
+      padding: 6px 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 700;
+      margin: 0 auto;
+      animation: pulseRecom 2s infinite alternate;
+    }
+
+    @keyframes pulseRecom {
+      from { box-shadow: 0 0 0 rgba(var(--primary-rgb), 0); }
+      to { box-shadow: 0 0 12px rgba(var(--primary-rgb), 0.15); }
+    }
+
+    /* Tabs Device Switcher */
+    .guide-tabs {
+      display: flex;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--card-border);
+      padding: 5px;
+      border-radius: 14px;
+      gap: 2px;
+    }
+
+    [data-theme="light"] .guide-tabs {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .guide-tab-btn {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .guide-tab-btn.active {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Steps Guide Wrapper */
+    .guide-steps-container {
+      position: relative;
+      min-height: 240px;
+    }
+
+    .guide-step-panel {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .guide-step-panel.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .guide-step-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      padding: 14px 18px;
+      border-radius: 14px;
+      text-align: left;
+      transition: all 0.3s ease;
+    }
+
+    .guide-step-row:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(var(--primary-rgb), 0.2);
+      transform: translateX(4px);
+    }
+
+    .step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(var(--primary-rgb), 0.1);
+      border: 1px solid rgba(var(--primary-rgb), 0.25);
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-text {
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .step-text strong {
+      color: var(--primary);
+    }
+
+    /* Premium Toast Alert System */
+    .install-toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 14px 28px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      backdrop-filter: blur(16px);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .install-toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .install-toast-icon {
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .install-container {
+        grid-template-columns: 1fr;
+      }
+      .showcase-panel {
+        padding: 32px 24px;
+        border-right: none;
+        border-bottom: 1px solid var(--card-border);
+      }
+      .branding-media-group {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+      }
+      .app-branding {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .app-branding p {
+        text-align: center;
+      }
+      .features-list {
+        max-width: 100%;
+      }
+      .control-panel {
+        padding: 40px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic background glows -->
+  <div class="bg-glows" aria-hidden="true">
+    <div class="glow-orb glow-1"></div>
+    <div class="glow-orb glow-2"></div>
+    <div class="glow-orb glow-3"></div>
+  </div>
+
+  <!-- Main Split Glassmorphic Shell -->
+  <div class="install-container" id="installContainer">
+    
+    <!-- Showcase Panel (Left Column) -->
+    <div class="showcase-panel">
+      
+      <!-- Top back / theme navigation -->
+      <div class="header-nav">
+        <a href="index.html" class="btn-circle" title="Back to Homepage" aria-label="Back to Homepage" id="backBtn">
+          <!-- Chevron Left SVG -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </a>
+        <button class="btn-circle" id="themeToggle" title="Toggle Theme" aria-label="Toggle Theme">
+          <!-- Theme Icon container will be dynamically set by JS -->
+          <span id="themeToggleIcon"></span>
+        </button>
+      </div>
+
+      <!-- Main app branding details -->
+      <div class="app-branding">
+        <div class="app-icon-badge">
+          <img src="logo.png" alt="BCA Store logo symbol" />
+        </div>
+        <h1>Install <span class="app-title-glow">BCA Store</span></h1>
+        <p>Run the platform natively on your device. Fast, secure, and always accessible directly from your home screen.</p>
+      </div>
+
+      <!-- Grid group for mobile phone mockup & core features -->
+      <div class="branding-media-group">
+        <!-- Pure CSS Phone Mockup -->
+        <div class="phone-mockup-wrapper">
+          <div class="phone-mockup">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="phone-header">
+                <span class="phone-header-logo">BCA Store</span>
+                <div class="phone-header-profile"></div>
+              </div>
+              <div class="phone-search-mock">Search study notes...</div>
+              <div class="phone-grid-mock">
+                <div class="phone-card-mock">
+                  <div class="phone-card-title">C++ Programming</div>
+                  <div class="phone-card-bar"></div>
+                </div>
+                <div class="phone-card-mock">
+                  <div class="phone-card-title">Python Track</div>
+                  <div class="phone-card-bar sec"></div>
+                </div>
+                <div class="phone-card-mock">
+                  <div class="phone-card-title">Data Structures</div>
+                  <div class="phone-card-bar"></div>
+                </div>
+                <div class="phone-card-mock">
+                  <div class="phone-card-title">BCA Sem 2 Notes</div>
+                  <div class="phone-card-bar sec"></div>
+                </div>
+              </div>
+              <div class="phone-bottom-panel-mock">
+                <div style="font-weight:700; font-size:0.55rem; color:#fff;">Get the Native App</div>
+                <div class="phone-btn-mock">ADD TO SCREEN</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Features list showcase -->
+        <div class="features-list">
+          <div class="feature-item">
+            <div class="feature-icon-wrapper">
+              <!-- Rocket SVG -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polyline>
+              </svg>
+            </div>
+            <div class="feature-text">
+              <h3>Lightning Fast Launch</h3>
+              <p>Opens instantly with optimized background caching rules.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon-wrapper">
+              <!-- Cloud Offline SVG -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+              </svg>
+            </div>
+            <div class="feature-text">
+              <h3>Offline Notes Access</h3>
+              <p>Access recently opened notes and materials without an internet connection.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon-wrapper">
+              <!-- Bell Notification SVG -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </div>
+            <div class="feature-text">
+              <h3>Instant Sync & Alerts</h3>
+              <p>Stay updated with push notifications on newly uploaded study files.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dynamic PWA Diagnostics Checks Console -->
+      <div class="diagnostics-panel" id="diagnosticsPanel">
+        <!-- Diagnostic 1: HTTPS -->
+        <div class="diagnostic-badge" id="diag-https">
+          <div class="diagnostic-badge-info">
+            <!-- Shield Lock SVG -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <span>SSL Secured</span>
+          </div>
+          <div class="diagnostic-status-indicator" id="diag-https-status">
+            <!-- Spinner placeholder -->
+            <svg class="spinner" width="16" height="16" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>
+          </div>
+        </div>
+
+        <!-- Diagnostic 2: SW Service Worker -->
+        <div class="diagnostic-badge" id="diag-sw">
+          <div class="diagnostic-badge-info">
+            <!-- Sync / Reload SW SVG -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+            </svg>
+            <span>Service Sync</span>
+          </div>
+          <div class="diagnostic-status-indicator" id="diag-sw-status">
+            <svg class="spinner" width="16" height="16" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>
+          </div>
+        </div>
+
+        <!-- Diagnostic 3: App Manifest -->
+        <div class="diagnostic-badge" id="diag-manifest">
+          <div class="diagnostic-badge-info">
+            <!-- Layout Grid/Manifest SVG -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="9" y1="3" x2="9" y2="21"></line>
+              <line x1="9" y1="9" x2="21" y2="9"></line>
+              <line x1="9" y1="15" x2="21" y2="15"></line>
+            </svg>
+            <span>App Manifest</span>
+          </div>
+          <div class="diagnostic-status-indicator" id="diag-manifest-status">
+            <svg class="spinner" width="16" height="16" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>
+          </div>
+        </div>
+
+        <!-- Diagnostic 4: Internet Connection status -->
+        <div class="diagnostic-badge" id="diag-network">
+          <div class="diagnostic-badge-info">
+            <!-- Wifi SVG -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"></path>
+            </svg>
+            <span>Network Status</span>
+          </div>
+          <div class="diagnostic-status-indicator" id="diag-network-status">
+            <svg class="spinner" width="16" height="16" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Installation Controller Panel (Right Column) -->
+    <div class="control-panel">
+      
+      <!-- Primary Launch Actions -->
+      <div class="install-action-box">
+        <button class="btn-install-premium" id="installBtn" aria-label="Trigger App Installation">
+          <!-- Install SVG -->
+          <svg id="btnIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
+          </svg>
+          <span id="btnText">Install BCA Store App</span>
+        </button>
+
+        <!-- OS Recommended badge -->
+        <div class="device-recom-tag" id="recomTag" style="display:none;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span id="recomText">Recommended for your device</span>
+        </div>
+      </div>
+
+      <!-- Segmented Tabs Switcher -->
+      <div class="guide-tabs" role="tablist">
+        <button class="guide-tab-btn active" role="tab" aria-selected="true" aria-controls="panel-android" onclick="switchGuideTab('android')">
+          Mobile & Android
+        </button>
+        <button class="guide-tab-btn" role="tab" aria-selected="false" aria-controls="panel-ios" onclick="switchGuideTab('ios')">
+          iOS & Apple
+        </button>
+        <button class="guide-tab-btn" role="tab" aria-selected="false" aria-controls="panel-desktop" onclick="switchGuideTab('desktop')">
+          PC & macOS
+        </button>
+      </div>
+
+      <!-- Steps Guides Sheets -->
+      <div class="guide-steps-container">
+        
+        <!-- Mobile/Android guide -->
+        <div class="guide-step-panel active" id="panel-android" role="tabpanel">
+          <div class="guide-step-row">
+            <div class="step-number">1</div>
+            <div class="step-text">Tap the <strong>"Install BCA Store App"</strong> action button above.</div>
+          </div>
+          <div class="guide-step-row">
+            <div class="step-number">2</div>
+            <div class="step-text">Confirm the prompt dialog by selecting <strong>Install</strong>.</div>
+          </div>
+          <div class="guide-step-row">
+            <div class="step-number">3</div>
+            <div class="step-text">The launch shortcut will automatically appear in your app locker.</div>
+          </div>
+        </div>
+
+        <!-- iOS/iPhone guide -->
+        <div class="guide-step-panel" id="panel-ios" role="tabpanel">
+          <div class="guide-step-row">
+            <div class="step-number">1</div>
+            <div class="step-text">Open this page using Apple's default <strong>Safari Browser</strong>.</div>
+          </div>
+          <div class="guide-step-row">
+            <div class="step-number">2</div>
+            <div class="step-text">Tap the <strong>Share button</strong> in Safari's lower navigation menu.</div>
+          </div>
+          <div class="guide-step-row">
+            <div class="step-number">3</div>
+            <div class="step-text">Select <strong>"Add to Home Screen"</strong> from the actions list.</div>
+          </div>
+        </div>
+
+        <!-- Windows/Mac Desktop guide -->
+        <div class="guide-step-panel" id="panel-desktop" role="tabpanel">
+          <div class="guide-step-row">
+            <div class="step-number">1</div>
+            <div class="step-text">Ensure you are using <strong>Chrome</strong> or <strong>Edge</strong> on PC/Mac.</div>
+          </div>
+          <div class="guide-step-row">
+            <div class="step-number">2</div>
+            <div class="step-text">Look for the **PWA Install icon** in the browser's address/search bar (right side).</div>
+          </div>
+          <div class="guide-step-row">
+            <div class="step-number">3</div>
+            <div class="step-text">Click the icon and select **Install** to add it to your Desktop/Dock.</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Toast overlay alerts -->
+  <div class="install-toast" id="installToast" role="alert" aria-live="polite">
+    <div class="install-toast-icon" id="toastIcon"></div>
+    <span id="toastMsg">App installed successfully!</span>
+  </div>
+
+  <script>
+    /* Theme Toggle System */
+    const html = document.documentElement;
+    const themeBtn = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeToggleIcon');
+    const savedTheme = localStorage.getItem('bca-theme');
+
+    const sunSVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+    const moonSVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+
+    function applyTheme(theme) {
+      html.setAttribute('data-theme', theme);
+      themeIcon.innerHTML = theme === 'dark' ? sunSVG : moonSVG;
+      localStorage.setItem('bca-theme', theme);
+    }
+
+    if (savedTheme) {
+      applyTheme(savedTheme);
+    } else {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      applyTheme(prefersDark ? 'dark' : 'light');
+    }
+
+    themeBtn.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    /* Switch device instructions tabs sheets */
+    window.switchGuideTab = function(device) {
+      const tabBtns = document.querySelectorAll('.guide-tab-btn');
+      tabBtns.forEach((btn) => {
+        const isTarget = btn.getAttribute('aria-controls') === `panel-${device}`;
+        btn.classList.toggle('active', isTarget);
+        btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+      });
+
+      const panels = document.querySelectorAll('.guide-step-panel');
+      panels.forEach((panel) => {
+        panel.classList.toggle('active', panel.id === `panel-${device}`);
+      });
+    };
+
+    /* Intelligent Browser & OS Sniffer */
+    function autoDetectDevice() {
+      const ua = navigator.userAgent;
+      const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      const isAndroid = /Android/i.test(ua);
+      const isMac = /Macintosh/i.test(ua) && !isIOS;
+      const isWindows = /Windows/i.test(ua);
+
+      const recomTag = document.getElementById('recomTag');
+      const recomText = document.getElementById('recomText');
+
+      if (isIOS) {
+        switchGuideTab('ios');
+        recomText.textContent = "Recommended settings for iOS Safari";
+        recomTag.style.display = 'inline-flex';
+      } else if (isAndroid) {
+        switchGuideTab('android');
+        recomText.textContent = "Recommended settings for Android Chrome";
+        recomTag.style.display = 'inline-flex';
+      } else if (isMac) {
+        switchGuideTab('desktop');
+        recomText.textContent = "Recommended settings for macOS Desktop";
+        recomTag.style.display = 'inline-flex';
+      } else if (isWindows) {
+        switchGuideTab('desktop');
+        recomText.textContent = "Recommended settings for Windows Desktop";
+        recomTag.style.display = 'inline-flex';
+      }
+    }
+
+    /* Diagnostics Simulation & Verification */
+    const checkmarkSVG = `<svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+    const crossSVG = `<svg class="cross-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+
+    function runDiagnosticVerification() {
+      const diagnostics = [
+        {
+          id: 'diag-https',
+          check: () => window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        },
+        {
+          id: 'diag-sw',
+          check: () => 'serviceWorker' in navigator
+        },
+        {
+          id: 'diag-manifest',
+          check: () => !!document.querySelector('link[rel="manifest"]')
+        },
+        {
+          id: 'diag-network',
+          check: () => navigator.onLine
+        }
+      ];
+
+      diagnostics.forEach((diag, index) => {
+        setTimeout(() => {
+          const badge = document.getElementById(diag.id);
+          const indicator = document.getElementById(`${diag.id}-status`);
+          const passed = diag.check();
+
+          if (passed) {
+            badge.classList.add('success');
+            indicator.innerHTML = checkmarkSVG;
+          } else {
+            badge.classList.add('failed');
+            indicator.innerHTML = crossSVG;
+          }
+        }, (index + 1) * 350); // Stagger verification for premium dashboard feel
+      });
+    }
+
+    /* Register service worker with status hooks */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(() => console.log('PWA Service Worker registered'))
+          .catch((err) => console.warn('Service Worker registration skipped:', err));
+      });
+    }
+
+    /* PWA Prompt flow integration */
+    let deferredPrompt = null;
+    let isAlreadyInstalled = false;
+    const installBtn = document.getElementById('installBtn');
+    const btnText = document.getElementById('btnText');
+    const btnIcon = document.getElementById('btnIcon');
+
+    // Display mode standalone check
+    if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) {
+      isAlreadyInstalled = true;
+      setAppInstalledState();
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    window.addEventListener('appinstalled', () => {
+      isAlreadyInstalled = true;
+      deferredPrompt = null;
+      setAppInstalledState();
+      showPremiumToast(checkmarkSVG, 'BCA Store App installed successfully! Launch it from home screen.');
+    });
+
+    function setAppInstalledState() {
+      installBtn.classList.add('installed');
+      btnText.textContent = 'App Already Installed ✅';
+      installBtn.disabled = true;
+      installBtn.style.pointerEvents = 'none';
+      btnIcon.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+    }
+
+    async function handleInstallTrigger() {
+      if (isAlreadyInstalled) return;
+
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        if (outcome === 'accepted') {
+          showPremiumToast(checkmarkSVG, 'Installing BCA Store Native App...');
+        }
+      } else {
+        const ua = navigator.userAgent;
+        const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        if (isIOS) {
+          switchGuideTab('ios');
+          showPremiumToast(checkmarkSVG, 'Please follow the iOS Safari instructions displayed below!');
+        } else {
+          showPremiumToast(crossSVG, 'Use browser options menu (⋮) to "Add to Home screen" manually.');
+        }
+      }
+    }
+
+    installBtn.addEventListener('click', handleInstallTrigger);
+
+    /* Premium Toast Alert system */
+    let toastTimer = null;
+    function showPremiumToast(iconHtml, msg) {
+      const toast = document.getElementById('installToast');
+      const toastIcon = document.getElementById('toastIcon');
+      const toastMsg = document.getElementById('toastMsg');
+
+      toastIcon.innerHTML = iconHtml;
+      toastMsg.textContent = msg;
+      
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 4000);
+    }
+
+    /* Glassmorphic 3D Card Hover Tilt Interaction */
+    const container = document.getElementById('installContainer');
+    
+    // Disable tilt on small devices for better readability
+    if (window.innerWidth > 900) {
+      container.addEventListener('mousemove', (e) => {
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const xc = rect.width / 2;
+        const yc = rect.height / 2;
+        const dx = x - xc;
+        const dy = y - yc;
+        const tiltX = (dy / yc) * -1.8;
+        const tiltY = (dx / xc) * 1.8;
+        
+        container.style.transform = `perspective(1200px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+      });
+
+      container.addEventListener('mouseleave', () => {
+        container.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+      });
+    }
+
+    // Initialize scripts on mount
+    window.addEventListener('DOMContentLoaded', () => {
+      autoDetectDevice();
+      runDiagnosticVerification();
+    });
+  </script>
+</body>
+</html>

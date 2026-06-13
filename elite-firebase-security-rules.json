@@ -1,0 +1,155 @@
+{
+  "rules": {
+    "elitePlus": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+      ".indexOn": ["uploadDate", "timestamp", "position"],
+      
+      // Each batch ID
+      "$batchId": {
+        ".validate": "newData.hasChild('sections') || newData.hasChild('info') || newData.hasChild('stats')",
+        
+        // Batch info
+        "info": {
+          ".read": true,
+          ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+          ".validate": "newData.hasChildren(['name', 'description'])",
+          
+          "name": { ".validate": "newData.isString() && newData.val().length > 0" },
+          "description": { ".validate": "newData.isString()" },
+          "icon": { ".validate": "newData.isString()" },
+          "level": { ".validate": "newData.isString()" },
+          "studentsEnrolled": { ".validate": "newData.isNumber()" }
+        },
+        
+        // Main sections container
+        "sections": {
+          ".read": true,
+          ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+          
+          // Videos section
+          "videos": {
+            ".read": true,
+            ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+            ".indexOn": ["uploadDate", "timestamp", "views", "position"],
+            
+            "$videoId": {
+              ".validate": "newData.hasChildren(['title', 'url'])",
+              
+              "title": { ".validate": "newData.isString() && newData.val().length > 0" },
+              "url": { ".validate": "newData.isString() && newData.val().matches(/^https:\\/\\/.+/)" },
+              "description": { ".validate": "newData.isString()" },
+              "duration": { ".validate": "newData.isString()" },
+              "instructor": { ".validate": "newData.isString()" },
+              "uploadDate": { ".validate": "newData.isNumber()" },
+              "timestamp": { ".validate": "newData.isNumber()" },
+              "views": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+              "likes": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+              "position": { ".validate": "newData.isNumber()" },
+              "uploadedBy": { ".validate": "newData.isString()" },
+              "lastModified": { ".validate": "newData.isNumber()" }
+            }
+          },
+          
+          // Notes section
+          "notes": {
+            ".read": true,
+            ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+            ".indexOn": ["uploadDate", "timestamp", "downloads", "position"],
+            
+            "$noteId": {
+              ".validate": "newData.hasChildren(['title', 'url'])",
+              
+              "title": { ".validate": "newData.isString() && newData.val().length > 0" },
+              "url": { ".validate": "newData.isString() && newData.val().matches(/^https:\\/\\/.+/)" },
+              "description": { ".validate": "newData.isString()" },
+              "pages": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+              "difficulty": { ".validate": "newData.isString() && newData.val().matches(/^(Easy|Medium|Hard)$/)" },
+              "uploadDate": { ".validate": "newData.isNumber()" },
+              "timestamp": { ".validate": "newData.isNumber()" },
+              "downloads": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+              "position": { ".validate": "newData.isNumber()" },
+              "uploadedBy": { ".validate": "newData.isString()" },
+              "lastModified": { ".validate": "newData.isNumber()" }
+            }
+          },
+          
+          // DPP section
+          "dpp": {
+            ".read": true,
+            ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+            ".indexOn": ["uploadDate", "timestamp", "attempts", "position"],
+            
+            "$dppId": {
+              ".validate": "newData.hasChildren(['title', 'url'])",
+              
+              "title": { ".validate": "newData.isString() && newData.val().length > 0" },
+              "url": { ".validate": "newData.isString() && newData.val().matches(/^https:\\/\\/.+/)" },
+              "description": { ".validate": "newData.isString()" },
+              "questions": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+              "difficulty": { ".validate": "newData.isString() && newData.val().matches(/^(Easy|Medium|Hard)$/)" },
+              "solutions": { ".validate": "newData.isString()" },
+              "uploadDate": { ".validate": "newData.isNumber()" },
+              "timestamp": { ".validate": "newData.isNumber()" },
+              "attempts": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+              "position": { ".validate": "newData.isNumber()" },
+              "uploadedBy": { ".validate": "newData.isString()" },
+              "lastModified": { ".validate": "newData.isNumber()" }
+            }
+          },
+          
+          // Live Classes section
+          "liveClasses": {
+            ".read": true,
+            ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+            ".indexOn": ["uploadDate", "timestamp", "attendees", "position"],
+            
+            "$liveId": {
+              ".validate": "newData.hasChildren(['title', 'url']) || newData.hasChild('zoomLink',)",
+              
+              "title": { ".validate": "newData.isString() && newData.val().length > 0" },
+              "description": { ".validate": "newData.isString()" },
+              "url": { ".validate": "newData.isString()" },
+              "zoomLink": { ".validate": "newData.isString() && newData.val().matches(/^https:\\/\\/.+/)" },
+              "recordingUrl": { ".validate": "newData.isString()" },
+              "schedule": { ".validate": "newData.isString()" },
+              "duration": { ".validate": "newData.isString()" },
+              "instructor": { ".validate": "newData.isString()" },
+              "status": { ".validate": "newData.isString() && newData.val().matches(/^(active|scheduled|completed)$/)" },
+              "uploadDate": { ".validate": "newData.isNumber()" },
+              "timestamp": { ".validate": "newData.isNumber()" },
+              "attendees": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+              "maxAttendees": { ".validate": "newData.isNumber() && newData.val() > 0" },
+              "position": { ".validate": "newData.isNumber()" },
+              "uploadedBy": { ".validate": "newData.isString()" },
+              "lastModified": { ".validate": "newData.isNumber()" }
+            }
+          }
+        },
+        
+        // Batch statistics
+        "stats": {
+          ".read": true,
+          ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+          
+          "totalVideos": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "totalNotes": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "totalDPP": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "totalLiveClasses": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "totalStudents": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "lastModified": { ".validate": "newData.isNumber()" }
+        }
+      }
+    },
+    
+    // Admin users
+    "admins": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      ".write": false,
+      
+      "$uid": {
+        ".validate": "$uid != null"
+      }
+    }
+  }
+}

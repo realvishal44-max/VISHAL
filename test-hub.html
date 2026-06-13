@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCA Store | Quiz Arena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="test.css">
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+</head>
+<body class="test-hub-body">
+    <nav class="nav-minimal">
+        <div class="nav-container">
+            <div style="display:flex; gap:16px; align-items:center;">
+                <a href="index.html" class="nav-back">← Back to Store</a>
+            </div>
+            <h1 class="nav-title">Quiz Arena</h1>
+        </div>
+    </nav>
+
+    <main class="hub-container">
+        <div class="hub-header glass-card">
+            <div class="hub-hero">
+                <h2>Ready to test your knowledge? 🧠</h2>
+                <p>Select your semester to discover active quizzes and challenges.</p>
+            </div>
+            
+            <div class="hub-filter">
+                <select id="hubSemFilter" onchange="loadQuizzes()">
+                    <option value="">— Select Semester —</option>
+                    <option value="Semester1">Semester 1</option>
+                    <option value="Semester2">Semester 2</option>
+                    <option value="Semester3">Semester 3</option>
+                    <option value="Semester4">Semester 4</option>
+                    <option value="Semester5">Semester 5</option>
+                    <option value="Semester6">Semester 6</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="quizListArea" class="quiz-grid">
+            <div class="hub-placeholder">
+                <span class="p-icon">📅</span>
+                <p>Please select a semester to see active quizzes.</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="student-registration.js"></script>
+    <script src="script.js"></script>
+    <script>
+        function loadQuizzes() {
+            const sem = document.getElementById('hubSemFilter').value;
+            const list = document.getElementById('quizListArea');
+            if(!sem) return;
+
+            list.innerHTML = '<div class="hub-loading"><div class="spinner"></div><p>Searching for active quizzes...</p></div>';
+
+            db.ref('tests/' + sem).on('value', snap => {
+                if(!snap.exists()) {
+                    list.innerHTML = '<div class="hub-empty"><h3>No Active Quizzes</h3><p>There are no quizzes published for this semester yet.</p></div>';
+                    return;
+                }
+
+                let html = '';
+                snap.forEach(subSnap => {
+                    subSnap.forEach(testSnap => {
+                        const t = testSnap.val();
+                        if(t.status === 'published') {
+                            const qCount = t.type === 'quiz' ? (t.questions?.length || 0) : 1;
+                            const time = t.timeLimit || qCount;
+                            
+                            html += `
+                                <div class="quiz-card glass-card">
+                                    <div class="q-badge">${t.subject}</div>
+                                    <h3 class="q-title">${t.title}</h3>
+                                    <div class="q-meta">
+                                        <span>⏱️ ${time} Mins</span>
+                                        <span>🔢 ${qCount} Questions</span>
+                                    </div>
+                                    <button class="q-btn" onclick="startQuiz('${sem}', '${t.subject}', '${t.testId}')">Start Test 🚀</button>
+                                </div>
+                            `;
+                        }
+                    });
+                });
+                list.innerHTML = html || '<div class="hub-empty"><h3>No Active Quizzes</h3></div>';
+            });
+        }
+
+        function startQuiz(sem, sub, tid) {
+            window.location.href = `test.html?sem=${sem}&sub=${sub}&tid=${tid}`;
+        }
+    </script>
+
+    <style>
+        .test-hub-body { background: #050505; color: #fff; font-family: 'Inter', sans-serif; }
+        .nav-minimal { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .nav-back { text-decoration: none; color: #818CF8; font-weight: 600; }
+        .nav-title { font-family: 'Outfit', sans-serif; font-size: 1.5rem; }
+        
+        .hub-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .hub-header { padding: 40px; border-radius: 24px; display: flex; justify-content: space-between; align-items: center; gap: 40px; margin-bottom: 40px; }
+        .hub-hero h2 { font-size: 1.8rem; margin-bottom: 8px; }
+        .hub-hero p { color: #94A3B8; }
+        
+        .hub-filter select { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); padding: 12px 24px; border-radius: 12px; font-size: 1rem; width: 250px; outline: none; }
+        
+        .quiz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+        .quiz-card { padding: 24px; border-radius: 20px; transition: transform 0.3s ease; }
+        .quiz-card:hover { transform: translateY(-5px); }
+        .q-badge { display: inline-block; padding: 4px 12px; background: rgba(99,102,241,0.1); color: #818CF8; border-radius: 99px; font-size: 0.75rem; font-weight: 700; margin-bottom: 16px; }
+        .q-title { font-size: 1.25rem; margin-bottom: 16px; line-height: 1.4; }
+        .q-meta { display: flex; gap: 16px; color: #94A3B8; font-size: 0.85rem; margin-bottom: 24px; }
+        .q-btn { width: 100%; padding: 14px; border-radius: 12px; background: #6366f1; color: #fff; border: none; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+        .q-btn:hover { opacity: 0.9; }
+
+        .hub-placeholder, .hub-empty, .hub-loading { grid-column: 1 / -1; text-align: center; padding: 100px 40px; color: #64748B; }
+        .p-icon { font-size: 4rem; display: block; margin-bottom: 20px; }
+        
+        @media (max-width: 768px) {
+            .hub-header { flex-direction: column; text-align: center; padding: 30px 20px; }
+            .hub-filter select { width: 100%; }
+        }
+    </style>
+</body>
+</html>

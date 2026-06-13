@@ -1,0 +1,1334 @@
+/*
+ * ============================================================
+ * HOME PAGE PREMIUM ENHANCEMENT CSS
+ * Ultra-clean, Premium, Modern EdTech Design
+ * Version: 2.0 - Full Enhancement
+ * ============================================================
+ */
+
+/* ============================================================
+   PERFORMANCE LAYER - GPU-Accelerated Base
+   ============================================================ */
+
+/* Kill code rain canvas on homepage for clean look */
+#codeRain {
+  display: none !important;
+}
+
+/* ============================================================
+   PREMIUM AMBIENT BACKGROUND
+   Subtle gradient movement, alive but never distracting
+   ============================================================ */
+
+[data-theme="dark"] body {
+  background:
+    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(99, 102, 241, 0.12) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 90%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 35% at 5% 60%, rgba(6, 182, 212, 0.05) 0%, transparent 60%),
+    #020817;
+  background-attachment: fixed;
+}
+
+/* Animated ambient orbs - subtle and hardware-accelerated */
+[data-theme="dark"] body::before {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: -10%;
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(ellipse, rgba(99, 102, 241, 0.06) 0%, transparent 70%);
+  animation: ambientOrb1 20s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: -2;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+[data-theme="dark"] body::after {
+  content: '';
+  position: fixed;
+  bottom: -20%;
+  right: -10%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(ellipse, rgba(139, 92, 246, 0.05) 0%, transparent 70%);
+  animation: ambientOrb2 25s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: -2;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+@keyframes ambientOrb1 {
+  0% { transform: translateX(0) translateY(0) translateZ(0); }
+  100% { transform: translateX(5%) translateY(8%) translateZ(0); }
+}
+
+@keyframes ambientOrb2 {
+  0% { transform: translateX(0) translateY(0) translateZ(0); }
+  100% { transform: translateX(-6%) translateY(-5%) translateZ(0); }
+}
+
+/* Mobile: Minimal ambient - no body pseudo-elements on small screens */
+@media (max-width: 768px) {
+  [data-theme="dark"] body::before,
+  [data-theme="dark"] body::after {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+/* ============================================================
+   HERO SECTION - Ultra Premium Redesign
+   ============================================================ */
+
+.hero {
+  min-height: 92vh;
+  padding: 140px 24px 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 100svh;
+    padding: 110px 20px 80px;
+  }
+}
+
+/* Hero ambient orbs - CSS-only, no JS needed */
+.hero-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(80px);
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+.hero-bg-orb.orb1 {
+  width: 600px;
+  height: 600px;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%) translateZ(0);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
+  animation: orbFloat1 18s ease-in-out infinite alternate;
+}
+
+.hero-bg-orb.orb2 {
+  width: 400px;
+  height: 400px;
+  bottom: 0;
+  right: 5%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
+  animation: orbFloat2 22s ease-in-out infinite alternate;
+}
+
+@keyframes orbFloat1 {
+  0% { transform: translateX(-50%) translateY(0) translateZ(0); }
+  100% { transform: translateX(-48%) translateY(-5%) translateZ(0); }
+}
+
+@keyframes orbFloat2 {
+  0% { transform: translateY(0) translateZ(0); }
+  100% { transform: translateY(-8%) translateZ(0); }
+}
+
+@media (max-width: 768px) {
+  .hero-bg-orb.orb1 {
+    width: 300px;
+    height: 300px;
+    filter: blur(60px);
+    opacity: 0.6;
+    animation: none;
+  }
+  .hero-bg-orb.orb2 {
+    display: none;
+  }
+}
+
+/* Hero content - premium spacing */
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ============================================================
+   HERO TITLE - Premium Typography
+   ============================================================ */
+
+.hero-title {
+  font-size: clamp(3.5rem, 9vw, 6.5rem) !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.05em !important;
+  line-height: 1 !important;
+  margin-bottom: 32px !important;
+  animation: heroTitleIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.1s;
+  will-change: transform, opacity;
+}
+
+@keyframes heroTitleIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0) scale(0.96);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+/* ============================================================
+   HERO TAGLINE - Premium Weight
+   ============================================================ */
+
+.hero-tagline {
+  font-size: clamp(1.1rem, 3vw, 1.55rem) !important;
+  font-weight: 800 !important;
+  margin-top: -8px !important;
+  margin-bottom: 24px !important;
+  line-height: 1.3 !important;
+  letter-spacing: -0.02em !important;
+  animation: heroFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.25s;
+  will-change: transform, opacity;
+}
+
+@keyframes heroFadeIn {
+  from { opacity: 0; transform: translate3d(0, 25px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+/* ============================================================
+   HERO SUBTITLE - Clean & Readable
+   ============================================================ */
+
+.hero-subtitle {
+  font-size: 1.05rem !important;
+  line-height: 1.75 !important;
+  color: var(--text-muted) !important;
+  max-width: 620px !important;
+  margin: 0 auto 28px !important;
+  letter-spacing: 0em !important;
+  font-weight: 450 !important;
+  animation: heroFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.38s;
+  will-change: transform, opacity;
+}
+
+@media (max-width: 768px) {
+  .hero-subtitle {
+    font-size: 0.97rem !important;
+    line-height: 1.65 !important;
+  }
+}
+
+/* ============================================================
+   HERO HIGHLIGHTS PILL - Premium Badge
+   ============================================================ */
+
+.hero-highlights {
+  animation: heroFadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.48s;
+  margin-bottom: 40px !important;
+}
+
+/* ============================================================
+   HERO CTA BUTTONS - Premium with Hover Lift
+   ============================================================ */
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  animation: heroFadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.55s;
+  margin-bottom: 48px;
+}
+
+.hero-cta-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 36px;
+  border-radius: 99px;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  text-decoration: none !important;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  overflow: hidden;
+  will-change: transform, box-shadow;
+  transform: translateZ(0);
+}
+
+.hero-cta-btn.install-btn {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: #fff !important;
+  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.35), 0 0 0 0 rgba(99, 102, 241, 0);
+}
+
+.hero-cta-btn.install-btn:hover {
+  transform: translateY(-4px) scale(1.03) translateZ(0);
+  box-shadow: 0 16px 45px rgba(99, 102, 241, 0.45), 0 0 0 4px rgba(99, 102, 241, 0.15);
+}
+
+.hero-cta-btn.explore-btn {
+  background: transparent;
+  color: var(--text) !important;
+  border: 1.5px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .hero-cta-btn.explore-btn {
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #fff !important;
+}
+
+.hero-cta-btn.explore-btn:hover {
+  border-color: rgba(99, 102, 241, 0.5);
+  background: rgba(99, 102, 241, 0.08);
+  transform: translateY(-4px) translateZ(0);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+/* Button glow pulse effect */
+.btn-glow-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 99px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  animation: btnGlowPulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes btnGlowPulse {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+@media (max-width: 480px) {
+  .hero-cta-btn {
+    padding: 14px 28px !important;
+    font-size: 0.93rem !important;
+  }
+  .hero-actions {
+    gap: 12px !important;
+  }
+}
+
+/* ============================================================
+   QUICK FEATURES GRID - Refined & Spacious
+   ============================================================ */
+
+.top-features-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 10px !important;
+  margin-top: 0 !important;
+  max-width: 720px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  animation: heroFadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.65s;
+}
+
+.tf-item {
+  background: rgba(255,255,255,0.03) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  padding: 11px 14px !important;
+  border-radius: 14px !important;
+  gap: 9px !important;
+  box-shadow: none !important;
+  transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+[data-theme="light"] .tf-item {
+  background: rgba(255,255,255,0.85) !important;
+  border-color: rgba(0,0,0,0.06) !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04) !important;
+}
+
+.tf-item:hover {
+  background: rgba(99, 102, 241, 0.1) !important;
+  border-color: rgba(99, 102, 241, 0.3) !important;
+  transform: translateY(-3px) scale(1.02) translateZ(0) !important;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15) !important;
+}
+
+.tf-icon {
+  font-size: 1.25rem !important;
+}
+
+.tf-title {
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+@media (max-width: 768px) {
+  .top-features-grid {
+    gap: 8px !important;
+    max-width: 100% !important;
+  }
+  .tf-item {
+    padding: 10px 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-features-grid {
+    gap: 6px !important;
+    padding: 0 !important;
+  }
+  .tf-item {
+    padding: 9px 10px !important;
+    border-radius: 12px !important;
+  }
+  .tf-icon {
+    font-size: 1.1rem !important;
+  }
+  .tf-title {
+    font-size: 0.72rem !important;
+  }
+}
+
+/* ============================================================
+   SECTION LAYOUT - Premium Breathing Room
+   ============================================================ */
+
+.section {
+  padding: 80px 0;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+.section-header h2 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem) !important;
+  font-weight: 850 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.15 !important;
+  margin-bottom: 14px !important;
+  color: var(--text);
+}
+
+.section-header p {
+  font-size: 1.05rem !important;
+  line-height: 1.7 !important;
+  color: var(--text-muted) !important;
+  max-width: 520px !important;
+  margin: 0 auto !important;
+  font-weight: 450 !important;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 60px 0;
+  }
+  .section-header {
+    margin-bottom: 36px;
+    padding: 0 16px;
+  }
+  .section-header h2 {
+    font-size: clamp(1.55rem, 6vw, 2rem) !important;
+  }
+  .section-header p {
+    font-size: 0.97rem !important;
+  }
+}
+
+/* ============================================================
+   STATS STRIP - Premium Card Presentation
+   ============================================================ */
+
+.stats-strip {
+  padding: 72px 0 !important;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .stats-strip {
+  background: linear-gradient(135deg, rgba(12, 26, 46, 0.95), rgba(10, 20, 40, 0.98)) !important;
+  border-top: 1px solid rgba(255,255,255,0.04) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+.stats-strip::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 200px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 28px 32px;
+  border-right: 1px solid rgba(255,255,255,0.05);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+}
+
+.stat-item:last-child {
+  border-right: none;
+}
+
+.stat-item:hover {
+  background: rgba(99, 102, 241, 0.04);
+  transform: translateY(-2px);
+}
+
+.stat-icon-bg {
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 18px !important;
+  font-size: 1.6rem !important;
+  flex-shrink: 0;
+}
+
+.stat-number {
+  font-size: 2.2rem !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.03em !important;
+}
+
+.stat-label {
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  margin-top: 2px !important;
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  .stat-item {
+    padding: 20px 24px;
+    border-right: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .stat-item:nth-child(even) {
+    border-right: none;
+  }
+  .stat-item:nth-child(3),
+  .stat-item:nth-child(4) {
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-item {
+    padding: 18px 16px;
+    gap: 14px;
+  }
+  .stat-icon-bg {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 14px !important;
+    font-size: 1.3rem !important;
+  }
+  .stat-number {
+    font-size: 1.75rem !important;
+  }
+}
+
+/* ============================================================
+   ELITE PLUS BANNER - Premium Glassmorphic Card
+   ============================================================ */
+
+.elite-plus-banner-section {
+  padding: 80px 0;
+}
+
+.elite-premium-card-container {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, box-shadow;
+  transform: translateZ(0);
+}
+
+.elite-premium-card-container:hover {
+  transform: translateY(-6px) translateZ(0);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.35) !important;
+}
+
+[data-theme="dark"] .elite-premium-card-inner {
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.9) 0%, rgba(12, 26, 46, 0.95) 100%);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+.elite-premium-title {
+  font-size: clamp(2rem, 5vw, 3rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.1 !important;
+  margin-bottom: 18px !important;
+}
+
+.elite-premium-desc {
+  font-size: 1rem !important;
+  line-height: 1.75 !important;
+  color: rgba(255,255,255,0.65) !important;
+  font-weight: 400 !important;
+  max-width: 380px !important;
+}
+
+.elite-feature-item {
+  padding: 14px 16px !important;
+  border-radius: 14px !important;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.elite-feature-item:hover {
+  background: rgba(255,255,255,0.05) !important;
+  transform: translateX(4px) !important;
+}
+
+.elite-feature-info h4 {
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 3px !important;
+  letter-spacing: -0.01em !important;
+}
+
+.elite-feature-info p {
+  font-size: 0.8rem !important;
+  line-height: 1.5 !important;
+  color: rgba(255,255,255,0.5) !important;
+}
+
+/* ============================================================
+   BATCH CARDS SECTION - Polished Grid
+   ============================================================ */
+
+.semesters-section {
+  padding: 80px 0 100px;
+}
+
+.semester-grid {
+  gap: 24px !important;
+}
+
+.batch-card {
+  border-radius: 22px !important;
+  overflow: hidden !important;
+  transition: all 0.38s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  will-change: transform, box-shadow;
+  transform: translateZ(0);
+}
+
+.batch-card:hover {
+  transform: translate3d(0, -10px, 0) scale(1.015) !important;
+}
+
+[data-theme="dark"] .batch-card:hover {
+  box-shadow: 
+    0 30px 60px -15px rgba(0, 0, 0, 0.6), 
+    0 0 40px rgba(99, 102, 241, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+/* ============================================================
+   BATCH CATEGORY SWITCHER - Premium Pill Buttons
+   ============================================================ */
+
+.batch-category-switcher {
+  display: inline-flex;
+  gap: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 5px;
+  margin-bottom: 40px;
+}
+
+[data-theme="dark"] .batch-category-switcher {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(255,255,255,0.07);
+  backdrop-filter: blur(12px);
+}
+
+.switcher-btn {
+  padding: 10px 22px !important;
+  border-radius: 99px !important;
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  border: none !important;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent !important;
+  color: var(--text-muted) !important;
+  letter-spacing: -0.01em;
+}
+
+.switcher-btn.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35) !important;
+}
+
+.switcher-btn:not(.active):hover {
+  background: rgba(99, 102, 241, 0.08) !important;
+  color: var(--text) !important;
+}
+
+/* ============================================================
+   UTILITIES SECTION - Clean Card Grid
+   ============================================================ */
+
+.utilities-section {
+  padding: 60px 0 !important;
+}
+
+.utilities-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 640px) {
+  .utilities-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.utility-card {
+  padding: 28px !important;
+  border-radius: 22px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, box-shadow;
+  transform: translateZ(0);
+}
+
+.utility-card:hover {
+  transform: translate3d(0, -8px, 0) scale(1.02) !important;
+  box-shadow: 
+    0 24px 48px -12px rgba(99, 102, 241, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.utility-icon-wrap {
+  font-size: 2rem;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: var(--primary-light);
+}
+
+.utility-info h3 {
+  font-size: 1.2rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 8px !important;
+}
+
+.utility-info p {
+  font-size: 0.9rem !important;
+  line-height: 1.65 !important;
+  color: var(--text-muted) !important;
+  font-weight: 420 !important;
+}
+
+.utility-action-btn {
+  align-self: flex-start;
+  padding: 12px 24px !important;
+  border-radius: 99px !important;
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================================
+   CHALLENGE CARD - Premium Design
+   ============================================================ */
+
+.challenge-section {
+  padding: 60px 0 !important;
+}
+
+.challenge-card {
+  border-radius: 22px !important;
+  padding: 32px 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 24px !important;
+  flex-wrap: wrap !important;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.challenge-card:hover {
+  transform: translate3d(0, -6px, 0) scale(1.01) !important;
+  box-shadow: 
+    0 20px 40px -10px rgba(139, 92, 246, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.challenge-card h3 {
+  font-size: 1.25rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 6px !important;
+}
+
+.challenge-card p {
+  font-size: 0.92rem !important;
+  color: var(--text-muted) !important;
+  font-weight: 420 !important;
+  line-height: 1.6 !important;
+}
+
+@media (max-width: 540px) {
+  .challenge-card {
+    padding: 24px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+}
+
+/* ============================================================
+   FAQ SECTION - Premium Accordion
+   ============================================================ */
+
+.faq-section {
+  padding: 80px 0 !important;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .faq-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.faq-item {
+  border-radius: 18px !important;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.faq-item:hover {
+  transform: translateY(-2px) translateZ(0);
+}
+
+.faq-question {
+  padding: 20px 24px !important;
+  font-size: 0.97rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  line-height: 1.5 !important;
+}
+
+.faq-answer {
+  overflow: hidden;
+}
+
+.faq-answer p {
+  padding: 0 24px 20px !important;
+  font-size: 0.92rem !important;
+  line-height: 1.7 !important;
+  color: var(--text-muted) !important;
+  font-weight: 420 !important;
+}
+
+.faq-icon {
+  font-size: 1.2rem;
+  font-weight: 300;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+  color: var(--primary);
+}
+
+.faq-item.active .faq-icon {
+  transform: rotate(45deg);
+}
+
+/* ============================================================
+   CONNECT STRIP - Spacious CTA Section
+   ============================================================ */
+
+.connect-strip {
+  padding: 80px 0 !important;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .connect-strip {
+  background: linear-gradient(135deg, rgba(12, 26, 46, 0.6), rgba(10, 20, 40, 0.8));
+}
+
+.connect-strip .section-header {
+  margin-bottom: 36px !important;
+}
+
+.connect-strip .section-header h2 {
+  font-size: clamp(1.6rem, 4vw, 2.4rem) !important;
+  line-height: 1.25 !important;
+}
+
+.contact-btn-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.home-contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 30px;
+  border-radius: 99px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, box-shadow;
+  transform: translateZ(0);
+}
+
+.home-contact-btn:hover {
+  transform: translateY(-4px) scale(1.03) translateZ(0);
+}
+
+.icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+/* ============================================================
+   VISIT COUNTER - Minimal & Clean
+   ============================================================ */
+
+.visit-counter-section {
+  padding: 48px 0;
+}
+
+.vc-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 28px 40px !important;
+  border-radius: 22px !important;
+  max-width: 420px;
+  margin: 0 auto;
+  transition: all 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.vc-card:hover {
+  transform: translateY(-4px);
+}
+
+.vc-icon {
+  font-size: 2rem;
+}
+
+.vc-info h3 {
+  font-size: 1.75rem !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1 !important;
+  margin-bottom: 4px !important;
+}
+
+.vc-info p {
+  font-size: 0.85rem !important;
+  color: var(--text-muted) !important;
+  font-weight: 500 !important;
+}
+
+/* ============================================================
+   GLASS CARDS - Global Premium Enhancement
+   ============================================================ */
+
+[data-theme="dark"] .glass-card {
+  background: rgba(15, 23, 42, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  backdrop-filter: blur(24px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+[data-theme="dark"] .glass-card:hover {
+  background: rgba(20, 30, 55, 0.75) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+}
+
+/* ============================================================
+   FOOTER - Premium Elevated
+   ============================================================ */
+
+.footer {
+  padding: 64px 0 40px !important;
+}
+
+[data-theme="dark"] .footer {
+  background: linear-gradient(to bottom, #020817, #010610) !important;
+  border-top: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+.footer-grid {
+  gap: 48px !important;
+}
+
+.footer-col h4 {
+  font-size: 0.8rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  margin-bottom: 20px !important;
+  color: var(--text-muted) !important;
+}
+
+.footer-links li {
+  margin-bottom: 12px !important;
+}
+
+.footer-links a {
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  color: var(--text-muted) !important;
+  transition: all 0.25s ease !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-links a:hover {
+  color: var(--primary) !important;
+  transform: translateX(4px);
+}
+
+.footer-bottom {
+  margin-top: 48px !important;
+  padding-top: 24px !important;
+  border-top: 1px solid var(--border);
+}
+
+.footer-bottom p {
+  font-size: 0.82rem !important;
+  color: var(--text-muted) !important;
+}
+
+/* ============================================================
+   REVEAL ANIMATIONS - Premium Scroll Reveals
+   ============================================================ */
+
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 30px, 0);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Stagger for grids */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translate3d(0, 25px, 0);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-stagger.revealed > *:nth-child(1) { transition-delay: 0.05s; opacity: 1; transform: translate3d(0, 0, 0); }
+.reveal-stagger.revealed > *:nth-child(2) { transition-delay: 0.1s;  opacity: 1; transform: translate3d(0, 0, 0); }
+.reveal-stagger.revealed > *:nth-child(3) { transition-delay: 0.15s; opacity: 1; transform: translate3d(0, 0, 0); }
+.reveal-stagger.revealed > *:nth-child(4) { transition-delay: 0.2s;  opacity: 1; transform: translate3d(0, 0, 0); }
+.reveal-stagger.revealed > *:nth-child(5) { transition-delay: 0.25s; opacity: 1; transform: translate3d(0, 0, 0); }
+.reveal-stagger.revealed > *:nth-child(6) { transition-delay: 0.3s;  opacity: 1; transform: translate3d(0, 0, 0); }
+.reveal-stagger.revealed > *:nth-child(n+7) { transition-delay: 0.35s; opacity: 1; transform: translate3d(0, 0, 0); }
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.95) translate3d(0, 10px, 0);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1) translate3d(0, 0, 0);
+}
+
+/* ============================================================
+   NAVBAR PREMIUM POLISH
+   ============================================================ */
+
+.nav-premium-install-btn {
+  padding: 9px 20px !important;
+  border-radius: 99px !important;
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  color: #fff !important;
+  transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  border: none !important;
+  letter-spacing: -0.01em;
+}
+
+.nav-premium-install-btn:hover {
+  transform: translateY(-2px) scale(1.04) !important;
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4) !important;
+}
+
+/* ============================================================
+   NOTIFICATION SECTION - Cleaner Look
+   ============================================================ */
+
+.notifications-section {
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+}
+
+.notif-section-title {
+  font-size: 1.3rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+}
+
+.notif-cards-grid {
+  gap: 14px !important;
+}
+
+/* ============================================================
+   MOBILE PERFORMANCE - Reduce All Heavy Effects
+   ============================================================ */
+
+@media (max-width: 768px) {
+  /* Disable heavy backdrop-filters on mobile for performance */
+  .glass-card {
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+  }
+  
+  /* Simplify transitions on mobile */
+  .batch-card:hover,
+  .utility-card:hover,
+  .elite-premium-card-container:hover {
+    transform: none !important;
+  }
+
+  /* Remove ambient orb animations on mobile */
+  .hero-bg-orb.orb1 {
+    animation: none !important;
+    opacity: 0.4 !important;
+  }
+}
+
+/* ============================================================
+   GLOBAL BUTTONS - Premium Micro-interactions
+   ============================================================ */
+
+.btn-primary {
+  padding: 13px 28px !important;
+  border-radius: 12px !important;
+  font-weight: 800 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: -0.01em !important;
+  transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.02) translateZ(0) !important;
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.3) !important;
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.99) translateZ(0) !important;
+  transition-duration: 0.1s !important;
+}
+
+/* ============================================================
+   DEVELOPER SECTION - Smooth Refined Effects
+   ============================================================ */
+
+/* Keep developer section functional, just refine animations */
+.dev-hero-title {
+  animation: heroTitleIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both !important;
+}
+
+/* ============================================================
+   COOKIE CONSENT - Polished
+   ============================================================ */
+
+.cookie-popup {
+  bottom: 20px !important;
+  left: 20px !important;
+  max-width: 400px !important;
+}
+
+.cookie-card {
+  border-radius: 20px !important;
+  padding: 20px 24px !important;
+}
+
+/* ============================================================
+   SEARCH MODAL - Premium Polish
+   ============================================================ */
+
+#navSearchOverlay {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* ============================================================
+   TOAST ANIMATIONS
+   ============================================================ */
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes slideOut {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(20px) scale(0.95); }
+}
+
+/* ============================================================
+   SCROLLBAR PREMIUM - Thin & Elegant
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 5px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.35) !important;
+  border-radius: 99px !important;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.6) !important;
+}
+
+/* ============================================================
+   SECTION DIVIDERS - Subtle & Elegant
+   ============================================================ */
+
+[data-theme="dark"] .section {
+  position: relative;
+}
+
+/* ============================================================
+   PREMIUM GRADIENT TEXT UTILITY
+   ============================================================ */
+
+.premium-gradient-text {
+  background: linear-gradient(135deg, #ffffff 0%, var(--primary) 50%, var(--secondary) 100%) !important;
+  background-size: 200% auto !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  animation: gradientTextFlow 8s ease infinite !important;
+}
+
+@keyframes gradientTextFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.highlight-connect {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   INTERSECTION OBSERVER TRIGGER - Reveal on Scroll
+   ============================================================ */
+
+/* This class is added by JS observer for section reveals */
+.section-visible {
+  animation: none !important;
+}

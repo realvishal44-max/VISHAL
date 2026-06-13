@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="BCA Exam Pattern & Marks Distribution - Detailed marking scheme and subject distribution for BRABU BCA students." />
+
+  <title>Exam Pattern & Marks | BCA STORE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="modern-theme.css" />
+</head>
+
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-link">🏠 Home</a>
+        <a href="my-batches.html" class="nav-link">🎓 My Batch</a>
+        <a href="attendance.html" class="nav-link">📋 Attendance</a>
+        <a href="exam.html" class="nav-link active">📝 Exam</a>
+        <a href="semester.html?sem=1" class="nav-link">📖 Subjects</a>
+        <a href="community.html" class="nav-link">🧑‍🤝‍🧑 Community</a>
+
+        <a href="#" class="nav-link" onclick="openSuggestionModal()">💬 Suggestion</a>
+        <button class="nav-bookmark-btn" id="navBkBtn" onclick="openBkPanel()" title="My Bookmarks">🔖<span
+            class="bk-count-badge" id="bkBadgeDesktop"></span></button>
+        <button class="dark-toggle" id="darkToggle" title="Toggle Dark Mode">🌙</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==================== PAGE HEADER ==================== -->
+  <header class="page-header">
+    <div class="hero-bg-orb orb1"></div>
+    <div class="hero-bg-orb orb2"></div>
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a> <span>›</span> <span>Exam Pattern</span>
+      </div>
+      <h1 class="page-title">📊 Exam <span class="gradient-text">Pattern</span></h1>
+      <p class="page-subtitle">BCA Exam Pattern & Marks Distribution (Simple Explanation)</p>
+    </div>
+  </header>
+
+  <!-- ==================== CONTENT SECTION ==================== -->
+  <main class="section">
+    <div class="container">
+
+      <!-- Section 1: General Exam Pattern -->
+      <div class="exam-section-card glass-card">
+        <div class="exam-card-header">
+          <span class="exam-icon">📝</span>
+          <h2>Section 1: General Exam Pattern (For All Semesters)</h2>
+        </div>
+        <p class="exam-intro">Before attempting exams, you should understand these basic rules:</p>
+        <ul class="exam-rules-list">
+          <li><strong>Total BCA Marks:</strong> The complete BCA course carries a total of 3200 marks.</li>
+          <li><strong>Question Paper Style:</strong> In each exam, there will be 10 long-answer type questions.</li>
+          <li><strong>Attempt Rule:</strong> You need to attempt any 5 questions of your choice.</li>
+          <li><strong>Equal Marks:</strong> All 5 questions carry 16 marks.</li>
+          <li><strong>Time Duration:</strong> Each theory and practical exam is conducted for 3 hours.</li>
+        </ul>
+
+        <div class="marks-division-box">
+          <h3>Marks Division (Sem 1–5):</h3>
+          <div class="marks-grid">
+            <div class="mark-item">
+              <span class="mark-val">20</span>
+              <span class="mark-label">Internal Exam</span>
+            </div>
+            <div class="mark-item">
+              <span class="mark-val">80</span>
+              <span class="mark-label">External Exam</span>
+            </div>
+            <div class="mark-item total">
+              <span class="mark-val">100</span>
+              <span class="mark-label">Total per Subject</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Semester-Wise Distribution -->
+      <div class="exam-section-header">
+        <span class="exam-icon">📅</span>
+        <h2>Section 2: Semester-Wise Subjects & Marks Distribution</h2>
+      </div>
+
+      <div class="sem-marks-grid">
+        <!-- Semester 1 -->
+        <div class="sem-marks-card glass-card">
+          <div class="sem-header">
+            <h3>1st Semester</h3>
+            <span class="total-badge">Total: 600 Marks</span>
+          </div>
+          <div class="table-responsive">
+            <table class="marks-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Subject Name</th>
+                  <th>Int.</th>
+                  <th>Ext.</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>BCA-101</td>
+                  <td>Mathematical Foundation</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-102</td>
+                  <td>Computer Fundamentals</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-103</td>
+                  <td>Business Communication & IS</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-104</td>
+                  <td>C Programming</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-105</td>
+                  <td>Lab on DOS & Windows (P)</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-106</td>
+                  <td>Lab on C (P)</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Semester 2 -->
+        <div class="sem-marks-card glass-card">
+          <div class="sem-header">
+            <h3>2nd Semester</h3>
+            <span class="total-badge">Total: 600 Marks</span>
+          </div>
+          <div class="table-responsive">
+            <table class="marks-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Subject Name</th>
+                  <th>Int.</th>
+                  <th>Ext.</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>BCA-201</td>
+                  <td>Discrete Mathematics</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-202</td>
+                  <td>Computer Architecture</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-203</td>
+                  <td>Data Structure through C</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-204</td>
+                  <td>System Analysis and Design</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-205</td>
+                  <td>Lab on MS-Office (P)</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-206</td>
+                  <td>Lab on Data Structure (P)</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Semester 3 -->
+        <div class="sem-marks-card glass-card">
+          <div class="sem-header">
+            <h3>3rd Semester</h3>
+            <span class="total-badge">Total: 600 Marks</span>
+          </div>
+          <div class="table-responsive">
+            <table class="marks-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Subject Name</th>
+                  <th>Int.</th>
+                  <th>Ext.</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>BCA-301</td>
+                  <td>Fundamentals of Management & Business Accounting</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-302</td>
+                  <td>Database Management System (DBMS)</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-303</td>
+                  <td>Object Oriented Programming using C++</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-304</td>
+                  <td>Numerical Methodology</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-305</td>
+                  <td>Lab on DBMS (SQL/MS-ACCESS) (P)</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-306</td>
+                  <td>Lab on C++ (P)</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Semester 4 -->
+        <div class="sem-marks-card glass-card">
+          <div class="sem-header">
+            <h3>4th Semester</h3>
+            <span class="total-badge">Total: 600 Marks</span>
+          </div>
+          <div class="table-responsive">
+            <table class="marks-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Subject Name</th>
+                  <th>Int.</th>
+                  <th>Ext.</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>BCA-401</td>
+                  <td>Java Programming</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-402</td>
+                  <td>Computer Graphics & Multimedia</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-403</td>
+                  <td>Operating System & Linux</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-404</td>
+                  <td>Software Engineering Principles</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-405</td>
+                  <td>Lab on Java Programming (P)</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-406</td>
+                  <td>Lab on Computer Graphics & Linux (P)</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Semester 5 -->
+        <div class="sem-marks-card glass-card">
+          <div class="sem-header">
+            <h3>5th Semester</h3>
+            <span class="total-badge">Total: 600 Marks</span>
+          </div>
+          <div class="table-responsive">
+            <table class="marks-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Subject Name</th>
+                  <th>Int.</th>
+                  <th>Ext.</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>BCA-501</td>
+                  <td>Relational Database Management System (RDBMS)</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-502</td>
+                  <td>Artificial Intelligence through Python Programming</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-503</td>
+                  <td>Web Technology (HTML, JavaScript, CSS)</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-504</td>
+                  <td>Computer Network, Security and Cyber Law</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-505</td>
+                  <td>Lab on Oracle (P)</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+                <tr>
+                  <td>BCA-506</td>
+                  <td>Lab on Python Programming & Web Technology (P)</td>
+                  <td>20</td>
+                  <td>80</td>
+                  <td>100</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Semester 6 -->
+        <div class="sem-marks-card sem-6-card glass-card">
+          <div class="sem-header">
+            <h3>6th Semester</h3>
+            <span class="total-badge gold">Total: 200 Marks</span>
+          </div>
+          <div class="sem-6-content">
+            <div class="sem-6-item highlight-card">
+              <div class="s6-header">
+                <span class="s6-icon">🚀</span>
+                <h4>BCA-601: Project Report</h4>
+                <span class="s6-mark">100 Marks</span>
+              </div>
+              <p>You must develop a software project and submit a detailed report.</p>
+            </div>
+            <div class="sem-6-item highlight-card">
+              <div class="s6-header">
+                <span class="s6-icon">🎤</span>
+                <h4>BCA-602: Seminar Presentation</h4>
+                <span class="s6-mark">50 Marks</span>
+              </div>
+              <p>You will give a presentation on your project or any technical topic.</p>
+            </div>
+            <div class="sem-6-item highlight-card">
+              <div class="s6-header">
+                <span class="s6-icon">🎓</span>
+                <h4>BCA-603: Viva-Voce</h4>
+                <span class="s6-mark">50 Marks</span>
+              </div>
+              <p>An external examiner will ask questions related to your project and subjects from previous semesters.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Final Note -->
+      <div class="final-note-card">
+        <span class="note-icon">💡</span>
+        <p>"This section helps students clearly understand the exam structure, marking scheme, and preparation
+          strategy."</p>
+      </div>
+
+      <!-- ==================== VISIT COUNTER ==================== -->
+      <section class="visit-counter-section">
+        <div class="container">
+          <div class="vc-card glass-card">
+            <div class="vc-icon">🌍</div>
+            <div class="vc-info">
+              <h3 id="totalVisits">0</h3>
+              <p>Global Students Visited</p>
+            </div>
+            <div class="vc-pulse" title="Live Counter Enabled"></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==================== MASTER FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3 class="footer-brand"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"
+              style="width: 32px; height: 32px; margin-right: 8px; border-radius: 8px;"> <span
+              class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></h3>
+          <p>Your one-stop destination for BRABU BCA study materials. Notes, PYQs, and Video Lectures at your
+            fingertips.</p>
+          <div class="footer-socials">
+            <a href="#" title="Facebook">📘</a>
+            <a href="#" title="Instagram">📸</a>
+            <a href="#" title="YouTube">📺</a>
+            <a href="#" title="Telegram">✈️</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="my-batches.html">🎓 My Batch</a></li>
+            <li><a href="exam.html">📝 Exam Pattern</a></li>
+            <li><a href="developer.html">👨‍💻 Founder & Developer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul class="footer-links">
+            <li><a href="#" onclick="openSuggestionModal()">💬 Suggestion</a></li>
+            <li><a href="mailto:vishal@example.com">📧 Contact Us</a></li>
+            <li><a href="#">🛡️ Privacy Policy</a></li>
+            <li><a href="#">📜 Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="dev-credit-box">
+          Designed & Developed with 🖤 by
+          <a href="developer.html" class="dev-link">VISHAL 🖤</a>
+        </div>
+        <p>&copy; 2026 BCA STORE. Babasaheb Bhim Rao Ambedkar Bihar University.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== FLOATING ACTION BUTTONS ==================== -->
+
+  <!-- ==================== SUGGESTION MODAL ==================== -->
+  <div class="modal-overlay" id="suggestionModal">
+    <div class="modal glass-card">
+      <div class="modal-header">
+        <div style="display:flex; gap:16px;">
+          <h3 class="sugg-tab active" id="tabSend" onclick="switchSuggTab('send')">💬 Send Suggestion</h3>
+          <h3 class="sugg-tab" id="tabHistory" onclick="switchSuggTab('history')">📜 My History</h3>
+        </div>
+        <button class="modal-close" onclick="closeSuggestionModal()">✕</button>
+      </div>
+      <div id="suggSendView">
+        <div class="modal-body" id="suggestionBody">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" id="suggName" placeholder="Enter your name..." />
+          </div>
+          <div class="form-group">
+            <label>Category <span class="required">*</span></label>
+            <select id="suggCategory">
+              <option value="General">✨ General Feedback</option>
+              <option value="Content Missing">📝 Content Missing</option>
+              <option value="Bug Report">🐛 Bug Report</option>
+              <option value="Feature Request">💡 Feature Request</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Your Message <span class="required">*</span></label>
+            <textarea id="suggMessage" placeholder="Describe your suggestion or feedback..." rows="4" maxlength="500"
+              oninput="updateCharCount(this)"></textarea>
+            <div class="char-count"
+              style="text-align:right; font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+              <span id="charCurrent">0</span>/500
+            </div>
+          </div>
+          <input type="hidden" id="suggContext" value="" />
+        </div>
+        <div class="modal-footer" id="suggestionFooter">
+          <button class="btn-outline" onclick="closeSuggestionModal()">Cancel</button>
+          <button class="btn-primary" onclick="submitSuggestion()">Send Suggestion ✈️</button>
+        </div>
+      </div>
+      <div id="suggHistoryView" style="display:none;">
+        <div class="modal-body" id="suggestionHistoryBody" style="max-height:400px; overflow-y:auto;">
+          <!-- Generated by JS -->
+        </div>
+        <div class="modal-footer">
+          <button class="btn-outline" style="width:100%" onclick="closeSuggestionModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST ==================== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initExamPage();
+    });
+  </script>
+  <script src="modern-effects.js"></script>
+  <script src="enhancements.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,86 @@
+{
+  "rules": {
+    ".read": true,
+    "admin_credentials": {
+      ".write": false
+    },
+    "developer_portfolio": {
+      ".write": true
+    },
+    "batches_config": {
+      ".write": true
+    },
+    "batches": {
+      ".write": true
+    },
+    "materials": {
+      ".write": true
+    },
+    "suggestions": {
+      ".write": true
+    },
+    "students": {
+      ".write": true,
+      ".indexOn": ["deviceId", "phone", "username", "email", "rollNo"]
+    },
+    "teachers": {
+      ".write": true
+    },
+    "admins": {
+      ".write": true
+    },
+    "semesters": {
+      ".write": true
+    },
+    "subjects": {
+      ".write": true
+    },
+    "notifications": {
+      ".write": true
+    },
+    "notifications_live": {
+      ".write": true
+    },
+    "notification_analytics": {
+      ".write": true
+    },
+    "active_users": {
+      ".write": true
+    },
+    "audit_logs": {
+      ".write": true
+    },
+    "visitors": {
+      ".write": true
+    },
+    "community_users": {
+      ".write": true
+    },
+    "community_doubts": {
+      ".write": true
+    },
+    "community_chat": {
+      ".write": true
+    },
+    "community_announcements": {
+      ".write": true
+    },
+    "community_typing": {
+      ".write": true
+    },
+    "community_online": {
+      ".write": true
+    },
+    "attendance-v2": {
+      ".write": true,
+      "records": {
+        "$sessionId": {
+          ".indexOn": ["studentId", "deviceFingerprint"]
+        }
+      },
+      "corrections": {
+        ".indexOn": ["studentId", "status"]
+      }
+    }
+  }
+}

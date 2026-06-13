@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Analytics | BCA STORE</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="modern-theme.css" />
+  <link rel="stylesheet" href="analytics.css" />
+</head>
+
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-link">🏠 Home</a>
+        <a href="my-batches.html" class="nav-link">🎓 My Batch</a>
+        <a href="attendance.html" class="nav-link">📋 Attendance</a>
+        <a href="exam.html" class="nav-link">📝 Exam</a>
+        <a href="semester.html?sem=1" class="nav-link">📖 Subjects</a>
+        <a href="community.html" class="nav-link">🧑‍🤝‍🧑 Community</a>
+        <a href="analytics.html" class="nav-link active">📊 Stats</a>
+        <a href="#" class="nav-link" onclick="openSuggestionModal()">💬 Suggestion</a>
+        <button class="nav-bookmark-btn" id="navBkBtn" onclick="openBkPanel()" title="My Bookmarks">🔖<span
+            class="bk-count-badge" id="bkBadgeDesktop"></span></button>
+        <button class="dark-toggle" id="darkToggle" title="Toggle Dark Mode">🌙</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="analytics-page">
+    <div class="analytics-container" id="analyticsRoot">
+
+      <!-- HERO -->
+      <div class="ana-hero" id="anaHero">
+        <div class="ana-hero-avatar" id="anaAvatar">🎓</div>
+        <div class="ana-hero-info">
+          <div class="ana-hero-greeting">Welcome back,</div>
+          <div class="ana-hero-name" id="anaName">Student</div>
+          <div class="ana-hero-rank" id="anaRankBadge">🌱 Fresher</div>
+        </div>
+        <div class="ana-xp-section">
+          <div class="ana-xp-label">
+            <span>XP Progress</span>
+            <span id="anaXpVal">0 XP</span>
+          </div>
+          <div class="ana-xp-bar-track">
+            <div class="ana-xp-bar-fill" id="anaXpBar" style="width:0%"></div>
+          </div>
+          <div class="ana-xp-next" id="anaXpNext">Keep studying to level up!</div>
+        </div>
+        <div class="ana-streak-badge">
+          <div class="ana-streak-fire">🔥</div>
+          <div class="ana-streak-num" id="anaStreak">0</div>
+          <div class="ana-streak-label">Day Streak</div>
+        </div>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="ana-kpi-grid" id="anaKpiGrid">
+        <div class="ana-kpi-card" style="animation-delay:0.1s">
+          <div class="ana-kpi-icon kpi-blue">⏱️</div>
+          <div class="ana-kpi-info">
+            <div class="ana-kpi-value" id="kpiStudyHours">0</div>
+            <div class="ana-kpi-label">Study Hours</div>
+            <div class="ana-kpi-sub" id="kpiStudyMin"></div>
+          </div>
+        </div>
+        <div class="ana-kpi-card" style="animation-delay:0.2s">
+          <div class="ana-kpi-icon kpi-green">📘</div>
+          <div class="ana-kpi-info">
+            <div class="ana-kpi-value" id="kpiNotes">0</div>
+            <div class="ana-kpi-label">Notes Opened</div>
+          </div>
+        </div>
+        <div class="ana-kpi-card" style="animation-delay:0.3s">
+          <div class="ana-kpi-icon kpi-orange">🎥</div>
+          <div class="ana-kpi-info">
+            <div class="ana-kpi-value" id="kpiVideos">0</div>
+            <div class="ana-kpi-label">Videos Watched</div>
+          </div>
+        </div>
+        <div class="ana-kpi-card" style="animation-delay:0.4s">
+          <div class="ana-kpi-icon kpi-pink">📄</div>
+          <div class="ana-kpi-info">
+            <div class="ana-kpi-value" id="kpiPyq">0</div>
+            <div class="ana-kpi-label">PYQs Opened</div>
+          </div>
+        </div>
+        <div class="ana-kpi-card" style="animation-delay:0.5s">
+          <div class="ana-kpi-icon kpi-purple">✅</div>
+          <div class="ana-kpi-info">
+            <div class="ana-kpi-value" id="kpiCompleted">0</div>
+            <div class="ana-kpi-label">Subjects Completed</div>
+          </div>
+        </div>
+        <div class="ana-kpi-card" style="animation-delay:0.6s">
+          <div class="ana-kpi-icon kpi-red">🏅</div>
+          <div class="ana-kpi-info">
+            <div class="ana-kpi-value" id="kpiBadges">0</div>
+            <div class="ana-kpi-label">Badges Earned</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXAM READINESS + PRODUCTIVITY -->
+      <div class="ana-two-col">
+        <div class="ana-readiness-wrap">
+          <div class="ana-ring-wrap">
+            <svg class="ana-ring-svg" width="140" height="140" viewBox="0 0 120 120">
+              <defs>
+                <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#6366f1" />
+                  <stop offset="100%" style="stop-color:#8b5cf6" />
+                </linearGradient>
+              </defs>
+              <circle class="ana-ring-track" cx="60" cy="60" r="54" />
+              <circle class="ana-ring-fill" id="anaReadinessRing" cx="60" cy="60" r="54" />
+            </svg>
+            <div class="ana-ring-center">
+              <div class="ana-ring-pct" id="anaReadinessPct">0%</div>
+              <div class="ana-ring-label">Readiness</div>
+            </div>
+          </div>
+          <div class="ana-readiness-details">
+            <h3>📊 Exam Readiness</h3>
+            <p id="anaReadinessMsg">Start studying to build your readiness score!</p>
+            <div class="ana-readiness-factors">
+              <div class="ana-factor-row">
+                <span class="ana-factor-name">✅ Completion</span>
+                <div class="ana-factor-track">
+                  <div class="ana-factor-fill" id="factorCompletion" style="width:0%"></div>
+                </div>
+                <span class="ana-factor-val" id="factorCompletionVal">0%</span>
+              </div>
+              <div class="ana-factor-row">
+                <span class="ana-factor-name">⏱️ Study Time</span>
+                <div class="ana-factor-track">
+                  <div class="ana-factor-fill" id="factorTime" style="width:0%"></div>
+                </div>
+                <span class="ana-factor-val" id="factorTimeVal">0%</span>
+              </div>
+              <div class="ana-factor-row">
+                <span class="ana-factor-name">🔥 Streak</span>
+                <div class="ana-factor-track">
+                  <div class="ana-factor-fill" id="factorStreak" style="width:0%"></div>
+                </div>
+                <span class="ana-factor-val" id="factorStreakVal">0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ana-panel"
+          style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;">
+          <div class="ana-productivity-card" style="width:100%">
+            <div class="ana-prod-score" id="anaProdScore">0.0</div>
+            <div class="ana-prod-label">Productivity Score / 10</div>
+            <div class="ana-prod-bar-wrap">
+              <div class="ana-prod-bar-track">
+                <div class="ana-prod-bar-fill" id="anaProdBar" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
+          <div style="width:100%;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="ana-kpi-card" style="padding:16px;border-radius:14px;animation:none;">
+              <div class="ana-kpi-icon kpi-blue" style="width:40px;height:40px;font-size:1.2rem;">📅</div>
+              <div class="ana-kpi-info">
+                <div class="ana-kpi-value" style="font-size:1.4rem;" id="kpiLongestStreak">0</div>
+                <div class="ana-kpi-label">Longest Streak</div>
+              </div>
+            </div>
+            <div class="ana-kpi-card" style="padding:16px;border-radius:14px;animation:none;">
+              <div class="ana-kpi-icon kpi-green" style="width:40px;height:40px;font-size:1.2rem;">🔄</div>
+              <div class="ana-kpi-info">
+                <div class="ana-kpi-value" style="font-size:1.4rem;" id="kpiSessions">0</div>
+                <div class="ana-kpi-label">Sessions</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVITY HEATMAP -->
+      <div class="ana-heatmap-wrap">
+        <div class="ana-section-title"><span>🌡️</span> Study Activity Heatmap</div>
+        <div class="ana-heatmap-day-label">
+          <div class="ana-heatmap-dl">Sun</div>
+          <div class="ana-heatmap-dl">Mon</div>
+          <div class="ana-heatmap-dl">Tue</div>
+          <div class="ana-heatmap-dl">Wed</div>
+          <div class="ana-heatmap-dl">Thu</div>
+          <div class="ana-heatmap-dl">Fri</div>
+          <div class="ana-heatmap-dl">Sat</div>
+        </div>
+        <div class="ana-heatmap-grid" id="anaHeatmap"></div>
+        <div class="ana-hm-legend">
+          Less
+          <div class="ana-hm-legend-cell" data-level="0" style="background:rgba(99,102,241,0.07)"></div>
+          <div class="ana-hm-legend-cell" data-level="1" style="background:rgba(99,102,241,0.25)"></div>
+          <div class="ana-hm-legend-cell" data-level="2" style="background:rgba(99,102,241,0.5)"></div>
+          <div class="ana-hm-legend-cell" data-level="3" style="background:rgba(99,102,241,0.75)"></div>
+          <div class="ana-hm-legend-cell" data-level="4" style="background:#6366f1"></div>
+          More
+        </div>
+      </div>
+
+      <!-- SUBJECT ANALYSIS -->
+      <div>
+        <div class="ana-section-title"><span>📚</span> Subject Analysis</div>
+        <div class="ana-subjects-grid" id="anaSubjectsGrid">
+          <div class="ana-empty-msg">Loading subjects...</div>
+        </div>
+      </div>
+
+      <!-- WEAK & STRONG -->
+      <div class="ana-two-col">
+        <div class="ana-panel">
+          <div class="ana-section-title"><span>⚠️</span> Needs Attention</div>
+          <div class="ana-weak-list" id="anaWeakList">
+            <div class="ana-empty-msg">No weak subjects detected 🎉</div>
+          </div>
+        </div>
+        <div class="ana-panel">
+          <div class="ana-section-title"><span>💪</span> Strong Areas</div>
+          <div class="ana-strong-list" id="anaStrongList">
+            <div class="ana-empty-msg">Keep studying to see your strengths!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SMART SUGGESTIONS -->
+      <div>
+        <div class="ana-section-title"><span>🧠</span> Smart Suggestions</div>
+        <div class="ana-suggestions-grid" id="anaSuggestions"></div>
+      </div>
+
+      <!-- BADGES -->
+      <div class="ana-badges-wrap">
+        <div class="ana-section-title"><span>🏆</span> Achievement Badges</div>
+        <div class="ana-badges-grid" id="anaBadgesGrid"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="analytics.js"></script>
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initAnalyticsDashboard();
+    });
+
+    function initAnalyticsDashboard() {
+      const data = BCA_Analytics.getData();
+      const userName = localStorage.getItem('userName') || 'Student';
+
+      // Hero
+      document.getElementById('anaName').textContent = userName;
+      document.getElementById('anaRankBadge').textContent = data.rank;
+      document.getElementById('anaStreak').textContent = data.streakDays;
+      document.getElementById('anaXpVal').textContent = (data.xpPoints || 0) + ' XP';
+
+      // XP Bar
+      const xpPct = BCA_Analytics.getXPProgress();
+      setTimeout(() => {
+        document.getElementById('anaXpBar').style.width = xpPct + '%';
+      }, 300);
+      const next = BCA_Analytics.getNextRank();
+      if (next) {
+        document.getElementById('anaXpNext').textContent = BCA_Analytics.getXPToNextRank() + ' XP to ' + next.label;
+      } else {
+        document.getElementById('anaXpNext').textContent = 'Maximum rank reached! 👑';
+      }
+
+      // KPIs
+      animateCounter('kpiStudyHours', Math.floor((data.totalStudyMinutes || 0) / 60));
+      document.getElementById('kpiStudyMin').textContent = ((data.totalStudyMinutes || 0) % 60) + ' min extra';
+      animateCounter('kpiNotes', BCA_Analytics.getTotalNotesRead());
+      animateCounter('kpiVideos', BCA_Analytics.getTotalVideosWatched());
+      animateCounter('kpiPyq', data.pyqSolved || 0);
+      animateCounter('kpiCompleted', (data.completedSubjects || []).length);
+      animateCounter('kpiBadges', (data.badges || []).length);
+      document.getElementById('kpiLongestStreak').textContent = data.longestStreak || 0;
+      document.getElementById('kpiSessions').textContent = data.totalSessions || 0;
+
+      // Exam Readiness
+      const readiness = BCA_Analytics.getExamReadiness();
+      const circumference = 339.3;
+      setTimeout(() => {
+        document.getElementById('anaReadinessRing').style.strokeDashoffset =
+          circumference - (circumference * readiness / 100);
+        document.getElementById('anaReadinessPct').textContent = readiness + '%';
+      }, 400);
+
+      const msgs = ['Keep studying to build your score!', 'Good start! Keep going!', 'Nice progress! Push further!', 'Great work! Almost exam-ready!', 'Excellent! You are well prepared! 🎯'];
+      document.getElementById('anaReadinessMsg').textContent = msgs[Math.floor(readiness / 25)] || msgs[0];
+
+      const compFactor = Math.min((data.completedSubjects || []).length * 8, 40);
+      const timeFactor = Math.min(Math.floor((data.totalStudyMinutes || 0) / 60) * 5, 25);
+      const strkFactor = Math.min((data.streakDays || 0) * 2, 15);
+      _setFactor('factorCompletion', compFactor, 40);
+      _setFactor('factorTime', timeFactor, 25);
+      _setFactor('factorStreak', strkFactor, 15);
+
+      // Productivity
+      const prod = BCA_Analytics.getProductivityScore();
+      document.getElementById('anaProdScore').textContent = prod;
+      setTimeout(() => {
+        document.getElementById('anaProdBar').style.width = (parseFloat(prod) / 10 * 100) + '%';
+      }, 400);
+
+      // Heatmap
+      renderHeatmap();
+
+      // Subjects
+      renderSubjectCards(data);
+
+      // Weak / Strong
+      renderWeakStrong(data);
+
+      // Suggestions
+      renderSuggestions();
+
+      // Badges
+      renderBadges(data);
+    }
+
+    function _setFactor(id, value, max) {
+      const pct = Math.min(Math.round(value / max * 100), 100);
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        const val = document.getElementById(id + 'Val');
+        if (el) el.style.width = pct + '%';
+        if (val) val.textContent = pct + '%';
+      }, 500);
+    }
+
+    function animateCounter(id, target) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      let start = 0;
+      const duration = 1200;
+      const step = (timestamp) => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        el.textContent = Math.floor(progress * target);
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target;
+      };
+      requestAnimationFrame(step);
+    }
+
+    function renderHeatmap() {
+      const heatmap = BCA_Analytics.getActivityHeatmap();
+      const grid = document.getElementById('anaHeatmap');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const today = new Date();
+      const cells = 49;
+      const dates = [];
+      for (let i = cells - 1; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        dates.push(d.toISOString().slice(0, 10));
+      }
+
+      // Pad to start on Sunday
+      const firstDay = new Date(dates[0]).getDay();
+      for (let i = 0; i < firstDay; i++) {
+        const pad = document.createElement('div');
+        pad.className = 'ana-hm-cell';
+        pad.setAttribute('data-future', 'true');
+        grid.appendChild(pad);
+      }
+
+      dates.forEach(dateStr => {
+        const actions = heatmap[dateStr] || 0;
+        const cell = document.createElement('div');
+        cell.className = 'ana-hm-cell';
+        const level = actions === 0 ? 0 : actions <= 2 ? 1 : actions <= 5 ? 2 : actions <= 10 ? 3 : 4;
+        cell.setAttribute('data-level', level);
+        cell.title = dateStr + ': ' + actions + ' actions';
+        grid.appendChild(cell);
+      });
+    }
+
+    function renderSubjectCards(data) {
+      const grid = document.getElementById('anaSubjectsGrid');
+      if (!grid || typeof SUBJECTS === 'undefined') return;
+      grid.innerHTML = '';
+
+      Object.entries(SUBJECTS).forEach(([semKey, subjects]) => {
+        subjects.forEach(sub => {
+          const key = semKey + '_' + sub.code;
+          const stat = data.subjectStats[key] || {};
+          const isCompleted = (data.completedSubjects || []).includes(key);
+          const notes = stat.notesOpened || 0;
+          const videos = stat.videosWatched || 0;
+          const isWeak = !isCompleted && (notes < 2 && videos < 1) && !!stat.lastVisit;
+          const progress = BCA_Analytics.getSubjectProgress(semKey, sub.code);
+          const tagClass = isCompleted ? 'tag-completed' : isWeak ? 'tag-weak' : notes > 0 || videos > 0 ? 'tag-strong' : 'tag-neutral';
+          const tagText = isCompleted ? '✅ Done' : isWeak ? '⚠️ Weak' : notes > 0 || videos > 0 ? '💪 Active' : '—';
+          const cardClass = isCompleted ? 'completed' : isWeak ? 'weak' : '';
+
+          grid.innerHTML += `
+        <div class="ana-subject-card ${cardClass}">
+          <div class="ana-subcard-header">
+            <div class="ana-subcard-icon">${sub.icon}</div>
+            <div>
+              <div class="ana-subcard-name">${sub.name}</div>
+              <div class="ana-subcard-code">${sub.code} • ${semKey.replace('Semester', 'Sem ')}</div>
+            </div>
+            <span class="ana-subcard-tag ${tagClass}">${tagText}</span>
+          </div>
+          <div class="ana-subcard-progress-label">
+            <span>Progress</span><span>${progress}%</span>
+          </div>
+          <div class="ana-subcard-progress-track">
+            <div class="ana-subcard-progress-fill" style="width:${progress}%"></div>
+          </div>
+          <div class="ana-subcard-stats">
+            <div class="ana-subcard-stat">
+              <div class="ana-subcard-stat-num">${notes}</div>
+              <div class="ana-subcard-stat-lbl">📘 Notes</div>
+            </div>
+            <div class="ana-subcard-stat">
+              <div class="ana-subcard-stat-num">${videos}</div>
+              <div class="ana-subcard-stat-lbl">🎥 Videos</div>
+            </div>
+            <div class="ana-subcard-stat">
+              <div class="ana-subcard-stat-num">${stat.xp || 0}</div>
+              <div class="ana-subcard-stat-lbl">⚡ XP</div>
+            </div>
+          </div>
+        </div>`;
+        });
+      });
+    }
+
+    function renderWeakStrong(data) {
+      if (typeof SUBJECTS === 'undefined') return;
+      const weak = BCA_Analytics.getWeakSubjects(SUBJECTS);
+      const strong = BCA_Analytics.getStrongSubjects(SUBJECTS);
+      const wkEl = document.getElementById('anaWeakList');
+      const stEl = document.getElementById('anaStrongList');
+
+      if (weak.length === 0) {
+        wkEl.innerHTML = '<div class="ana-empty-msg">No weak subjects detected 🎉</div>';
+      } else {
+        wkEl.innerHTML = weak.map(s =>
+          `<div class="ana-wk-item"><span>${s.icon}</span> ${s.name}</div>`).join('');
+      }
+
+      if (strong.length === 0) {
+        stEl.innerHTML = '<div class="ana-empty-msg">Keep studying to see your strengths!</div>';
+      } else {
+        stEl.innerHTML = strong.map(s =>
+          `<div class="ana-st-item"><span>${s.icon}</span> ${s.name}${s.isCompleted ? ' ✅' : ''}</div>`).join('');
+      }
+    }
+
+    function renderSuggestions() {
+      const tips = BCA_Analytics.getSmartSuggestions();
+      const el = document.getElementById('anaSuggestions');
+      if (!el) return;
+      if (tips.length === 0) {
+        el.innerHTML = '<div class="ana-empty-msg">Keep using the platform to get personalized tips!</div>';
+        return;
+      }
+      el.innerHTML = tips.map(t => `
+    <div class="ana-suggestion-card">
+      <div class="ana-sugg-icon sugg-type-${t.type}">${t.icon}</div>
+      <div class="ana-sugg-text">${t.text}</div>
+    </div>`).join('');
+    }
+
+    function renderBadges(data) {
+      const grid = document.getElementById('anaBadgesGrid');
+      if (!grid) return;
+      grid.innerHTML = BCA_Analytics.BADGE_DEFS.map(b => {
+        const earned = (data.badges || []).includes(b.id);
+        return `
+      <div class="ana-badge-item ${earned ? 'earned' : 'locked'}" title="${b.desc}">
+        ${earned ? '<div class="ana-badge-earned-star">✓</div>' : ''}
+        <span class="ana-badge-icon">${b.icon}</span>
+        <div class="ana-badge-name">${b.label}</div>
+        <div class="ana-badge-xp">+${b.xp} XP</div>
+      </div>`;
+      }).join('');
+    }
+  </script>
+</body>
+
+</html>

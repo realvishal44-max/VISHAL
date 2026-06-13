@@ -1,0 +1,473 @@
+/* ============================================================
+   ELITE BATCH - ANIMATION OVERRIDES
+   ============================================================
+   Remove background animations from video/notes/DPP sections
+   Keep animations in headers, modals, and other UI elements
+   ============================================================ */
+
+/* ============================================================
+   CONTENT CARDS - OPTIMIZED LAYOUT FOR VISIBILITY
+   ============================================================ */
+
+/* Main Card Container - Flex layout for proper structure */
+.content-card {
+  animation: none !important;
+  background: var(--bg-primary) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.content-card:hover {
+  border-color: var(--color-purple);
+  box-shadow: 0 16px 48px rgba(102, 126, 234, 0.2);
+  transform: translateY(-4px);
+}
+
+/* Content Grid - Responsive layout */
+.content-grid {
+  animation: none !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
+  gap: 20px !important;
+  padding: 16px !important;
+}
+
+/* ============================================================
+   VIDEO CARD - PROMINENT DISPLAY
+   ============================================================ */
+
+/* Video Thumbnail - Top, prominent, large */
+.video-card .content-thumbnail {
+  width: 100% !important;
+  height: 200px !important;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Video Thumbnail Image */
+.video-card .video-card-thumb {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Play Overlay - Always Visible */
+.video-card .video-play-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: opacity 0.3s ease;
+  opacity: 1 !important;
+  z-index: 1;
+}
+
+/* Play Button Circle - Always Visible */
+.video-card .play-btn-circle {
+  width: 70px !important;
+  height: 70px !important;
+  border-radius: 50% !important;
+  background: var(--color-purple) !important;
+  color: white !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.8rem !important;
+  transform: scale(1) !important;
+  transition: transform 0.3s ease, background 0.3s ease;
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.6) !important;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.video-card:hover .play-btn-circle {
+  transform: scale(1.1);
+  background: var(--color-pink);
+}
+
+/* Duration Badge - Always Visible, Top Right */
+.video-duration {
+  position: absolute !important;
+  bottom: 12px !important;
+  right: 12px !important;
+  background: rgba(0, 0, 0, 0.9) !important;
+  color: white !important;
+  padding: 6px 10px !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  z-index: 3;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Sync Badge - Top Right */
+.sync-badge {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  background: rgba(34, 197, 94, 0.9) !important;
+  color: white !important;
+  font-size: 11px !important;
+  padding: 4px 8px !important;
+  border-radius: 12px !important;
+  z-index: 3;
+  font-weight: 600;
+}
+
+/* ============================================================
+   CONTENT INFO - CLEAR, READABLE
+   ============================================================ */
+
+.content-info {
+  padding: 16px !important;
+  background: var(--bg-primary) !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px;
+}
+
+/* Title - Bold, Top */
+.content-title {
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  color: var(--text-primary) !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+}
+
+/* Description - Secondary text */
+.content-description {
+  font-size: 0.85rem !important;
+  color: var(--text-secondary) !important;
+  line-height: 1.35 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  flex: 1;
+}
+
+/* Meta Information */
+.content-meta {
+  display: flex !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+  font-size: 0.8rem !important;
+  color: var(--text-tertiary) !important;
+  margin: 8px 0 !important;
+  padding: 8px 0;
+  border-top: 1px solid var(--bg-tertiary);
+  border-bottom: 1px solid var(--bg-tertiary);
+}
+
+.content-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Footer - Instructor & Actions */
+.content-footer {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding-top: 8px !important;
+  margin-top: auto;
+}
+
+.content-instructor {
+  font-size: 0.8rem !important;
+  color: var(--text-secondary) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px;
+  flex: 1;
+}
+
+.content-actions {
+  display: flex !important;
+  gap: 8px !important;
+}
+
+.action-btn {
+  background: linear-gradient(135deg, var(--color-purple), var(--color-pink)) !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+}
+
+/* ============================================================
+   NOTES CARD - PROMINENT DISPLAY
+   ============================================================ */
+
+.content-card:not(.video-card) .content-thumbnail {
+  width: 100% !important;
+  height: 160px !important;
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* Note Icon */
+.note-icon {
+  font-size: 3.5rem !important;
+  opacity: 0.9;
+}
+
+/* Pages Badge */
+.note-pages {
+  position: absolute !important;
+  bottom: 8px !important;
+  right: 8px !important;
+  background: rgba(59, 130, 246, 0.9) !important;
+  color: white !important;
+  padding: 6px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  z-index: 2;
+}
+
+/* DPP Icon */
+.dpp-icon {
+  font-size: 3.5rem !important;
+  opacity: 0.9;
+}
+
+/* Questions Badge */
+.dpp-questions {
+  position: absolute !important;
+  bottom: 8px !important;
+  right: 8px !important;
+  background: rgba(245, 158, 11, 0.9) !important;
+  color: white !important;
+  padding: 6px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  z-index: 2;
+}
+
+/* Live Class Icon */
+.live-icon {
+  font-size: 3.5rem !important;
+  opacity: 0.9;
+}
+
+/* Live Status Badge */
+.live-status {
+  position: absolute !important;
+  bottom: 8px !important;
+  right: 8px !important;
+  background: rgba(239, 68, 68, 0.9) !important;
+  color: white !important;
+  padding: 6px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  z-index: 2;
+}
+
+/* Skeleton Cards - No pulse animation */
+.skeleton-card {
+  animation: none !important;
+  opacity: 0.6;
+}
+
+/* Empty State Icons - No floating animation */
+.empty-icon {
+  animation: none !important;
+  opacity: 0.5;
+}
+
+/* Loading State - No animations */
+.loading-state {
+  animation: none !important;
+}
+
+/* Section Container - Remove fade-in animation but keep visibility */
+.section-container {
+  animation: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.section-container.active {
+  display: block !important;
+  opacity: 1 !important;
+}
+
+/* ============================================================
+   HEADER ANIMATIONS - KEEP
+   ============================================================ */
+
+.batch-hero-header::before,
+.batch-hero-header::after {
+  animation: float 6s ease-in-out infinite !important;
+}
+
+.batch-hero-icon {
+  animation: pulse-scale 2s ease-in-out infinite !important;
+}
+
+/* ============================================================
+   MODAL ANIMATIONS - KEEP
+   ============================================================ */
+.modal-overlay {
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  animation: slideUp 0.3s ease-out !important;
+}
+
+.elite-video-modal-overlay {
+  transition: all 0.3s ease;
+}
+
+.elite-video-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Tab animations - KEEP */
+.tab-btn {
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-btn.active::after {
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN - MOBILE OPTIMIZATION
+   ============================================================ */
+
+@media (max-width: 1200px) {
+  .content-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+    gap: 16px !important;
+    animation: none !important;
+  }
+  
+  .content-card {
+    animation: none !important;
+  }
+  
+  .video-card .content-thumbnail {
+    height: 180px !important;
+  }
+  
+  .video-card .play-btn-circle {
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 1.4rem !important;
+  }
+  
+  .content-info {
+    padding: 12px !important;
+  }
+  
+  .content-title {
+    font-size: 0.95rem !important;
+  }
+  
+  .content-description {
+    font-size: 0.8rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  
+  .video-card .content-thumbnail {
+    height: 160px !important;
+  }
+  
+  .content-info {
+    padding: 10px !important;
+  }
+  
+  .content-meta {
+    gap: 8px !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+/* ============================================================
+   ACCESSIBILITY - REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .batch-hero-icon {
+    animation: none !important;
+  }
+  
+  .batch-hero-header::before,
+  .batch-hero-header::after {
+    animation: none !important;
+  }
+  
+  .content-card:hover {
+    transform: none;
+  }
+  
+  .video-card:hover .play-btn-circle {
+    transform: scale(1);
+  }
+}

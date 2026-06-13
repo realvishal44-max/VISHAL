@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | BCA STORE</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="modern-theme.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --contact-primary: #6366f1;
+      --contact-glass: rgba(255, 255, 255, 0.75);
+      --contact-border: rgba(99, 102, 241, 0.12);
+    }
+    [data-theme="dark"] {
+      --contact-glass: rgba(15, 23, 42, 0.85);
+      --contact-border: rgba(99, 102, 241, 0.2);
+    }
+
+    body {
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    /* Premium Mesh Background */
+    .mesh-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      filter: blur(100px);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .orb {
+      position: absolute;
+      width: 60vw;
+      height: 60vw;
+      border-radius: 50%;
+      animation: float 25s infinite alternate;
+    }
+    .orb-1 { background: #6366f1; top: -20%; left: -20%; animation-delay: 0s; }
+    .orb-2 { background: #8b5cf6; bottom: -20%; right: -20%; animation-delay: -5s; }
+    .orb-3 { background: #06b6d4; top: 30%; left: 20%; animation-delay: -10s; }
+
+    @keyframes float {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(15%, 15%) scale(1.15); }
+    }
+
+    .contact-header {
+      padding: 160px 0 60px;
+      text-align: center;
+      position: relative;
+    }
+    .contact-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(3rem, 10vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, var(--contact-primary), #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+    .contact-subtitle {
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      padding-bottom: 100px;
+    }
+
+    .contact-card-premium {
+      background: var(--contact-glass);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid var(--contact-border);
+      border-radius: 32px;
+      padding: 48px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.1);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .contact-card-premium:hover {
+      transform: translateY(-10px);
+      border-color: var(--contact-primary);
+      box-shadow: 0 35px 80px rgba(99, 102, 241, 0.15);
+    }
+
+    .section-icon {
+      font-size: 2.5rem;
+      margin-bottom: 24px;
+      display: block;
+    }
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+    .section-text {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    .feature-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--contact-primary);
+      border-radius: 50%;
+    }
+
+    .contact-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: auto;
+    }
+
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px 28px;
+      border-radius: 24px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .contact-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: 0.5s;
+    }
+    .contact-btn:hover::before {
+      left: 100%;
+    }
+
+    .btn-email { 
+      background: linear-gradient(135deg, #ef4444, #b91c1c); 
+      color: #fff;
+      box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
+    }
+    .btn-whatsapp { 
+      background: linear-gradient(135deg, #22c55e, #15803d); 
+      color: #fff;
+      box-shadow: 0 10px 25px rgba(34, 197, 94, 0.3);
+    }
+    .btn-insta { 
+      background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
+      color: #fff;
+      box-shadow: 0 10px 25px rgba(204, 35, 102, 0.3);
+    }
+
+    .contact-btn:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    .btn-icon-wrapper {
+      width: 44px;
+      height: 44px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      backdrop-filter: blur(5px);
+    }
+
+    .dev-profile {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      background: rgba(99, 102, 241, 0.05);
+      padding: 24px;
+      border-radius: 24px;
+      border: 1px dashed var(--contact-border);
+      margin-bottom: 24px;
+    }
+    .dev-avatar-lg {
+      width: 72px;
+      height: 72px;
+      background: var(--contact-primary);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .suggestion-box {
+      grid-column: span 2;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+    }
+
+    .support-msg {
+      margin-top: 40px;
+      text-align: center;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    @media (max-width: 900px) {
+      .contact-grid { grid-template-columns: 1fr; }
+      .suggestion-box { grid-column: span 1; }
+      .contact-card-premium { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mesh-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">🏠 Home</a>
+        <a href="attendance.html" class="nav-link">📋 Attendance</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="contact-header">
+    <div class="container">
+      <h1 class="contact-title">Contact Us</h1>
+      <p class="contact-subtitle">Have questions, suggestions, or need help regarding notes, videos, PDFs, batches, or any feature of BCA Store? We’re always here to support students and improve your learning experience.</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="contact-grid">
+      <!-- About Section -->
+      <section class="contact-card-premium">
+        <span class="section-icon">💎</span>
+        <h2 class="section-title">About Our Platform</h2>
+        <p class="section-text">BCA Store is a student-focused educational platform created to help BCA students access quality study materials in one place. Our mission is to provide:</p>
+        <div class="feature-list">
+          <div class="feature-item"><div class="feature-dot"></div> Organized Notes</div>
+          <div class="feature-item"><div class="feature-dot"></div> Important PDFs</div>
+          <div class="feature-item"><div class="feature-dot"></div> Video Lectures</div>
+          <div class="feature-item"><div class="feature-dot"></div> Batch Materials</div>
+          <div class="feature-item"><div class="feature-dot"></div> Practical Resources</div>
+          <div class="feature-item"><div class="feature-dot"></div> Exam Content</div>
+        </div>
+        <p class="section-text" style="margin-top: 20px;">We continuously work to make learning easier, smarter, and more accessible for every student.</p>
+      </section>
+
+      <!-- Developer Section -->
+      <section class="contact-card-premium">
+        <span class="section-icon">👨‍💻</span>
+        <h2 class="section-title">About the Developer</h2>
+        <div class="dev-profile">
+          <div class="dev-avatar-lg">V</div>
+          <div>
+            <h3 style="margin:0; font-size:1.2rem; color:var(--text);">VISHAL KUMAR</h3>
+            <p style="margin:0; font-size:0.9rem; color:var(--text-muted);">BCA 2nd Semester | Island College</p>
+          </div>
+        </div>
+        <p class="section-text">Hello 👋 I’m Vishal Kumar, a BCA 2nd Semester student at Island College and the developer of BCA Store.</p>
+        <p class="section-text">I’m a beginner student developer who loves learning new technologies, building useful projects, and solving problems. BCA Store was created to help students access study materials in a simple, organized, and user-friendly way.</p>
+        <p class="section-text">Thank you for supporting BCA Store ❤️</p>
+        <div style="margin-top: 20px;">
+          <a href="developer.html" class="contact-btn btn-primary" style="padding: 14px 24px; border-radius: 16px; font-size: 0.95rem; display: inline-flex; width: auto; background: linear-gradient(135deg, var(--contact-primary), #4f46e5); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);">
+            <span style="font-size: 1.2rem;">🌐</span> WHO IS VISHAL?
+          </a>
+        </div>
+      </section>
+
+      <!-- Contact Info -->
+      <section class="contact-card-premium">
+        <span class="section-icon">📩</span>
+        <h2 class="section-title">Get in Touch</h2>
+        <p class="section-text">You can contact us anytime regarding technical issues, material problems, copyright concerns, or collaborations.</p>
+        <div class="contact-actions">
+          <a href="mailto:10717vishal@gmail.com" class="contact-btn btn-email">
+            <div class="btn-icon-wrapper">📧</div>
+            <div class="btn-text-content">
+              <span style="display:block; font-size:0.75rem; opacity:0.8; text-transform:uppercase; letter-spacing:0.05em;">Official Email</span>
+              Email Support
+            </div>
+          </a>
+          <a href="https://wa.me/917633865663?text=HII%20VISHAL%20!%20I%20HAVE%20QUESTION%20RELATED%20TO%20BCA%20STORE" target="_blank" class="contact-btn btn-whatsapp">
+            <div class="btn-icon-wrapper">💬</div>
+            <div class="btn-text-content">
+              <span style="display:block; font-size:0.75rem; opacity:0.8; text-transform:uppercase; letter-spacing:0.05em;">Instant Chat</span>
+              WhatsApp Support
+            </div>
+          </a>
+          <a href="https://www.instagram.com/real.vishal_" target="_blank" class="contact-btn btn-insta">
+            <div class="btn-icon-wrapper">📸</div>
+            <div class="btn-text-content">
+              <span style="display:block; font-size:0.75rem; opacity:0.8; text-transform:uppercase; letter-spacing:0.05em;">Latest Updates</span>
+              Follow on Instagram
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Suggestion Intro -->
+      <section class="contact-card-premium">
+        <span class="section-icon">🌟</span>
+        <h2 class="section-title">Share Your Suggestions</h2>
+        <p class="section-text">Your ideas matter to us. If you find any issue or want new features, subjects, notes, or improvements, feel free to send your suggestions.</p>
+        <p class="section-text">We read every feedback carefully to improve the platform experience for all students.</p>
+        <button onclick="openSuggestionModal()" class="btn-primary" style="padding: 16px; border-radius: 16px;">
+          Send Feedback Now →
+        </button>
+      </section>
+
+      <!-- Quick Support Message -->
+      <div class="suggestion-box contact-card-premium">
+        <span class="section-icon">⚡</span>
+        <h2 class="section-title">Quick Support Message</h2>
+        <p class="section-text">We try our best to respond as quickly as possible. Your patience is appreciated!</p>
+        <p class="support-msg">Thank you for being part of the BCA Store community 🚀</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container" style="text-align:center; padding: 60px 0;">
+      <div class="dev-credit-box" style="margin-bottom: 12px;">
+        Designed & Developed with 🖤 by 
+        <a href="developer.html" class="dev-link">VISHAL 🖤</a>
+      </div>
+      <p style="opacity:0.7;">&copy; 2026 BCA STORE. Babasaheb Bhim Rao Ambedkar Bihar University.</p>
+    </div>
+  </footer>
+
+  <!-- Suggestion Modal (Integrated via script.js logic) -->
+  <script src="script.js"></script>
+  <script>
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    if (isDark) document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+  <script src="modern-effects.js"></script>
+  <script src="enhancements.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+{
+  "rules": {
+    "batches": {
+      ".read": true,
+      "$batchId": {
+        ".write": "root.child('admins').child(auth.uid).child('batches').val().contains($batchId) || root.child('admins').child(auth.uid).child('role').val() === 'super-admin'",
+        "info": {
+          ".validate": "newData.hasChildren(['name', 'description', 'icon'])"
+        },
+        "sections": {
+          "videos": {
+            "$videoId": {
+              ".validate": "newData.hasChildren(['title', 'url', 'position'])"
+            }
+          },
+          "notes": {
+            "$noteId": {
+              ".validate": "newData.hasChildren(['title', 'url', 'position'])"
+            }
+          },
+          "dpp": {
+            "$dppId": {
+              ".validate": "newData.hasChildren(['title', 'url', 'position'])"
+            }
+          },
+          "liveClasses": {
+            "$classId": {
+              ".validate": "newData.hasChildren(['title', 'position'])"
+            }
+          },
+          "pdfs": {
+            "$pdfId": {
+              ".validate": "newData.hasChildren(['title', 'url', 'position'])"
+            }
+          }
+        },
+        "stats": {
+          ".validate": "newData.hasChildren(['totalVideos', 'totalNotes', 'totalDPP', 'totalLiveClasses', 'totalPDFs'])"
+        }
+      }
+    },
+    "admins": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() != null)",
+      ".write": "root.child('admins').child(auth.uid).child('role').val() === 'super-admin'",
+      "$adminId": {
+        ".validate": "newData.hasChildren(['email', 'role', 'batches'])"
+      }
+    },
+    "userProgress": {
+      ".read": "auth != null && ($uid === auth.uid || root.child('admins').child(auth.uid).val() != null)",
+      ".write": "auth != null && $uid === auth.uid",
+      "$uid": {
+        "$batchId": {
+          ".validate": "newData.hasChildren(['enrolledDate'])"
+        }
+      }
+    }
+  }
+}

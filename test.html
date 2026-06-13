@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCAverse | Professional Test Arena</title>
+    
+    <!-- Title Tags and SEO -->
+    <meta name="description" content="Premium competitive test environment for BCA exams. Distraction-free, real-time analytics, and live leaderboard." />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="test.css">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body>
+
+    <!-- 1. REGISTRATION / EXAM INSTRUCTIONS SCREEN -->
+    <div class="test-registration-overlay" id="regOverlay">
+        <div class="reg-card glass-card animate-scale" id="instructionCard" style="display:none;">
+            <div class="reg-header">
+                <h2>📝 Examination Instructions</h2>
+                <p>Please review your test details and rules carefully before starting.</p>
+            </div>
+            
+            <!-- Scrollable Instructions Container -->
+            <div class="instructions-scroll-wrapper">
+                <!-- Candidate Profile Verified Strip -->
+                <div class="candidate-verify-strip">
+                    <div class="candidate-avatar" id="candAvatar">S</div>
+                    <div class="candidate-details">
+                        <h4 id="candName">Loading Candidate...</h4>
+                        <p id="candRoll">Roll No: --</p>
+                    </div>
+                </div>
+
+                <!-- Dashboard of test info -->
+                <div class="test-info-dash">
+                    <div class="info-dash-item">
+                        <div class="info-dash-icon">⏱️</div>
+                        <div class="info-dash-meta">
+                            <span>Duration</span>
+                            <strong id="infoDuration">-- Mins</strong>
+                        </div>
+                    </div>
+                    <div class="info-dash-item">
+                        <div class="info-dash-icon">🔢</div>
+                        <div class="info-dash-meta">
+                            <span>Questions</span>
+                            <strong id="infoQuestions">-- Questions</strong>
+                        </div>
+                    </div>
+                    <div class="info-dash-item">
+                        <div class="info-dash-icon">🎯</div>
+                        <div class="info-dash-meta">
+                            <span>Total Marks</span>
+                            <strong id="infoMarks">-- Marks</strong>
+                        </div>
+                    </div>
+                    <div class="info-dash-item">
+                        <div class="info-dash-icon">📚</div>
+                        <div class="info-dash-meta">
+                            <span>Subject</span>
+                            <strong id="infoSub">Loading...</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Standard Examination rules -->
+                <div class="rules-block">
+                    <h5>⚠️ Exam Guidelines & Warnings</h5>
+                    <ul>
+                        <li>Do NOT switch tabs or minimize the browser window. Tab switching is monitored, and 3 violations will auto-submit your test.</li>
+                        <li>Answers are automatically saved locally in real-time. In case of page refresh, your progress will be restored.</li>
+                        <li>Make sure you have a stable internet connection. Results are synced instantly to the Cloud Leaderboard.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Option for full screen launch -->
+            <label class="fullscreen-opt-box">
+                <input type="checkbox" id="enterFullscreenCheck" checked />
+                <span>Launch in Fullscreen Mode (Recommended)</span>
+            </label>
+
+            <!-- Buttons -->
+            <div style="display:flex; gap:16px;">
+                <button class="btn btn-sec" style="flex:1;" onclick="window.location.href='test-hub.html'">Cancel</button>
+                <button class="btn btn-prim" style="flex:2;" onclick="startExam()">🚀 Continue with Examination</button>
+            </div>
+        </div>
+        
+        <!-- Pre-init spinner while fetching test data -->
+        <div id="initLoader" style="text-align:center;">
+            <div class="spinner"></div>
+            <p style="margin-top:20px; color:var(--exam-muted); font-weight:600;">Fetching Examination Details...</p>
+        </div>
+    </div>
+
+    <!-- 2. EXAM HEADER BAR -->
+    <header class="exam-header-bar" style="display:none;" id="testHeader">
+        <div class="eh-left">
+            <div class="eh-brand">EXAM PORTAL</div>
+            <div class="eh-separator"></div>
+            <div class="eh-title-info">
+                <h3 id="testTitle">Loading Exam...</h3>
+                <span id="testSubCode">Code: --</span>
+            </div>
+        </div>
+        
+        <div class="eh-right">
+            <!-- Timer Countdown -->
+            <div class="eh-timer-box" id="timerBox">
+                <span>⏱️</span>
+                <span id="testTimer">00:00:00</span>
+            </div>
+            
+            <button class="btn btn-sec" style="padding: 10px 16px; font-size: 0.85rem;" onclick="toggleManualFullscreen()">🖥️ Fullscreen</button>
+            <button class="btn btn-warning" style="padding: 10px 20px; font-size: 0.85rem;" onclick="TestEngine.submitTest()">Submit Test</button>
+        </div>
+    </header>
+
+    <!-- 3. CHEAT DETECTION WARNING OVERLAY -->
+    <div class="cheat-warning" id="cheatWarning">
+        <span class="warn-icon">⚠️</span>
+        <span id="cheatMsg">Tab switching detected! (Warning 1/3)</span>
+    </div>
+
+    <!-- 4. EXAMINATION ACTIVE WORKSPACE -->
+    <main class="exam-layout-grid" style="display:none;" id="testArena">
+        
+        <!-- Left Column: Question Arena -->
+        <section class="exam-question-column">
+            <div class="exam-main-panel">
+                <div id="testContentArea">
+                    <!-- Loaded dynamically via test-engine.js -->
+                    <div style="text-align:center; padding:100px;">
+                        <div class="spinner"></div>
+                        <p style="margin-top:20px; color:var(--exam-muted);">Loading question...</p>
+                    </div>
+                </div>
+
+                <!-- Footer Navigation Buttons -->
+                <footer class="exam-nav-footer">
+                    <div class="footer-nav-left">
+                        <button class="btn btn-sec" id="btnPrev" onclick="TestEngine.prevQuestion()">← Previous</button>
+                        <button class="btn btn-outline-subtle" id="btnClearResp" onclick="TestEngine.clearResponse()">Clear Response</button>
+                    </div>
+                    <div class="footer-nav-right">
+                        <button class="btn btn-violet" id="btnMarkReview" onclick="TestEngine.markForReview()">Mark for Review &amp; Next</button>
+                        <button class="btn btn-prim" id="btnNext" onclick="TestEngine.nextQuestion()">Save &amp; Next →</button>
+                        <button class="btn btn-prim" id="btnSubmit" style="background:var(--exam-green); display:none;" onclick="TestEngine.submitTest()">✅ Submit Exam</button>
+                    </div>
+                </footer>
+            </div>
+        </section>
+
+        <!-- Right Column: Sidebar Question Palette -->
+        <aside class="exam-sidebar-column" id="examSidebar">
+            <!-- Candidate Summary -->
+            <div class="sidebar-user-card">
+                <div class="sidebar-avatar" id="sideAvatar">S</div>
+                <div class="sidebar-user-info">
+                    <span id="sideName">Candidate Name</span>
+                    <span id="sideRoll">Roll: --</span>
+                </div>
+            </div>
+
+            <!-- Legends Guideline -->
+            <div class="palette-legends-container">
+                <div class="palette-legends-grid">
+                    <div class="legend-item">
+                        <div class="legend-badge bg-answered" id="legendAnsCount">0</div>
+                        <span>Answered</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-badge bg-not-answered" id="legendNotAnsCount">0</div>
+                        <span>Not Answered</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-badge bg-marked" id="legendMarkCount">0</div>
+                        <span>Marked for Review</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-badge bg-not-visited" id="legendNotVisitCount">0</div>
+                        <span>Not Visited</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Palette Numbers grid -->
+            <div class="palette-numbers-box">
+                <h4 id="paletteHeader">Question Palette</h4>
+                <div class="palette-buttons-grid" id="paletteButtonsContainer">
+                    <!-- Dynamic Palette indices generated here -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Floating Sidebar Toggle Button for mobile screens -->
+        <button class="palette-drawer-toggle" id="paletteToggleBtn" onclick="toggleSidebarDrawer()">🎨</button>
+    </main>
+
+    <!-- 5. REDESIGNED RESULTS & ANALYTICS VIEW -->
+    <main class="results-container" style="display:none;" id="testResultsView">
+        
+        <!-- Switching tabs -->
+        <div class="results-tab-bar">
+            <button class="results-tab-btn active" id="btnTabAnalytics" onclick="switchResultsTab('analytics')">📊 Performance Analysis</button>
+            <button class="results-tab-btn" id="btnTabLeaderboard" onclick="switchResultsTab('leaderboard')">🏆 Leaderboard Rankings</button>
+        </div>
+
+        <!-- 5A: Performance analysis Tab -->
+        <div id="resultsAnalyticsTab">
+            <!-- Radial gauges dashboard header -->
+            <div class="analytics-hero-card animate-in">
+                <div class="svg-radial-wrap">
+                    <svg width="140" height="140">
+                        <circle cx="70" cy="70" r="60" class="svg-radial-bg" />
+                        <circle cx="70" cy="70" r="60" class="svg-radial-bar" id="scoreRadialCircle" />
+                    </svg>
+                    <div class="radial-score-val">
+                        <span id="resPercentage">0%</span>
+                        <span>Percentage</span>
+                    </div>
+                </div>
+                
+                <div class="hero-eval-summary">
+                    <div class="performance-badge excellent" id="performanceLevelBadge">Excellent</div>
+                    <h2 id="resSugg">Calculating Evaluation Summary...</h2>
+                    <p>Analysis indicates a steady understanding of the subject. Review wrong choices and feedback below to optimize concepts further.</p>
+                </div>
+            </div>
+
+            <!-- Stats dashboard grid -->
+            <div class="analytics-stats-grid animate-in" style="animation-delay: 0.1s;">
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background:var(--exam-primary-hover); color:#fff;">📊</div>
+                    <div class="stat-card-meta">
+                        <span id="statScore">0/0</span>
+                        <span>Marks Secured</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background:var(--exam-green-bg); color:var(--exam-green);">🎯</div>
+                    <div class="stat-card-meta">
+                        <span id="statAccuracy">0%</span>
+                        <span>Accuracy Rate</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background:var(--exam-yellow-bg); color:var(--exam-yellow);">🏆</div>
+                    <div class="stat-card-meta">
+                        <span id="statRank">#0 / --</span>
+                        <span>Dynamic Rank</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background:var(--exam-green-bg); color:var(--exam-green);">✅</div>
+                    <div class="stat-card-meta">
+                        <span id="statCorrect">0</span>
+                        <span>Correct Questions</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background:var(--exam-red-bg); color:var(--exam-red);">❌</div>
+                    <div class="stat-card-meta">
+                        <span id="statIncorrect">0</span>
+                        <span>Incorrect Questions</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background:var(--exam-grey-bg); color:var(--exam-muted);">🔘</div>
+                    <div class="stat-card-meta">
+                        <span id="statUnattempted">0</span>
+                        <span>Unattempted Questions</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background:var(--exam-violet-bg); color:var(--exam-violet);">⏱️</div>
+                    <div class="stat-card-meta">
+                        <span id="statTimeTaken">00:00</span>
+                        <span>Time Consumed</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background:var(--exam-grey-bg); color:var(--exam-muted);">⚠️</div>
+                    <div class="stat-card-meta">
+                        <span id="statViolations">0 / 3</span>
+                        <span>Cheat Warnings</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Question review solutions -->
+            <div class="animate-in" style="animation-delay: 0.2s;">
+                <h3 class="solutions-review-title">
+                    <span>💡 Question-Wise Solution & Concept Analysis</span>
+                </h3>
+                
+                <div id="solutionsListArea">
+                    <!-- Question evaluation block loaded dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 5B: Leaderboard Tab -->
+        <div id="resultsLeaderboardTab" style="display:none;">
+            <div class="leaderboard-card animate-in">
+                <h3 style="margin: 0 0 8px 0; font-family:'Outfit'; font-size:1.4rem;">🏆 Cloud Examination Leaderboard</h3>
+                <p style="color:var(--exam-muted); font-size:0.85rem; margin:0 0 24px 0;">Rankings are computed live based on obtained marks (higher marks first) and test duration (faster time taken as tie-breaker).</p>
+                
+                <div class="leaderboard-list" id="leaderboardListArea">
+                    <!-- Live database rankings injected here -->
+                    <div style="text-align:center; padding:40px; color:var(--exam-muted);">
+                        <div class="spinner" style="width:30px; height:30px;"></div>
+                        <p style="margin-top:10px;">Compiling live standings...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Return to hub button -->
+        <button class="btn btn-prim animate-in" style="width:100%; margin-top:40px; padding:18px; border-radius:12px;" onclick="window.location.href='test-hub.html'">Return to Exam Hub</button>
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="student-registration.js"></script>
+    <script src="script.js"></script> <!-- To load Firebase database reference -->
+    <script src="test-engine.js"></script>
+    <script>
+        // Start script initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sem = urlParams.get('sem');
+            const sub = urlParams.get('sub');
+            const tid = urlParams.get('tid');
+
+            if (!sem || !sub || !tid) {
+                alert("Invalid Test Access Parameters.");
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Sync user data to card
+            const studentDataStr = localStorage.getItem('student_data');
+            const studentData = studentDataStr ? JSON.parse(studentDataStr) : null;
+            const isRegistered = localStorage.getItem('student_registered') === 'true';
+
+            if (!isRegistered || !studentData) {
+                alert("Access Denied: Please register or log in to attempt tests.");
+                window.location.href = 'test-hub.html';
+                return;
+            }
+
+            const name = studentData.name;
+            const roll = studentData.rollNo || "N/A";
+            
+            document.getElementById('candName').textContent = name;
+            document.getElementById('candRoll').textContent = `Roll No: ${roll}`;
+            document.getElementById('candAvatar').textContent = name.charAt(0).toUpperCase();
+            
+            document.getElementById('sideName').textContent = name;
+            document.getElementById('sideRoll').textContent = `Roll No: ${roll}`;
+            document.getElementById('sideAvatar').textContent = name.charAt(0).toUpperCase();
+
+            // Wait for script.js to bind firebase db connection
+            let checkDb = setInterval(() => {
+                if (window.db) {
+                    clearInterval(checkDb);
+                    
+                    db.ref(`tests/${sem}/${sub}/${tid}`).once('value', snap => {
+                        if (snap.exists()) {
+                            window.currentTestData = snap.val();
+                            
+                            // Render instructions details card
+                            const test = window.currentTestData;
+                            const qCount = test.type === 'quiz' ? (test.questions?.length || 0) : 1;
+                            const tLimit = test.timeLimit || qCount;
+                            const tMarks = test.type === 'quiz' ? qCount : (test.questionData?.marks || 10);
+                            
+                            document.getElementById('infoDuration').textContent = `${tLimit} Mins`;
+                            document.getElementById('infoQuestions').textContent = `${qCount} Questions`;
+                            document.getElementById('infoMarks').textContent = `${tMarks} Marks`;
+                            document.getElementById('infoSub').textContent = `${test.subjectName || test.subject} (${test.subject})`;
+                            
+                            document.getElementById('testTitle').textContent = test.title;
+                            document.getElementById('testSubCode').textContent = `Code: ${test.subject} | Sem: ${test.semester.replace('Semester', 'Semester ')}`;
+
+                            // Show instruction card panel
+                            document.getElementById('initLoader').style.display = 'none';
+                            document.getElementById('instructionCard').style.display = 'block';
+                        } else {
+                            alert("Test details not found or expired.");
+                            window.location.href = 'test-hub.html';
+                        }
+                    });
+                }
+            }, 100);
+        });
+
+        // Launch exam flow
+        function startExam() {
+            const fsCheck = document.getElementById('enterFullscreenCheck').checked;
+            if (fsCheck) {
+                requestFullscreenMode();
+            }
+
+            // Save student data to TestEngine
+            const sem = new URLSearchParams(window.location.search).get('sem');
+            const sub = new URLSearchParams(window.location.search).get('sub');
+            const studentDataStr = localStorage.getItem('student_data');
+            const studentData = studentDataStr ? JSON.parse(studentDataStr) : null;
+            
+            if (!studentData) {
+                alert("Unauthorized: Student data missing.");
+                window.location.href = 'index.html';
+                return;
+            }
+
+            TestEngine.studentData = {
+                name: studentData.name,
+                roll: studentData.rollNo || "N/A",
+                class: studentData.college || "BCA Department",
+                sem: sem,
+                sub: sub,
+                date: new Date().toISOString()
+            };
+
+            // Transition DOM elements
+            document.getElementById('regOverlay').style.display = 'none';
+            document.getElementById('testHeader').style.display = 'flex';
+            document.getElementById('testArena').style.display = 'grid';
+
+            // Start Examination engine
+            TestEngine.initTest(window.currentTestData);
+        }
+
+        // Fullscreen API Helper
+        function requestFullscreenMode() {
+            const doc = document.documentElement;
+            if (doc.requestFullscreen) doc.requestFullscreen();
+            else if (doc.mozRequestFullScreen) doc.mozRequestFullScreen();
+            else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
+            else if (doc.msRequestFullscreen) doc.msRequestFullscreen();
+        }
+
+        function toggleManualFullscreen() {
+            if (!document.fullscreenElement) {
+                requestFullscreenMode();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        // Responsive mobile side panel drawer
+        function toggleSidebarDrawer() {
+            const sidebar = document.getElementById('examSidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Tab switches in Results
+        function switchResultsTab(tabName) {
+            const analyticsTab = document.getElementById('resultsAnalyticsTab');
+            const leaderboardTab = document.getElementById('resultsLeaderboardTab');
+            const btnAnalytics = document.getElementById('btnTabAnalytics');
+            const btnLeaderboard = document.getElementById('btnTabLeaderboard');
+
+            if (tabName === 'analytics') {
+                analyticsTab.style.display = 'block';
+                leaderboardTab.style.display = 'none';
+                btnAnalytics.classList.add('active');
+                btnLeaderboard.classList.remove('active');
+            } else {
+                analyticsTab.style.display = 'none';
+                leaderboardTab.style.display = 'block';
+                btnAnalytics.classList.remove('active');
+                btnLeaderboard.classList.add('active');
+                TestEngine.loadLeaderboard(); // Trigger standings refresh
+            }
+        }
+    </script>
+
+    <style>
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 4px solid rgba(99, 102, 241, 0.1);
+            border-top-color: var(--exam-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</body>
+</html>

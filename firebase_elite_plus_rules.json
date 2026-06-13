@@ -1,0 +1,86 @@
+{
+  "rules": {
+    // Elite Plus Database Rules
+    "elitePlus": {
+      // Allow read access to everyone
+      ".read": true,
+      
+      // Only authenticated admins can write
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+      
+      // Structure: elitePlus/{batchId}/{sectionType}/{contentId}
+      "{batchId}": {
+        ".read": true,
+        ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+        
+        "notes": {
+          ".read": true,
+          ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+          "{contentId}": {
+            "title": { ".validate": "newData.isString()" },
+            "link": { ".validate": "newData.isString() && newData.val().matches(/^https?:\\/\\/.+/)" },
+            "type": { ".validate": "newData.val() === 'notes'" },
+            "batch": { ".validate": "newData.isString()" },
+            "uploadedAt": { ".validate": "newData.isString()" },
+            "uploadedBy": { ".validate": "newData.isString()" }
+          }
+        },
+        
+        "dpp": {
+          ".read": true,
+          ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+          "{contentId}": {
+            "title": { ".validate": "newData.isString()" },
+            "link": { ".validate": "newData.isString() && newData.val().matches(/^https?:\\/\\/.+/)" },
+            "type": { ".validate": "newData.val() === 'dpp'" },
+            "batch": { ".validate": "newData.isString()" },
+            "uploadedAt": { ".validate": "newData.isString()" },
+            "uploadedBy": { ".validate": "newData.isString()" }
+          }
+        },
+        
+        "videos": {
+          ".read": true,
+          ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+          "{contentId}": {
+            "title": { ".validate": "newData.isString()" },
+            "link": { ".validate": "newData.isString() && newData.val().matches(/^https?:\\/\\/.+/)" },
+            "type": { ".validate": "newData.val() === 'videos'" },
+            "batch": { ".validate": "newData.isString()" },
+            "uploadedAt": { ".validate": "newData.isString()" },
+            "uploadedBy": { ".validate": "newData.isString()" }
+          }
+        },
+        
+        "live": {
+          ".read": true,
+          ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+          "{contentId}": {
+            "title": { ".validate": "newData.isString()" },
+            "link": { ".validate": "newData.isString() && newData.val().matches(/^https?:\\/\\/.+/)" },
+            "type": { ".validate": "newData.val() === 'live'" },
+            "batch": { ".validate": "newData.isString()" },
+            "uploadedAt": { ".validate": "newData.isString()" },
+            "uploadedBy": { ".validate": "newData.isString()" }
+          }
+        }
+      }
+    },
+    
+    // Keep existing BCA Store rules
+    "materials": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+    },
+    
+    "admins": {
+      ".read": false,
+      ".write": false
+    },
+    
+    "tests": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+    }
+  }
+}
