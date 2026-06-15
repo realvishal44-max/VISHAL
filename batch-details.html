@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Batch Details - Dynamic content loading based on batch ID" />
+  <title>Batch Details | BCA STORE</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Orbitron:wght@400;700;900&display=swap"
+    rel="stylesheet" />
+  
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Batch Details Page Specific Styles */
+    .batch-details-hero {
+      padding: 60px 0;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      margin-bottom: 40px;
+    }
+
+    .batch-hero-info {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .batch-hero-info {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+
+    .batch-thumbnail {
+      width: 200px;
+      height: 200px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      border: 2px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .batch-header-content h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+
+    .batch-header-content p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .batch-meta-info {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    .meta-label {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .meta-value {
+      color: var(--text-primary);
+    }
+
+    .batch-action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-enroll {
+      padding: 12px 28px;
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn-enroll:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(139, 92, 246, 0.45);
+    }
+
+    /* Content Tabs */
+    .content-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 16px 20px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      font-size: 0.95rem;
+      gap: 6px;
+      display: flex;
+      align-items: center;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      color: #8b5cf6;
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+    }
+
+    /* Content Sections */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .content-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+    }
+
+    .content-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .content-card:hover {
+      border-color: rgba(139, 92, 246, 0.5);
+      background: rgba(139, 92, 246, 0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+    }
+
+    .content-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .content-card-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .content-card-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #8b5cf6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .empty-state-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .empty-state-desc {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"></span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-link">🏠 Home</a>
+        <a href="my-batches.html" class="nav-link">🎓 My Batch</a>
+        <a href="attendance.html" class="nav-link">📋 Attendance</a>
+        <a href="elite-plus.html" class="nav-link">💎 Elite Plus</a>
+        <a href="exam.html" class="nav-link">📝 Exam</a>
+        <a href="test-hub.html" class="nav-link">🧠 Tests</a>
+        <a href="community.html" class="nav-link">🧑‍🤝‍🧑 Community</a>
+        <a href="analytics.html" class="nav-link">📊 Stats</a>
+        <a href="javascript:void(0)" class="nav-link" onclick="openSuggestionModal()">💬 Suggestion</a>
+        <button class="nav-bookmark-btn" id="navBkBtn" onclick="openBkPanel()" title="My Bookmarks">🔖<span
+            class="bk-count-badge" id="bkBadgeDesktop"></span></button>
+        <button class="dark-toggle" id="darkToggle" title="Toggle Dark Mode">🌙</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==================== BATCH HERO ==================== -->
+  <section class="batch-details-hero">
+    <div class="container">
+      <div class="batch-hero-info">
+        <div class="batch-thumbnail" id="batchThumbnail">📚</div>
+        <div class="batch-header-content">
+          <h1 id="batchTitle">Loading batch...</h1>
+          <p id="batchDescription">Fetching batch information...</p>
+          
+          <div class="batch-meta-info">
+            <div class="meta-item">
+              <span class="meta-label">👨‍🏫 Faculty:</span>
+              <span class="meta-value" id="batchFaculty">Loading...</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">📊 Level:</span>
+              <span class="meta-value" id="batchLevel">Loading...</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">📅 Created:</span>
+              <span class="meta-value" id="batchCreated">Loading...</span>
+            </div>
+          </div>
+
+          <div class="batch-action-buttons">
+            <button class="btn-enroll" id="enrollBtn" onclick="handleEnroll()">
+              <span id="enrollBtnText">Enroll Now</span>
+            </button>
+            <button class="btn-enroll" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; box-shadow: none;" onclick="handleContinueLearning()">
+              📚 Continue Learning
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CONTENT TABS ==================== -->
+  <main class="container" style="padding-bottom: 60px;">
+    <div class="content-tabs" id="contentTabs">
+      <!-- Injected by JavaScript -->
+    </div>
+
+    <!-- ==================== TAB CONTENTS ==================== -->
+    
+    <!-- Lectures Tab -->
+    <div id="lectures-tab" class="tab-content active">
+      <div id="lecturesContent">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading lectures...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes Tab -->
+    <div id="notes-tab" class="tab-content">
+      <div id="notesContent">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading notes...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assignments Tab -->
+    <div id="assignments-tab" class="tab-content">
+      <div id="assignmentsContent">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading assignments...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tests Tab -->
+    <div id="tests-tab" class="tab-content">
+      <div id="testsContent">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading tests...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3 class="footer-brand"><img src="logo.png" class="brand-logo-img" alt="BCA Store Logo"
+              style="width: 32px; height: 32px; margin-right: 8px; border-radius: 8px;"> <span
+              class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></h3>
+          <p>Your one-stop destination for BRABU BCA study materials.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="my-batches.html">🎓 My Batch</a></li>
+            <li><a href="elite-plus.html">💎 Elite Plus</a></li>
+            <li><a href="developer.html">👨‍💻 Developer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul class="footer-links">
+            <li><a href="#" onclick="openSuggestionModal()">💬 Suggestion</a></li>
+            <li><a href="contact.html">📧 Contact</a></li>
+            <li><a href="privacy.html">🛡️ Privacy</a></li>
+            <li><a href="terms.html">📜 Terms</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="dev-credit-box">Designed & Developed with 🖤 by <a href="developer.html" class="dev-link">VISHAL</a></div>
+        <p>&copy; 2026 BCA STORE. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== BACK TO TOP ==================== -->
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <span>↑</span>
+  </button>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  
+  <!-- Batch Management System -->
+  <script src="batch-service.js"></script>
+  <script src="batch-card-renderer.js"></script>
+  <script src="batch-platform-integration.js"></script>
+  
+  <!-- Core Scripts -->
+  <script src="student-registration.js"></script>
+  <script src="script.js"></script>
+  <script>
+    // Batch Details Page Controller
+    class BatchDetailsController {
+      constructor() {
+        this.batchId = null;
+        this.batchData = null;
+        this.currentTab = 'lectures';
+        this.enrolled = JSON.parse(localStorage.getItem('enrolledBatches') || '[]');
+      }
+
+      /**
+       * Initialize the page
+       */
+      async init() {
+        // Get batch ID from URL parameter
+        const params = new URLSearchParams(window.location.search);
+        this.batchId = params.get('id');
+
+        if (!this.batchId) {
+          this.showError('No batch ID provided');
+          return;
+        }
+
+        // Wait for database to be ready
+        await this.waitForDatabase();
+
+        // Initialize batch service
+        if (typeof batchService !== 'undefined') {
+          batchService.initialize(typeof db !== 'undefined' ? db : null);
+          
+          // Wait for initialization
+          await new Promise((resolve) => {
+            const checkInit = setInterval(() => {
+              if (batchService.isInitialized) {
+                clearInterval(checkInit);
+                resolve();
+              }
+            }, 100);
+
+            // Timeout after 5 seconds
+            setTimeout(() => {
+              clearInterval(checkInit);
+              resolve();
+            }, 5000);
+          });
+        }
+
+        // Load batch details
+        await this.loadBatchDetails();
+
+        // Setup UI
+        this.setupTabs();
+        this.setupEventListeners();
+
+        // Load content
+        await this.loadAllContent();
+      }
+
+      /**
+       * Wait for Firebase database to be ready
+       */
+      async waitForDatabase() {
+        return new Promise((resolve) => {
+          const checkDb = setInterval(() => {
+            if (typeof db !== 'undefined' && db) {
+              clearInterval(checkDb);
+              resolve();
+            }
+          }, 100);
+
+          // Timeout after 3 seconds
+          setTimeout(() => {
+            clearInterval(checkDb);
+            resolve();
+          }, 3000);
+        });
+      }
+
+      /**
+       * Load batch details
+       */
+      async loadBatchDetails() {
+        try {
+          if (typeof batchService !== 'undefined' && batchService.isInitialized) {
+            this.batchData = batchService.getBatch(this.batchId);
+          }
+
+          // Fallback to Firebase if batch service not ready
+          if (!this.batchData && typeof db !== 'undefined' && db) {
+            const snapshot = await db.ref(`batches/${this.batchId}`).get();
+            if (snapshot.val()) {
+              this.batchData = {
+                id: this.batchId,
+                ...snapshot.val()
+              };
+            }
+          }
+
+          if (!this.batchData) {
+            throw new Error(`Batch ${this.batchId} not found`);
+          }
+
+          this.displayBatchInfo();
+        } catch (error) {
+          console.error('Error loading batch details:', error);
+          this.showError(`Failed to load batch: ${error.message}`);
+        }
+      }
+
+      /**
+       * Display batch information
+       */
+      displayBatchInfo() {
+        const batch = this.batchData;
+
+        document.getElementById('batchTitle').textContent = batch.name || batch.batchName || 'Unknown Batch';
+        document.getElementById('batchDescription').textContent = batch.description || batch.subtitle || 'No description available';
+        document.getElementById('batchFaculty').textContent = batch.faculty || batch.instructor || 'Admin';
+        document.getElementById('batchLevel').textContent = batch.level || 'Beginner';
+        
+        // Format date
+        const createdDate = batch.createdAt ? new Date(batch.createdAt) : new Date();
+        document.getElementById('batchCreated').textContent = createdDate.toLocaleDateString();
+
+        // Update thumbnail
+        const thumbnail = document.getElementById('batchThumbnail');
+        if (batch.thumbnail) {
+          thumbnail.style.backgroundImage = `url(${batch.thumbnail})`;
+          thumbnail.style.backgroundSize = 'cover';
+          thumbnail.style.backgroundPosition = 'center';
+          thumbnail.textContent = '';
+        } else {
+          thumbnail.textContent = batch.icon || '📚';
+        }
+
+        // Update button state
+        this.updateEnrollButton();
+      }
+
+      /**
+       * Update enroll button based on enrollment status
+       */
+      updateEnrollButton() {
+        const btn = document.getElementById('enrollBtn');
+        const btnText = document.getElementById('enrollBtnText');
+
+        if (this.enrolled.includes(this.batchId)) {
+          btn.style.background = 'rgba(16, 185, 129, 0.2)';
+          btn.style.color = '#10b981';
+          btn.style.boxShadow = 'none';
+          btnText.textContent = '✅ Already Enrolled';
+          btn.disabled = true;
+        } else {
+          btn.style.background = 'linear-gradient(135deg, #8b5cf6, #6d28d9)';
+          btn.style.color = 'white';
+          btn.style.boxShadow = '0 4px 15px rgba(139, 92, 246, 0.3)';
+          btnText.textContent = 'Enroll Now';
+          btn.disabled = false;
+        }
+      }
+
+      /**
+       * Setup tabs
+       */
+      setupTabs() {
+        const tabsContainer = document.getElementById('contentTabs');
+        const tabs = [
+          { id: 'lectures', name: 'Lectures', icon: '🎥', count: 0 },
+          { id: 'notes', name: 'Study Notes', icon: '📄', count: 0 },
+          { id: 'assignments', name: 'Assignments', icon: '📋', count: 0 },
+          { id: 'tests', name: 'Tests', icon: '📝', count: 0 }
+        ];
+
+        tabs.forEach((tab, index) => {
+          const btn = document.createElement('button');
+          btn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
+          btn.innerHTML = `${tab.icon} ${tab.name} <span style="font-size: 0.8rem; opacity: 0.6;" id="count-${tab.id}"></span>`;
+          btn.onclick = () => this.switchTab(tab.id);
+          tabsContainer.appendChild(btn);
+        });
+      }
+
+      /**
+       * Switch tab
+       */
+      switchTab(tabId) {
+        // Update tab buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        event.target.closest('.tab-btn').classList.add('active');
+
+        // Update tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        document.getElementById(`${tabId}-tab`).classList.add('active');
+
+        this.currentTab = tabId;
+      }
+
+      /**
+       * Load all content
+       */
+      async loadAllContent() {
+        await Promise.all([
+          this.loadLectures(),
+          this.loadNotes(),
+          this.loadAssignments(),
+          this.loadTests()
+        ]);
+      }
+
+      /**
+       * Load lectures for batch
+       */
+      async loadLectures() {
+        try {
+          let lectures = [];
+
+          if (typeof batchService !== 'undefined' && batchService.isInitialized) {
+            lectures = await batchService.getLectures(this.batchId);
+          } else if (typeof db !== 'undefined' && db) {
+            const snapshot = await db.ref('lectures').orderByChild('batchId').equalTo(this.batchId).get();
+            if (snapshot.val()) {
+              lectures = Object.entries(snapshot.val()).map(([id, data]) => ({
+                id,
+                ...data
+              }));
+            }
+          }
+
+          this.renderContent('lectures', lectures);
+          document.getElementById('count-lectures').textContent = `(${lectures.length})`;
+        } catch (error) {
+          console.error('Error loading lectures:', error);
+          this.renderEmptyState('lectures', 'No lectures available yet');
+        }
+      }
+
+      /**
+       * Load notes for batch
+       */
+      async loadNotes() {
+        try {
+          let notes = [];
+
+          if (typeof batchService !== 'undefined' && batchService.isInitialized) {
+            notes = await batchService.getNotes(this.batchId);
+          } else if (typeof db !== 'undefined' && db) {
+            const snapshot = await db.ref('notes').orderByChild('batchId').equalTo(this.batchId).get();
+            if (snapshot.val()) {
+              notes = Object.entries(snapshot.val()).map(([id, data]) => ({
+                id,
+                ...data
+              }));
+            }
+          }
+
+          this.renderContent('notes', notes);
+          document.getElementById('count-notes').textContent = `(${notes.length})`;
+        } catch (error) {
+          console.error('Error loading notes:', error);
+          this.renderEmptyState('notes', 'No study notes available yet');
+        }
+      }
+
+      /**
+       * Load assignments for batch
+       */
+      async loadAssignments() {
+        try {
+          let assignments = [];
+
+          if (typeof batchService !== 'undefined' && batchService.isInitialized) {
+            assignments = await batchService.getAssignments(this.batchId);
+          } else if (typeof db !== 'undefined' && db) {
+            const snapshot = await db.ref('assignments').orderByChild('batchId').equalTo(this.batchId).get();
+            if (snapshot.val()) {
+              assignments = Object.entries(snapshot.val()).map(([id, data]) => ({
+                id,
+                ...data
+              }));
+            }
+          }
+
+          this.renderContent('assignments', assignments);
+          document.getElementById('count-assignments').textContent = `(${assignments.length})`;
+        } catch (error) {
+          console.error('Error loading assignments:', error);
+          this.renderEmptyState('assignments', 'No assignments available yet');
+        }
+      }
+
+      /**
+       * Load tests for batch
+       */
+      async loadTests() {
+        try {
+          let tests = [];
+
+          if (typeof batchService !== 'undefined' && batchService.isInitialized) {
+            tests = await batchService.getTests(this.batchId);
+          } else if (typeof db !== 'undefined' && db) {
+            const snapshot = await db.ref('tests').orderByChild('batchId').equalTo(this.batchId).get();
+            if (snapshot.val()) {
+              tests = Object.entries(snapshot.val()).map(([id, data]) => ({
+                id,
+                ...data
+              }));
+            }
+          }
+
+          this.renderContent('tests', tests);
+          document.getElementById('count-tests').textContent = `(${tests.length})`;
+        } catch (error) {
+          console.error('Error loading tests:', error);
+          this.renderEmptyState('tests', 'No tests available yet');
+        }
+      }
+
+      /**
+       * Render content in grid
+       */
+      renderContent(type, items) {
+        const container = document.getElementById(`${type}Content`);
+
+        if (!items || items.length === 0) {
+          this.renderEmptyState(type, `No ${type} available yet for this batch`);
+          return;
+        }
+
+        let html = `<div class="content-grid">`;
+
+        items.forEach(item => {
+          html += `
+            <div class="content-card" onclick="controller.openContent('${type}', '${item.id}')">
+              <div class="content-card-title">${item.title || item.name || 'Untitled'}</div>
+              <div class="content-card-desc">${item.description || ''}</div>
+              <div class="content-card-meta">
+                <span>${item.duration || item.pages || '—'}</span>
+                <span>${item.instructor || item.author || 'Admin'}</span>
+              </div>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+        container.innerHTML = html;
+      }
+
+      /**
+       * Render empty state
+       */
+      renderEmptyState(type, message) {
+        const container = document.getElementById(`${type}Content`);
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <div class="empty-state-title">No ${type} Yet</div>
+            <div class="empty-state-desc">${message}</div>
+          </div>
+        `;
+      }
+
+      /**
+       * Handle content opening
+       */
+      openContent(type, contentId) {
+        console.log(`Opening ${type}: ${contentId}`);
+        // This would typically navigate to a content player or open a modal
+      }
+
+      /**
+       * Handle enrollment
+       */
+      handleEnroll() {
+        if (!this.enrolled.includes(this.batchId)) {
+          this.enrolled.push(this.batchId);
+          localStorage.setItem('enrolledBatches', JSON.stringify(this.enrolled));
+          this.updateEnrollButton();
+          showToast('✅ Successfully enrolled in this batch!', 'success');
+        }
+      }
+
+      /**
+       * Handle continue learning
+       */
+      handleContinueLearning() {
+        if (!this.enrolled.includes(this.batchId)) {
+          this.handleEnroll();
+        }
+        // Navigate to learning dashboard
+        window.location.href = `elite-batches.html?batch=${this.batchId}`;
+      }
+
+      /**
+       * Show error message
+       */
+      showError(message) {
+        const container = document.querySelector('main.container');
+        container.innerHTML = `
+          <div class="empty-state" style="padding: 100px 20px;">
+            <div class="empty-state-icon">❌</div>
+            <div class="empty-state-title">Error Loading Batch</div>
+            <div class="empty-state-desc">${message}</div>
+            <div style="margin-top: 20px;">
+              <a href="elite-plus.html" class="btn-enroll">← Back to Elite Plus</a>
+            </div>
+          </div>
+        `;
+      }
+
+      /**
+       * Setup event listeners
+       */
+      setupEventListeners() {
+        window.addEventListener('scroll', () => {
+          const navbar = document.getElementById('navbar');
+          const backBtn = document.getElementById('backToTop');
+
+          if (window.scrollY > 50) {
+            navbar?.classList.add('scrolled');
+          } else {
+            navbar?.classList.remove('scrolled');
+          }
+
+          if (window.scrollY > 300) {
+            backBtn?.classList.add('show');
+          } else {
+            backBtn?.classList.remove('show');
+          }
+        });
+      }
+    }
+
+    // Initialize controller when DOM is ready
+    let controller;
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (typeof initDarkMode === 'function') initDarkMode();
+      if (typeof initNavbar === 'function') initNavbar();
+
+      controller = new BatchDetailsController();
+      await controller.init();
+    });
+  </script>
+</body>
+
+</html>
